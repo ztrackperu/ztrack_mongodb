@@ -1,7 +1,8 @@
 from fastapi import FastAPI
-
+from fastapi_pagination import Page, add_pagination
 #from server.routes.usuarios import router as UsuariosRouter
 from server.routes.madurador import router as MaduradorRouter
+
 
 app = FastAPI(
     title="Integracion ZTRACK MONGODB",
@@ -18,3 +19,5 @@ app.include_router(MaduradorRouter, tags=["maduradores"], prefix="/maduradores")
 @app.get("/", tags=["Root"])
 async def read_root():
     return {"message": "Welcome to this fantastic app ztrack by mongodb!"}
+
+add_pagination(app)

@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-
+from fastapi_pagination import Page, add_pagination
+from fastapi_pagination.ext.motor import paginate
 
 #aqui pedimos las funciones que incluyen nuestro CRUD
 from server.funciones.notificaciones import (
@@ -23,7 +24,6 @@ from server.models.notificaciones import (
 )
 #aqui se definen las rutas de la API REST
 router = APIRouter()
-
 
 @router.post("/", response_description="Datos de los notificacion agregados a la base de datos.")
 #La funcion espera "ConceptoOTSchema"

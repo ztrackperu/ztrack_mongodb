@@ -23,6 +23,9 @@ pip install mysqlclient
 pip install sqlalchemy
 pip install pymysql
 pip install python-dotenv
-
+#para paginacion
+pip install fastapi-pagination
+#para todo s 
+pip install "fastapi[all]"
 -> se ejecuta 
 python app/main.py

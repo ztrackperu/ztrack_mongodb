@@ -4,8 +4,11 @@ from pydantic import BaseModel, Field
 class SolicitudMaduradorSchema(BaseModel):
     device:str = Field(...)
     ultima: str = Field(...)
-    fechaI: Optional[str] | None =None
-    fechaF: Optional[str] | None =None
+    fechaI: Optional[str] | None ="0"
+    fechaF: Optional[str] | None ="0"
+    page: Optional[int] | None =1
+    size: Optional[int] | None =300
+    empresa: Optional[int] | None =22
     class Config:
         json_schema_extra = {
             "example": {
@@ -28,3 +31,6 @@ def ResponseModel(data, message):
 def ErrorResponseModel(error, code, message):
     return {"error": error, "code": code, "message": message}
 
+class DatosMadurador(BaseModel):
+    id:int = Field(...)
+    return_air: float = Field(...)
