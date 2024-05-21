@@ -29,3 +29,9 @@ pip install fastapi-pagination
 pip install "fastapi[all]"
 -> se ejecuta 
 python app/main.py
+
+para nivelar permisos en produccion 
+alter table permisos add tipo int(11) NOT NULL DEFAULT 1;
+alter table permisos add estado int(11) NOT NULL DEFAULT 1;
+-> insertar datos basicos
+insert into permisos (nombre,tipo) values ("AdminPage",3)("Live",4)
