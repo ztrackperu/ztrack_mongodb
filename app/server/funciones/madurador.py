@@ -87,28 +87,39 @@ async def data_madurador(notificacion_data: dict) -> dict:
             {"$skip" : (notificacion_data['page']-1)*notificacion_data['size']},
             {"$limit" : notificacion_data['size']},  
         ]
+        minutosP =2
+        delta =5
         concepto_ots = []
+        actual_time = fech[0] 
+        actual_intervalo_final =fech[0] +timedelta(minutes=minutosP)
+        dato_return_air=None
         async for concepto_ot in madurador.aggregate(pip):
-            concepto_ots.append(concepto_ot)
-            for i in range(len(graph)):
-                dato =graph
-                listas[dato[i]['label']]["data"].append(depurar_coincidencia(concepto_ot[dato[i]['label']]))
+            if(concepto_ot['created_at']<actual_intervalo_final):
+                if(dato_return_air is None or abs((concepto_ot['return_air']-dato_return_air)/dato_return_air))* 100 > delta :
+                    concepto_ots.append(concepto_ot)
+                    for i in range(len(graph)):
+                        dato =graph
+                        listas[dato[i]['label']]["data"].append(depurar_coincidencia(concepto_ot[dato[i]['label']]))
+                dato_return_air = concepto_ot['return_air']
+            else:
+                concepto_ots.append(concepto_ot)
+                for i in range(len(graph)):
+                    dato =graph
+                    listas[dato[i]['label']]["data"].append(depurar_coincidencia(concepto_ot[dato[i]['label']]))
+                actual_time = concepto_ot['created_at']
+                actual_intervalo_final = actual_time + timedelta(minutes=minutosP)
+                last_return_air = concepto_ot['return_air']
             listasT = {"graph":listas,"table":concepto_ots,"cadena":cadena}
     else:
-        z=0
-        print(len(bconsultas))
         for i in range(len(bconsultas)):
             print(i)
             if(i==0):
-                print("hacer lo de inicio")
                 diferencial =[{"created_at": {"$gte": fech[0]}}]
             else :
                 if(i==len(bconsultas)-1):
-                    diferencial =[{"created_at": {"$gte": fech[0]}}]
-                    print("hacer lo del final")       
+                    diferencial =[{"created_at": {"$gte": fech[0]}}]    
                 else:
                     diferencial=[]
-                    print("consulatr todo")
             pip = [
                 {"$match": {"$and":diferencial}},  
                 {"$project":dataConfig['config_data']},
@@ -118,11 +129,31 @@ async def data_madurador(notificacion_data: dict) -> dict:
             database = client[bconsultas[i]]
             madurador = database.get_collection("madurador")
             concepto_ots = []
+            minutosP =2
+            delta =8
+            actual_time = fech[0] 
+            actual_intervalo_final =fech[0] +timedelta(minutes=minutosP)
+            dato_return_air=None
             async for concepto_ot in madurador.aggregate(pip):
-                concepto_ots.append(concepto_ot)
-                for i in range(len(graph)):
-                    dato =graph
-                    listas[dato[i]['label']]["data"].append(depurar_coincidencia(concepto_ot[dato[i]['label']]))
+                if(concepto_ot['created_at']<actual_intervalo_final):
+                    if(dato_return_air is None or abs((concepto_ot['return_air']-dato_return_air)/dato_return_air))* 100 > delta :
+                        concepto_ots.append(concepto_ot)
+                        for i in range(len(graph)):
+                            dato =graph
+                            listas[dato[i]['label']]["data"].append(depurar_coincidencia(concepto_ot[dato[i]['label']]))
+                    dato_return_air = concepto_ot['return_air']
+                else:
+                    concepto_ots.append(concepto_ot)
+                    for i in range(len(graph)):
+                        dato =graph
+                        listas[dato[i]['label']]["data"].append(depurar_coincidencia(concepto_ot[dato[i]['label']]))
+                    actual_time = concepto_ot['created_at']
+                    actual_intervalo_final = actual_time + timedelta(minutes=minutosP)
+                    last_return_air = concepto_ot['return_air']
+                #concepto_ots.append(concepto_ot)
+                #for i in range(len(graph)):
+                    #dato =graph
+                    #listas[dato[i]['label']]["data"].append(depurar_coincidencia(concepto_ot[dato[i]['label']]))
                 listasT = {"graph":listas,"table":concepto_ots,"cadena":cadena}
     return listasT
 
