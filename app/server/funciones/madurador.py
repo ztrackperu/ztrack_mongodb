@@ -25,7 +25,28 @@ def procesar_texto(texto):
     texto_procesado = " ".join(partes_capitalizadas) 
     return texto_procesado
 
-# import all you need from fastapi-pagination
+def procesar_fecha(fechaI,fechaF="0"):
+    if(fechaF=="0"):
+        fechaIx=  datetime.fromisoformat(fechaI)-timedelta(hours=12)
+        fechaFx = datetime.fromisoformat(fechaI)-timedelta(hours=1)
+    else:
+        fechaIx=  datetime.fromisoformat(fechaI)
+        fechaFx = datetime.fromisoformat(fechaF)-timedelta(hours=1)
+    data = [fechaIx,fechaFx]
+    return data
+
+def oMeses(dispositivo,fecha_inicio, fecha_fin):
+    inicio = datetime.strptime(fecha_inicio, '%Y-%m-%dT%H:%M:%S')
+    fin = datetime.strptime(fecha_fin, '%Y-%m-%dT%H:%M:%S')
+    meses = []
+    # Iterar sobre los meses en el rango
+    while inicio <= fin:
+        # Agregar el mes actual a la lista
+        meses.append(dispositivo+"_"+str(int(inicio.strftime('%m')))+inicio.strftime('_%Y'))
+        # Avanzar al siguiente mes
+        inicio += timedelta(days=32)
+        inicio = inicio.replace(day=1)
+    return meses
 
 async def config(empresa :int):
     notificacions=[]
@@ -37,114 +58,76 @@ async def config(empresa :int):
     return notificacions[0]
 
 async def data_madurador(notificacion_data: dict) -> dict:
-    #pedir la ultima conexion 
-    #ultima conexion pedir mes y año 
-                                                                                                                                                                         
-    #construir base de datos 
-    #database = client.intranet
-    per = notificacion_data['ultima'].split('T')
-    #ARRAY 0 represnta la fecha y 1 la hora
-    periodo = per[0].split('-')
-    #periodo 0 , es el año , 1 es el mes , 2 es el dia 
-    #armamos la base de datos 
-    bd = notificacion_data['device']+"_"+str(int(periodo[1]))+"_"+periodo[0]
-    database = client[bd]
-    #print(bd)
-    #print("olitas")
-    #print(notificacion_data['empresa'])
-    #print(notificacion_data['page'])
-    #print(notificacion_data['size'])
-    madurador = database.get_collection("madurador")
-    #notificacion_collection = collection("notificaciones")
-    page=notificacion_data['page']
-    limit=notificacion_data['size']
-    empresa =notificacion_data['empresa']
-    #esquema para consultar data 
-    dataConfig =await config(empresa)
-    #print(dataConfig)
-    #print(dataConfig['config_data'])
-    #print(dataConfig['config_graph'])
-    #result = madurador.find({ "$and": [{"created_at": {"$gte": datetime.fromisoformat("2024-05-07T00:00:00.000Z")}},{"created_at": {"$lte": datetime.fromisoformat("2024-05-09T23:59:59.999Z")}}]},{"_id":0})                                
-    #esquema con agregation para mayor versatilidad
     if(notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0"):
-        fechaF = datetime.fromisoformat(notificacion_data['ultima'])
-        one_day = timedelta(hours=12)
-        fechaI = fechaF-one_day
-        #print(certeza)
-        #print(certeza1)
+        fech = procesar_fecha(notificacion_data['ultima'])
+        bconsultas =oMeses(notificacion_data['device'],notificacion_data['ultima'],notificacion_data['ultima'])
     else : 
-        fechaI=datetime.fromisoformat(notificacion_data['fechaI'])
-        fechaF=datetime.fromisoformat(notificacion_data['fechaF'])
-    print(fechaI)
-    print(fechaF)
-
-    pip = [
-        {"$match": {
-                "$and":[
-                    {"created_at": {"$gte": fechaI}},
-                    {"created_at": {"$lte": fechaF}}
-                ]
-            }
-        },  
-        {"$project":dataConfig['config_data']},
-        {"$skip" : (page-1)*limit},
-        {"$limit" : limit},  
-    ]
-
+        fech = procesar_fecha(notificacion_data['fechaI'],notificacion_data['fechaF'])
+        bconsultas =oMeses(notificacion_data['device'],notificacion_data['fechaI'],notificacion_data['fechaF'])
+    dataConfig =await config(notificacion_data['empresa'])
     #recorrer array y crear varaibles para insertar
     graph = dataConfig['config_graph']
-    #print("baja")
-    #print(graph)
-    #print("alta")
     listas = {}
     cadena =[]
     for i in range(len(graph)):
-        #print(graph[i]['label'])
         nombre_lista = f"{graph[i]['label']}"
         cadena.append(graph[i]['label'])
         lab = procesar_texto(graph[i]['label'])
-
         listas[nombre_lista] = {
             "data":[],
             "config":[lab,graph[i]['hidden'],graph[i]['color'],graph[i]['tipo']]
         }
-
-    concepto_ots = []
-    async for concepto_ot in madurador.aggregate(pip):
-        #print(concepto_ot)
-        concepto_ots.append(concepto_ot)
-        for i in range(len(graph)):
-           #dataConfig['config_graph'][i].append(concepto_ot[dataConfig['config_graph'][i]])
-           #primerfiltro =depurar_coincidencia(concepto_ot[dato[i]])
-           #if(primerfiltro!=None):
-               #aqui evaluamos si sera filtro de temperatura , porcentaje , ety-avl, area
-                #pu ="oli"
-           
-           dato =graph
-           #print(dato)
-           #listas[dato[i]].append(concepto_ot[dato[i]])
-           listas[dato[i]['label']]["data"].append(depurar_coincidencia(concepto_ot[dato[i]['label']]))
-
-           #print(concepto_ot[dato[i]])s
-           #dato[i].append(concepto_ot[dato[i]])
-        #print(concepto_ot['return_air'])
-    #print(listas)
-    listasT = {"graph":listas,"table":concepto_ots,"cadena":cadena}
-    #print(listasT)
-
+    #print(bconsultas)
+    if(len(bconsultas)==1):
+        database = client[bconsultas[0]]
+        madurador = database.get_collection("madurador")
+        pip = [
+            {"$match": {"$and":[{"created_at": {"$gte": fech[0]}},{"created_at": {"$lte": fech[1]}}]}},  
+            {"$project":dataConfig['config_data']},
+            {"$skip" : (notificacion_data['page']-1)*notificacion_data['size']},
+            {"$limit" : notificacion_data['size']},  
+        ]
+        concepto_ots = []
+        async for concepto_ot in madurador.aggregate(pip):
+            concepto_ots.append(concepto_ot)
+            for i in range(len(graph)):
+                dato =graph
+                listas[dato[i]['label']]["data"].append(depurar_coincidencia(concepto_ot[dato[i]['label']]))
+            listasT = {"graph":listas,"table":concepto_ots,"cadena":cadena}
+    else:
+        z=0
+        print(len(bconsultas))
+        for i in range(len(bconsultas)):
+            print(i)
+            if(i==0):
+                print("hacer lo de inicio")
+                diferencial =[{"created_at": {"$gte": fech[0]}}]
+            else :
+                if(i==len(bconsultas)-1):
+                    diferencial =[{"created_at": {"$gte": fech[0]}}]
+                    print("hacer lo del final")       
+                else:
+                    diferencial=[]
+                    print("consulatr todo")
+            pip = [
+                {"$match": {"$and":diferencial}},  
+                {"$project":dataConfig['config_data']},
+                {"$skip" : (notificacion_data['page']-1)*notificacion_data['size']},
+                {"$limit" : notificacion_data['size']},  
+            ]
+            database = client[bconsultas[i]]
+            madurador = database.get_collection("madurador")
+            concepto_ots = []
+            async for concepto_ot in madurador.aggregate(pip):
+                concepto_ots.append(concepto_ot)
+                for i in range(len(graph)):
+                    dato =graph
+                    listas[dato[i]['label']]["data"].append(depurar_coincidencia(concepto_ot[dato[i]['label']]))
+                listasT = {"graph":listas,"table":concepto_ots,"cadena":cadena}
     return listasT
 
 
 
-
-#async def add_notificacion(notificacion_data: dict) -> dict:
-    #aqui envia el json a mongo y lo inserta
-    #notificacion = await notificacion_collection.insert_one(notificacion_data)
-    #aqui busca el dato obtenido para mostrarlo como respuesta
-    #new_notificacion = await notificacion_collection.find_one({"_id": notificacion.inserted_id})
-    #return notificacion_helper(new_notificacion)   
-
-                        
 async def obtener_madurador() -> dict:
     bd = "ZGRU9015808_5_2024"
     database = client[bd]

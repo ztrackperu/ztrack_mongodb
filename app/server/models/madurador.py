@@ -7,7 +7,7 @@ class SolicitudMaduradorSchema(BaseModel):
     fechaI: Optional[str] | None ="0"
     fechaF: Optional[str] | None ="0"
     page: Optional[int] | None =1
-    size: Optional[int] | None =3200
+    size: Optional[int] | None =50000
     empresa: Optional[int] | None =22
     class Config:
         json_schema_extra = {
