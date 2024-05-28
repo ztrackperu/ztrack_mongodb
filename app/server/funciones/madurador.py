@@ -10,6 +10,42 @@ datosDepurar = [
     32762, -32762, 3276.2, -3276.2, 327.62, -327.62, 32761, -32761, 3276.1, -3276.1, 327.61, -327.61,32760, -32760, 3276.0, -3276.0, 327.60, -327.60,
     32759, -32759, 3275.9, -3275.9, 327.59, -327.59,32751, -32751, 3275.1, -3275.1, 327.51, -327.51,-3277,-3276.9,-38.5,25.4,255,18559,65151
 ]
+def calcular_minuto(fecha_inicio, fecha_fin):
+    # Convertir las fechas a objetos datetime
+    #fecha_inicio = datetime.strptime(fecha_inicio1, '%Y-%m-%dT%H:%M:%S')
+    #fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%dT%H:%M:%S')
+    #fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d')
+    #fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d')   
+    # Calcular la diferencia en días
+    diferencia = abs((fecha_fin - fecha_inicio).days) 
+    if 120 <= diferencia <= 150:
+        auto =[60,28]
+    elif 90 <= diferencia < 120:
+        auto =[55,26]
+    elif 60 <= diferencia < 90:
+        auto =[50,24]
+    elif 45 <= diferencia < 60:
+        auto =[45,22]
+    elif 30 <= diferencia < 45:
+        auto =[40,20]
+    elif 24 <= diferencia < 30:
+        auto =[35,18]
+    elif 18 <= diferencia < 24:
+       auto =[30,16]
+    elif 12 <= diferencia < 18:
+        auto =[25,14]
+    elif 9 <= diferencia < 12:
+        auto =[20,12]
+    elif 6 <= diferencia < 9:
+        auto =[15,10]
+    elif 3 <= diferencia < 6:
+        auto =[10,8]
+    elif 1 <= diferencia < 3:
+        auto =[5,6]
+    else:
+        auto =[2,5]
+    return auto
+    
 def depurar_coincidencia(dato, datosDepurar=datosDepurar):
     if dato in datosDepurar:
         return None
@@ -69,6 +105,14 @@ async def data_madurador(notificacion_data: dict) -> dict:
     graph = dataConfig['config_graph']
     listas = {}
     cadena =[]
+    listasT={}
+    perz = calcular_minuto(fech[0],fech[1])
+    #print(bconsultas)
+    print(perz)
+    minutosP =perz[0]
+    print(minutosP)
+    delta =perz[1]
+    print(delta)
     for i in range(len(graph)):
         nombre_lista = f"{graph[i]['label']}"
         cadena.append(graph[i]['label'])
@@ -77,9 +121,6 @@ async def data_madurador(notificacion_data: dict) -> dict:
             "data":[],
             "config":[lab,graph[i]['hidden'],graph[i]['color'],graph[i]['tipo']]
         }
-    #print(bconsultas)
-    minutosP =30
-    delta =8
     for i in range(len(bconsultas)):
         if(len(bconsultas)==1):
             diferencial =[{"created_at": {"$gte": fech[0]}},{"created_at": {"$lte": fech[1]}}]
@@ -119,6 +160,7 @@ async def data_madurador(notificacion_data: dict) -> dict:
             listasT = {"graph":listas,"table":concepto_ots,"cadena":cadena}
         print(i)
         print(pip)
+        #print(listasT)
     return listasT
 
 
