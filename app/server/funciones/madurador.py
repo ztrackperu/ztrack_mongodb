@@ -87,7 +87,7 @@ async def data_madurador(notificacion_data: dict) -> dict:
             if(i==0):
                 diferencial =[{"created_at": {"$gte": fech[0]}}]
             else :
-                diferencial = [{"created_at": {"$lte": fech[1]}}] if (i==len(bconsultas)-1) else []
+                diferencial = [{"created_at": {"$lte": fech[1]}}] if (i==len(bconsultas)-1) else [{"modelo":"THERMOKING"}]
         pip = [
             {"$match": {"$and":diferencial}},  
             {"$project":dataConfig['config_data']},
