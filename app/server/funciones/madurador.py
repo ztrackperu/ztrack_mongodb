@@ -178,7 +178,9 @@ async def data_madurador(notificacion_data: dict) -> dict:
         for i in range(len(graph)):
             dato =graph
             listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
-    listasT = {"graph":listas,"table":concepto_ots,"cadena":cadena,"temperature":dataConfig['c_f']}
+    #print(fech[0])
+    #print(fech[2])
+    listasT = {"graph":listas,"table":concepto_ots,"cadena":cadena,"temperature":dataConfig['c_f'],"date":[fech[0],fech[2]]}
     return listasT
 
 
