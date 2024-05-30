@@ -45,7 +45,10 @@ def calcular_minuto(fecha_inicio, fecha_fin):
     else:
         auto =[2,5]
     return auto
-    
+
+def temp(dato,op):
+    res = dato if op==0 else (int(((dato*9/5)+32)*100)/100)
+    return res
 def depurar_coincidencia(dato, datosDepurar=datosDepurar):
     if dato in datosDepurar:
         return None
@@ -65,10 +68,12 @@ def procesar_fecha(fechaI,fechaF="0"):
     if(fechaF=="0"):
         fechaIx=  datetime.fromisoformat(fechaI)-timedelta(hours=12)
         fechaFx = datetime.fromisoformat(fechaI)-timedelta(hours=1)
+        fechaFx1 = datetime.fromisoformat(fechaI)
     else:
         fechaIx=  datetime.fromisoformat(fechaI)
         fechaFx = datetime.fromisoformat(fechaF)-timedelta(hours=1)
-    data = [fechaIx,fechaFx]
+        fechaFx1 = datetime.fromisoformat(fechaF)
+    data = [fechaIx,fechaFx,fechaFx1]
     return data
 
 def oMeses(dispositivo,fecha_inicio, fecha_fin):
@@ -83,6 +88,29 @@ def oMeses(dispositivo,fecha_inicio, fecha_fin):
         inicio += timedelta(days=32)
         inicio = inicio.replace(day=1)
     return meses
+
+def analisis_dato(dato,tipo,c_f):
+    #dato=float(dato) if dato else None
+    #print(dato)
+    #print(tipo)
+    if dato != None :
+        if(tipo==1):
+            full = dato if -45 <= dato < 130 else None
+            full = full if c_f==0 else (int(((dato*9/5)+32)*100)/100)
+        elif(tipo==2):
+            full = dato if 0 <= dato< 100 else None
+        elif(tipo==3):
+            full = dato if 0 <= dato <= 260 else None
+        elif(tipo==0):
+            full=dato
+        else:
+            full = 100 if dato==0 or dato==3 else 0
+    else :
+        full =None
+    #return full
+    #print(full)
+    return full
+
 
 async def config(empresa :int):
     notificacions=[]
@@ -101,26 +129,15 @@ async def data_madurador(notificacion_data: dict) -> dict:
         fech = procesar_fecha(notificacion_data['fechaI'],notificacion_data['fechaF'])
         bconsultas =oMeses(notificacion_data['device'],notificacion_data['fechaI'],notificacion_data['fechaF'])
     dataConfig =await config(notificacion_data['empresa'])
-    #recorrer array y crear varaibles para insertar
     graph = dataConfig['config_graph']
     listas = {}
     cadena =[]
-    listasT={}
-    perz = calcular_minuto(fech[0],fech[1])
-    #print(bconsultas)
-    print(perz)
-    minutosP =perz[0]
-    print(minutosP)
-    delta =perz[1]
-    print(delta)
+    m_d = calcular_minuto(fech[0],fech[1])
     for i in range(len(graph)):
         nombre_lista = f"{graph[i]['label']}"
         cadena.append(graph[i]['label'])
         lab = procesar_texto(graph[i]['label'])
-        listas[nombre_lista] = {
-            "data":[],
-            "config":[lab,graph[i]['hidden'],graph[i]['color'],graph[i]['tipo']]
-        }
+        listas[nombre_lista] = {"data":[],"config":[lab,graph[i]['hidden'],graph[i]['color'],graph[i]['tipo']]}
     for i in range(len(bconsultas)):
         if(len(bconsultas)==1):
             diferencial =[{"created_at": {"$gte": fech[0]}},{"created_at": {"$lte": fech[1]}}]
@@ -129,38 +146,39 @@ async def data_madurador(notificacion_data: dict) -> dict:
                 diferencial =[{"created_at": {"$gte": fech[0]}}]
             else :
                 diferencial = [{"created_at": {"$lte": fech[1]}}] if (i==len(bconsultas)-1) else [{"modelo":"THERMOKING"}]
-        pip = [
-            {"$match": {"$and":diferencial}},  
-            {"$project":dataConfig['config_data']},
-            {"$skip" : (notificacion_data['page']-1)*notificacion_data['size']},
-            {"$limit" : notificacion_data['size']},  
-        ]
+        pip = [{"$match": {"$and":diferencial}},  {"$project":dataConfig['config_data']},
+                {"$skip" : (notificacion_data['page']-1)*notificacion_data['size']},{"$limit" : notificacion_data['size']}]
         concepto_ots = []
         database = client[bconsultas[i]]
         madurador = database.get_collection("madurador")
         actual_time = fech[0] 
-        actual_intervalo_final =fech[0] +timedelta(minutes=minutosP)
+        actual_intervalo_final =fech[0] +timedelta(minutes=m_d[0])
         dato_return_air=None
         async for concepto_ot in madurador.aggregate(pip):
             if(concepto_ot['created_at']<actual_intervalo_final):
-                if(dato_return_air is None or abs((concepto_ot['return_air']-dato_return_air)/dato_return_air))* 100 > delta :
-                    concepto_ots.append(concepto_ot)
+                if(dato_return_air is None or abs((concepto_ot['return_air']-dato_return_air)/dato_return_air))* 100 > m_d[1] :
+                    #concepto_ots.append(concepto_ot)
                     for i in range(len(graph)):
                         dato =graph
-                        listas[dato[i]['label']]["data"].append(depurar_coincidencia(concepto_ot[dato[i]['label']]))
+                        listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
                 dato_return_air = concepto_ot['return_air']
             else:
-                concepto_ots.append(concepto_ot)
+                #concepto_ots.append(concepto_ot)
                 for i in range(len(graph)):
                     dato =graph
-                    listas[dato[i]['label']]["data"].append(depurar_coincidencia(concepto_ot[dato[i]['label']]))
+                    listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
                 actual_time = concepto_ot['created_at']
-                actual_intervalo_final = actual_time + timedelta(minutes=minutosP)
+                actual_intervalo_final = actual_time + timedelta(minutes=m_d[0])
                 last_return_air = concepto_ot['return_air']
-            listasT = {"graph":listas,"table":concepto_ots,"cadena":cadena}
-        print(i)
-        print(pip)
-        #print(listasT)
+    database = client[bconsultas[len(bconsultas)-1]]
+    madurador = database.get_collection("madurador")
+    pip = [{"$match": {"$and":[{"created_at": {"$gte": fech[1]}},{"created_at": {"$lte": fech[2]}}]}},  {"$project":dataConfig['config_data']},
+    {"$skip" : (notificacion_data['page']-1)*notificacion_data['size']},{"$limit" : notificacion_data['size']}]
+    async for concepto_ot in madurador.aggregate(pip):
+        for i in range(len(graph)):
+            dato =graph
+            listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
+    listasT = {"graph":listas,"table":concepto_ots,"cadena":cadena,"temperature":dataConfig['c_f']}
     return listasT
 
 
