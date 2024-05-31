@@ -9,9 +9,8 @@ class SolicitudMaduradorSchema(BaseModel):
     page: Optional[int] | None =1
     size: Optional[int] | None =50000
     empresa: Optional[int] | None =22
+    utc: Optional[int] | None =300
     
-    
-
     class Config:
         json_schema_extra = {
             "example": {

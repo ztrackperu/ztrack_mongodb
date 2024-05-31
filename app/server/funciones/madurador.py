@@ -64,16 +64,38 @@ def procesar_texto(texto):
     texto_procesado = " ".join(partes_capitalizadas) 
     return texto_procesado
 
-def procesar_fecha(fechaI,fechaF="0"):
+def devolverfecha(utc,fecha):
+    terrible=0
+    if(utc!=300):
+        terrible =300-utc
+    #print(terrible)
+    #print(fecha)
+    #fechaX = datetime.fromisoformat(fecha)+timedelta(minutes=terrible)
+    fechaX = fecha+timedelta(minutes=terrible)
+    #fechaX =1
+    #print(fechaX)
+    return fechaX
+
+
+def procesar_fecha(utc,fechaI,fechaF="0"):
+    terrible = 0 ; 
+    #print(fechaI)
+    #print(fechaF)
+    if(utc!=300):
+        #terrible =300-utc
+        terrible =utc-300
+    #print(terrible)
+    #print(utc)
     if(fechaF=="0"):
-        fechaIx=  datetime.fromisoformat(fechaI)-timedelta(hours=12)
-        fechaFx = datetime.fromisoformat(fechaI)-timedelta(hours=1)
-        fechaFx1 = datetime.fromisoformat(fechaI)
+        fechaIx=  datetime.fromisoformat(fechaI)-timedelta(hours=12)+timedelta(minutes=terrible)
+        fechaFx = datetime.fromisoformat(fechaI)-timedelta(hours=1)+timedelta(minutes=terrible)
+        fechaFx1 = datetime.fromisoformat(fechaI)+timedelta(minutes=terrible)
     else:
-        fechaIx=  datetime.fromisoformat(fechaI)
-        fechaFx = datetime.fromisoformat(fechaF)-timedelta(hours=1)
-        fechaFx1 = datetime.fromisoformat(fechaF)
+        fechaIx=  datetime.fromisoformat(fechaI)+timedelta(minutes=terrible)
+        fechaFx = datetime.fromisoformat(fechaF)-timedelta(hours=1)+timedelta(minutes=terrible)
+        fechaFx1 = datetime.fromisoformat(fechaF)+timedelta(minutes=terrible)
     data = [fechaIx,fechaFx,fechaFx1]
+    #print(data)
     return data
 
 def oMeses(dispositivo,fecha_inicio, fecha_fin):
@@ -122,11 +144,12 @@ async def config(empresa :int):
     return notificacions[0]
 
 async def data_madurador(notificacion_data: dict) -> dict:
+    #print(notificacion_data['utc'])
     if(notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0"):
-        fech = procesar_fecha(notificacion_data['ultima'])
+        fech = procesar_fecha(notificacion_data['utc'],notificacion_data['ultima'])
         bconsultas =oMeses(notificacion_data['device'],notificacion_data['ultima'],notificacion_data['ultima'])
     else : 
-        fech = procesar_fecha(notificacion_data['fechaI'],notificacion_data['fechaF'])
+        fech = procesar_fecha(notificacion_data['utc'],notificacion_data['fechaI'],notificacion_data['fechaF'])
         bconsultas =oMeses(notificacion_data['device'],notificacion_data['fechaI'],notificacion_data['fechaF'])
     dataConfig =await config(notificacion_data['empresa'])
     graph = dataConfig['config_graph']
@@ -156,17 +179,24 @@ async def data_madurador(notificacion_data: dict) -> dict:
         dato_return_air=None
         async for concepto_ot in madurador.aggregate(pip):
             if(concepto_ot['created_at']<actual_intervalo_final):
+                dato_return_air = None if dato_return_air==0  else dato_return_air
                 if(dato_return_air is None or abs((concepto_ot['return_air']-dato_return_air)/dato_return_air))* 100 > m_d[1] :
                     #concepto_ots.append(concepto_ot)
                     for i in range(len(graph)):
                         dato =graph
-                        listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
+                        if dato[i]['label']=='created_at':
+                            listas[dato[i]['label']]["data"].append(devolverfecha(notificacion_data['utc'],concepto_ot[dato[i]['label']]))
+                        else:
+                            listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
                 dato_return_air = concepto_ot['return_air']
             else:
                 #concepto_ots.append(concepto_ot)
                 for i in range(len(graph)):
                     dato =graph
-                    listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
+                    if dato[i]['label']=='created_at':
+                        listas[dato[i]['label']]["data"].append(devolverfecha(notificacion_data['utc'],concepto_ot[dato[i]['label']]))
+                    else:
+                        listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
                 actual_time = concepto_ot['created_at']
                 actual_intervalo_final = actual_time + timedelta(minutes=m_d[0])
                 last_return_air = concepto_ot['return_air']
@@ -177,10 +207,13 @@ async def data_madurador(notificacion_data: dict) -> dict:
     async for concepto_ot in madurador.aggregate(pip):
         for i in range(len(graph)):
             dato =graph
-            listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
+            if dato[i]['label']=='created_at':
+                listas[dato[i]['label']]["data"].append(devolverfecha(notificacion_data['utc'],concepto_ot[dato[i]['label']]))
+            else:
+                listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
     #print(fech[0])
     #print(fech[2])
-    listasT = {"graph":listas,"table":concepto_ots,"cadena":cadena,"temperature":dataConfig['c_f'],"date":[fech[0],fech[2]]}
+    listasT = {"graph":listas,"table":concepto_ots,"cadena":cadena,"temperature":dataConfig['c_f'],"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
     return listasT
 
 
