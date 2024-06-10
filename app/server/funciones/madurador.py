@@ -4,6 +4,13 @@ from bson import regex
 from datetime import datetime,timedelta
 from fastapi_pagination.ext.motor import paginate
 
+def per_actual():
+    now = datetime.now()
+    mes = now.month 
+    per = now.year
+    periodo = str(mes)+"_"+str(per)
+    return periodo
+
 datosDepurar = [
     32752,-32752, 3275.2, -3275.2, 327.52,-327.52, 32767, -32767, 3276.7, -3276.7, 327.67, -327.67,32766, -32766 , 3276.6, -3276.6, 327.66, -327.66,
     32765, -32765, 3276.5, -3276.5, 327.65, -327.65,32764, -32764, 3276.4, -3276.4, 327.64, -327.64,32763, -32763, 3276.3, -3276.3, 327.63, -327.63,
@@ -142,6 +149,21 @@ async def config(empresa :int):
         notificacions.append(mad)
     #se debe extraer el primir resultado
     return notificacions[0]
+
+
+async def data_tunel(notificacion_data: dict) -> dict:
+    #capturar hora 
+    #desglozar la data y almacenar en base de datos REPOSITORIO_MES_AÑO
+    palm = "REPOSITORIO_"+per_actual()
+    database = client[palm]
+    tunel = database.get_collection("tunel")
+    #insertar el dato 
+    print(notificacion_data)
+    notificacion = await tunel.insert_one(notificacion_data)
+    new_notificacion = await tunel.find_one({"_id": notificacion.inserted_id},{"_id":0})
+    #return notificacion_helper(new_notificacion)
+    print(palm)
+    return new_notificacion
 
 async def data_madurador(notificacion_data: dict) -> dict:
     #print(notificacion_data['utc'])

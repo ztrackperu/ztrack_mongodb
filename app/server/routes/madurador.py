@@ -9,6 +9,7 @@ from fastapi_pagination import Page, add_pagination, paginate
 from server.funciones.madurador import (
     data_madurador,
     obtener_madurador,
+    data_tunel,
 
 
 )
@@ -18,6 +19,7 @@ from server.models.madurador import (
     ResponseModel,
     SolicitudMaduradorSchema,
     DatosMadurador,
+    TunelSchema,
 
 )
 #aqui se definen las rutas de la API REST
@@ -47,3 +49,11 @@ async def obtener_notificacion_data()->Page[DatosMadurador]:
     new_notificacion = await obtener_madurador()
     return ResponseModel(new_notificacion, "ok")
     #return paginate(new_notificacion)
+
+@router.post("/Tunel/", response_description="Datos del tunel agregados a la base de datos.")
+#La funcion espera "ConceptoOTSchema"
+async def add_tunel_data(notificacion: TunelSchema = Body(...)):
+    #convertir en json
+    notificacion = jsonable_encoder(notificacion)   
+    new_notificacion = await data_tunel(notificacion)
+    return ResponseModel(new_notificacion, "ok")

@@ -18,6 +18,23 @@ class SolicitudMaduradorSchema(BaseModel):
                 "ultima": "2024-05-18T10:11:04",
                 "fechaI": "2024-04-18T11:11:04",
                 "fechaF": "2024-04-18T13:11:04", 
+                "page":1,
+                "size":50000,
+                "empresa":22,
+                "utc":300
+
+            }
+        }
+
+
+class TunelSchema(BaseModel):
+    data:str = Field(...)
+    status: Optional[int] | None =1
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "data": "1TC2,Madurador,,0.10,...",   
+                "status" :1
             }
         }
 
