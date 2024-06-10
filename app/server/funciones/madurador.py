@@ -158,6 +158,11 @@ async def data_tunel(notificacion_data: dict) -> dict:
     database = client[palm]
     tunel = database.get_collection("tunel")
     #insertar el dato 
+    fet =datetime.now()
+    #part = fet.strftime('%d_%m_%Y')
+    #colect ="Datos_"+part
+    #print(colect)
+    notificacion_data['fecha'] = fet
     print(notificacion_data)
     notificacion = await tunel.insert_one(notificacion_data)
     new_notificacion = await tunel.find_one({"_id": notificacion.inserted_id},{"_id":0})
