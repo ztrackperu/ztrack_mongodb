@@ -178,8 +178,11 @@ async def data_wonderful(notificacion_data: dict) -> dict:
     cadenaWonderful = notificacion_data['data']
     listaWonderful = cadenaWonderful.split(",")
     device = listaWonderful[2]
+    deviceW = device.split("|")
+    deviceW1 =deviceW[0]
+
     #tunel = database.get_collection("tunel")
-    tunel = database.get_collection(device)
+    tunel = database.get_collection(deviceW1)
     fet =datetime.now()
     notificacion_data['fecha'] = fet
     print(notificacion_data)
