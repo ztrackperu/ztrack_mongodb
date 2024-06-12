@@ -10,7 +10,7 @@ from server.funciones.madurador import (
     data_madurador,
     obtener_madurador,
     data_tunel,
-
+    data_wonderful,
 
 )
 #Aqui importamos el modelo necesario para la clase 
@@ -20,6 +20,8 @@ from server.models.madurador import (
     SolicitudMaduradorSchema,
     DatosMadurador,
     TunelSchema,
+    WonderfulSchema,
+
 
 )
 #aqui se definen las rutas de la API REST
@@ -56,4 +58,13 @@ async def add_tunel_data(notificacion: TunelSchema = Body(...)):
     #convertir en json
     notificacion = jsonable_encoder(notificacion)   
     new_notificacion = await data_tunel(notificacion)
+    return ResponseModel(new_notificacion, "ok")
+
+
+@router.post("/Wonderful/", response_description="Datos de wonderful agregados a la base de datos.")
+#La funcion espera "ConceptoOTSchema"
+async def add_wonderful_data(notificacion: WonderfulSchema = Body(...)):
+    #convertir en json
+    notificacion = jsonable_encoder(notificacion)   
+    new_notificacion = await data_wonderful(notificacion)
     return ResponseModel(new_notificacion, "ok")
