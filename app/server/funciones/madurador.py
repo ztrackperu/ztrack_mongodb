@@ -311,6 +311,15 @@ async def homologar_tunel_2() -> dict:
     for db in db_cursor :
         if db!="" :
             print(db)
+            update_tunel= (
+                "UPDATE contenedores SET set_point = %s,set_point = %s,temp_supply_1 = %s,return_air = %s,evaporation_coil = %s,condensation_coil = %s"
+                ",compress_coil_1 = %s,ambient_air = %s,cargo_1_temp = %s,cargo_2_temp = %s,cargo_3_temp = %s,cargo_4_temp = %s,relative_humidity = %s"
+                ",avl = %s,suction_pressure = %s,discharge_pressure = %s,line_voltage = %s,line_frequency = %s,consumption_ph_1 = %s,consumption_ph_2 = %s"
+                ",consumption_ph_3 = %s,co2_reading = %s,o2_reading = %s,evaporator_speed = %s,condenser_speed = %s,battery_voltage = %s,power_kwh = %s"
+                ",power_trip_reading = %s,power_state = %s,created_at = %s"
+                "WHERE telemetria_id=1000000 ")
+            data_tunel =()
+            
             #actualizar datos del tunel 
 
 
