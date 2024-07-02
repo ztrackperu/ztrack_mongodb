@@ -1,8 +1,17 @@
 import json
+import mysql.connector
 from server.database import client
 from bson import regex
 from datetime import datetime,timedelta
 from fastapi_pagination.ext.motor import paginate
+
+db_connection = mysql.connector.connect(
+    host= "localhost",
+    user= "ztrack2023",
+    passwd= "lpmp2018",
+    database="zgroupztrack"
+)
+
 
 def per_actual():
     now = datetime.now()
@@ -290,7 +299,18 @@ async def obtener_madurador() -> dict:
     return  notificacions
 
 async def homologar_tunel() -> dict:
-    dat ="olitas"
+    #establecer conexion con datos en mongodb 
+    #normalizar los datos y actualizar infromacion en tiempo real en mysql
+    #insertar trama en base de mongodb para su uso en la plataforma 
+
+    #consultar datos de mysql de tunel ZGTU0015
+    dat =''
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT * FROM  contenedores WHERE nombre_contenedor='ZGTU0015'")
+    for db in db_cursor :
+        print(db[0])
+        dat = db[0]
+    #dat ="olitas"
     return dat
 
 
