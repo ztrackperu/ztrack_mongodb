@@ -309,7 +309,7 @@ async def homologar_tunel_2() -> dict:
     #ZGRU9015808
     db_cursor.execute("SELECT * FROM  contenedores WHERE nombre_contenedor='ZGTU0015-10'")
     for db in db_cursor :
-        if db=="" :
+        if db!="" :
             print(db)
         else:
             print("sin data de esto")
