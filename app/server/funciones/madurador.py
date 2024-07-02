@@ -308,9 +308,9 @@ async def homologar_tunel_2() -> dict:
     db_cursor = db_connection.cursor()
     db_cursor.execute("SELECT * FROM  contenedores WHERE nombre_contenedor='ZGTU0015'")
     for db in db_cursor :
-        print(db[0])
+        print(db)
         print("esta letra")
-        dat = db[0]
+        dat = db
     #dat ="olitas"
     return dat
 
