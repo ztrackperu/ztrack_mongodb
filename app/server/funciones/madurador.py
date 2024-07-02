@@ -264,3 +264,8 @@ async def obtener_madurador() -> dict:
         notificacions.append(mad)
     return  notificacions
 
+async def homologar_tunel() -> dict:
+    dat ="olitas"
+    return dat
+
+

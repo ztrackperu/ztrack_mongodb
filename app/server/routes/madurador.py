@@ -10,6 +10,7 @@ from server.funciones.madurador import (
     data_madurador,
     obtener_madurador,
     data_tunel,
+    homologar_tunel,
 
 
 )
@@ -57,3 +58,11 @@ async def add_tunel_data(notificacion: TunelSchema = Body(...)):
     notificacion = jsonable_encoder(notificacion)   
     new_notificacion = await data_tunel(notificacion)
     return ResponseModel(new_notificacion, "ok")
+
+
+@router.get("/homologar", response_description="Datos de tunel se homologan con ztrack")
+async def homologar_data_tunel():
+    notificacions = await homologar_tunel()
+    if notificacions:
+        return ResponseModel(notificacions, "Datos homologados!")
+    return ResponseModel(notificacions, "Lista vacía devuelta")
