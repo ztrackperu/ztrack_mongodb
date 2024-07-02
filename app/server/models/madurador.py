@@ -38,6 +38,17 @@ class TunelSchema(BaseModel):
             }
         }
 
+class WonderfulSchema(BaseModel):
+    data:str = Field(...)
+    status: Optional[int] | None =1
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "data": "1CR2,Madurador,ZGRU4587968,0.10,...",   
+                "status" :1
+            }
+        }
+
 #respuesta cuando todo esta bien
 def ResponseModel(data, message):
     return {
