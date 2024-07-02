@@ -10,12 +10,10 @@ from server.funciones.madurador import (
     data_madurador,
     obtener_madurador,
     data_tunel,
-<<<<<<< HEAD
-    homologar_tunel,
-
-=======
     data_wonderful,
->>>>>>> a3b2883bfa1750c713bebfb4a2738706b7cc1c70
+    homologar_tunel,
+    
+
 
 )
 #Aqui importamos el modelo necesario para la clase 
