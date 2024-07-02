@@ -298,7 +298,7 @@ async def obtener_madurador() -> dict:
         notificacions.append(mad)
     return  notificacions
 
-async def homologar_tunel() -> dict:
+async def homologar_tunel_2() -> dict:
     #establecer conexion con datos en mongodb 
     #normalizar los datos y actualizar infromacion en tiempo real en mysql
     #insertar trama en base de mongodb para su uso en la plataforma 
@@ -309,6 +309,7 @@ async def homologar_tunel() -> dict:
     db_cursor.execute("SELECT * FROM  contenedores WHERE nombre_contenedor='ZGTU0015'")
     for db in db_cursor :
         print(db[0])
+        print("esta letra")
         dat = db[0]
     #dat ="olitas"
     return dat

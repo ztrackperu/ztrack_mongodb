@@ -16,7 +16,7 @@ source myTest/bin/activate
 pip install -r requirements.txt
 -> se requiere crear .env
 especificando la conexion a la base de datos
-MONGO_DETAILS="mongodb://localhost:27017"
+MONGO_DETAILS="mongodb://localhost:27170"
 #importante para API con mysql 
 
 pip install mysqlclient
@@ -25,6 +25,8 @@ pip install pymysql
 pip install python-dotenv
 #para paginacion
 pip install fastapi-pagination
+
+pip install mysql-connector-python
 #para todo s 
 pip install "fastapi[all]"
 -> se ejecuta 

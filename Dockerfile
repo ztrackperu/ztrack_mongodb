@@ -8,6 +8,7 @@ WORKDIR /ztrack_mongodb
 # Copie el archivo con los requisitos al directorio /code.
 #Copie primero solo el archivo con los requisitos, no el resto del código.
 #Como este archivo no cambia con frecuencia, Docker lo detectará y utilizará el caché para este paso, habilitando el caché también para el siguiente paso.
+
 #COPY ./requirements.txt /code/requirements.txt
 COPY ./requirements.txt /ztrack_mongodb/requirements.txt
 
