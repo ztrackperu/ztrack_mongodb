@@ -63,15 +63,6 @@ async def add_tunel_data(notificacion: TunelSchema = Body(...)):
     new_notificacion = await data_tunel(notificacion)
     return ResponseModel(new_notificacion, "ok")
 
-
-<<<<<<< HEAD
-@router.get("/homologar", response_description="Datos de tunel se homologan con ztrack")
-async def homologar_data_tunel():
-    notificacions = await homologar_tunel()
-    if notificacions:
-        return ResponseModel(notificacions, "Datos homologados!")
-    return ResponseModel(notificacions, "Lista vacía devuelta")
-=======
 @router.post("/Wonderful/", response_description="Datos de wonderful agregados a la base de datos.")
 #La funcion espera "ConceptoOTSchema"
 async def add_wonderful_data(notificacion: WonderfulSchema = Body(...)):
@@ -79,4 +70,12 @@ async def add_wonderful_data(notificacion: WonderfulSchema = Body(...)):
     notificacion = jsonable_encoder(notificacion)   
     new_notificacion = await data_wonderful(notificacion)
     return ResponseModel(new_notificacion, "ok")
->>>>>>> a3b2883bfa1750c713bebfb4a2738706b7cc1c70
+
+@router.get("/homologar", response_description="Datos de tunel se homologan con ztrack")
+async def homologar_data_tunel():
+    notificacions = await homologar_tunel()
+    if notificacions:
+        return ResponseModel(notificacions, "Datos homologados!")
+    return ResponseModel(notificacions, "Lista vacía devuelta")
+
+
