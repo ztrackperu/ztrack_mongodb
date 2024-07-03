@@ -443,8 +443,8 @@ async def homologar_tunel_2() -> dict:
                 data_tunel =(float(paquete[3]),float(paquete[4]),float(paquete[6]),float(paquete[7]),float(paquete[8]),float(paquete[9]),float(paquete[11])
                              ,float(paquete[12]),float(paquete[13]),float(paquete[14]),float(paquete[15]),float(paquete[16]),float(paquete[17]),float(paquete[18])
                              ,float(paquete[19]),float(paquete[20]),float(paquete[21]),float(paquete[22]),float(paquete[23]),float(paquete[24]),float(paquete[25])
-                             ,float(paquete[26]),float(paquete[27]),float(paquete[28]),float(paquete[29]),float(paquete[30]),float(paquete[31]),float(paquete[42]
-                              ,x['fecha']                                                                                                                       )
+                             ,float(paquete[26]),float(paquete[27]),float(paquete[28]),float(paquete[29]),float(paquete[30]),float(paquete[31]),float(paquete[42])
+                              ,x['fecha']                                                                                                                       
                              )
                 # Insert new employee
             db_cursor1 = db_connection.cursor()
