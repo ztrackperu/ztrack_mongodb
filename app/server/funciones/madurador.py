@@ -310,9 +310,14 @@ async def homologar_tunel_2() -> dict:
     #buscar data en mysql del tunel
     db_cursor.execute("SELECT * FROM  contenedores WHERE nombre_contenedor='ZGTU0015'")
     #extramemos la informacion en bruto del equipo
-    bd = "REPOSITORIO_6_2024"
-    databaseMongo = client[bd]
-    collectionMongo = databaseMongo.tunel
+    bdM = "REPOSITORIO_6_2024"
+    databaseMongo = client[bdM]
+    collectionMongo = databaseMongo.get_collection("tunel")
+    
+    #palm = "REPOSITORIO_"+per_actual()
+    #database = client[palm]
+    #tunel = database.get_collection("tunel")
+    
     querymongo = collectionMongo.find({"status":1}).sort("fecha",1)
     for x in querymongo:
         db1 = client.ZGTU0015_6_2024
