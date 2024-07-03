@@ -333,7 +333,7 @@ async def homologar_tunel_2() -> dict:
         print(query1)
         if query1:
             #query2 = collectionMongo2.find().sort("id",-1).limit(1)
-            for y in collectionMongo2.find().sort("id",-1).limit(1):
+            async for y in collectionMongo2.find().sort("id",-1).limit(1):
                 print(y)
                 id =y["id"] +1
         else:
