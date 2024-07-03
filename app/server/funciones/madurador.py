@@ -458,6 +458,11 @@ async def homologar_tunel_2() -> dict:
             #emp_no = cursor.lastrowid
                 
             #actualizar datos del tunel 
+            db_connection.commit()
+            db_cursor1.close()
+        
+        db_cursor.close()
+        db_connection.close()
 
 
         dat = db
