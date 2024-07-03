@@ -305,12 +305,10 @@ async def homologar_tunel_2() -> dict:
 
     #consultar datos de mysql de tunel ZGTU0015
     dat =''
-    db_cursor = db_connection.cursor()
-    #ZGRU9015808
-    #buscar data en mysql del tunel
-    db_cursor.execute("SELECT * FROM  contenedores WHERE nombre_contenedor='ZGTU0015'")
+
     #extramemos la informacion en bruto del equipo
-    databaseMongo = client["REPOSITORIO_6_2024"]
+    #databaseMongo = client["REPOSITORIO_6_2024"]
+    databaseMongo = client["REPOSITORIO_7_2024"]
     collectionMongo = databaseMongo.get_collection("tunel")
 
     #database =client["config_ztrack"]
@@ -326,7 +324,9 @@ async def homologar_tunel_2() -> dict:
         #db1 = client.ZGTU0015_6_2024
         #collection1 = db1.madurador
         #query1 = collection1.find().sort("id",-1).limit(1)
-        databaseMongo2 = client["ZGTU0015_6_2024"]
+        #databaseMongo2 = client["ZGTU0015_6_2024"]
+        databaseMongo2 = client["ZGTU0015_7_2024"]
+
         collectionMongo2 = databaseMongo2.get_collection("madurador")
 
         query1 = collectionMongo2.find_one()
@@ -429,6 +429,11 @@ async def homologar_tunel_2() -> dict:
         #print(objeto1)
         #guardar en base de datos 
         collectionMongo2.insert_one(objeto1)
+
+        db_cursor = db_connection.cursor()
+        #ZGRU9015808
+        #buscar data en mysql del tunel
+        db_cursor.execute("SELECT * FROM  contenedores WHERE nombre_contenedor='ZGTU0015'")
           
         for db in db_cursor :
             if db!="" :
@@ -439,7 +444,8 @@ async def homologar_tunel_2() -> dict:
                     ",avl = %s,suction_pressure = %s,discharge_pressure = %s,line_voltage = %s,line_frequency = %s,consumption_ph_1 = %s,consumption_ph_2 = %s"
                     ",consumption_ph_3 = %s,co2_reading = %s,o2_reading = %s,evaporator_speed = %s,condenser_speed = %s,battery_voltage = %s,power_kwh = %s"
                     ",power_trip_reading = %s,power_state = %s,ultima_fecha = %s"
-                    "WHERE telemetria_id=1000000 ")
+                    "WHERE nombre_contenedor='ZGTU0015'")
+                    #telemetria_id=1000000 
                 data_tunel =(float(paquete[3]),float(paquete[4]),float(paquete[6]),float(paquete[7]),float(paquete[8]),float(paquete[9]),float(paquete[11])
                              ,float(paquete[12]),float(paquete[13]),float(paquete[14]),float(paquete[15]),float(paquete[16]),float(paquete[17]),float(paquete[18])
                              ,float(paquete[19]),float(paquete[20]),float(paquete[21]),float(paquete[22]),float(paquete[23]),float(paquete[24]),float(paquete[25])
