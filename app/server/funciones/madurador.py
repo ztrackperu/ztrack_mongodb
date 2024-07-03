@@ -322,13 +322,17 @@ async def homologar_tunel_2() -> dict:
     
     #querymongo = collectionMongo.find({"status":1}).sort("fecha",1)
     async for x in collectionMongo.find({"status":1}).sort("fecha",1):
-        db1 = client.ZGTU0015_6_2024
-        collection1 = db1.madurador
+
+        #db1 = client.ZGTU0015_6_2024
+        #collection1 = db1.madurador
         #query1 = collection1.find().sort("id",-1).limit(1)
-        query1 = collection1.find_one()
+        databaseMongo2 = client["ZGTU0015_6_2024"]
+        collectionMongo2 = databaseMongo2.get_collection("madurador")
+
+        query1 = collectionMongo2.find_one()
         print(query1)
         if query1:
-            query2 = collection1.find().sort("id",-1).limit(1)
+            query2 = collectionMongo2.find().sort("id",-1).limit(1)
             for y in query2:
                 print(y)
                 id =y["id"] +1
@@ -424,7 +428,7 @@ async def homologar_tunel_2() -> dict:
         }
         #print(objeto1)
         #guardar en base de datos 
-        collection1.insert_one(objeto1)
+        collectionMongo2.insert_one(objeto1)
           
         for db in db_cursor :
             if db!="" :
