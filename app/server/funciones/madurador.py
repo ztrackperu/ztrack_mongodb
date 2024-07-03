@@ -310,16 +310,18 @@ async def homologar_tunel_2() -> dict:
     #buscar data en mysql del tunel
     db_cursor.execute("SELECT * FROM  contenedores WHERE nombre_contenedor='ZGTU0015'")
     #extramemos la informacion en bruto del equipo
-    bdM = "REPOSITORIO_6_2024"
-    databaseMongo = client[bdM]
+    databaseMongo = client["REPOSITORIO_6_2024"]
     collectionMongo = databaseMongo.get_collection("tunel")
+
+    #database =client["config_ztrack"]
+    #empresa_config= database.get_collection("empresa_config")
+    #async for mad in empresa_config.find({"user_id":empresa},{"_id":0}):
+        #notificacions.append(mad)
+    #se debe extraer el primir resultado
+    #return notificacions[0]
     
-    #palm = "REPOSITORIO_"+per_actual()
-    #database = client[palm]
-    #tunel = database.get_collection("tunel")
-    
-    querymongo = collectionMongo.find({"status":1}).sort("fecha",1)
-    for x in querymongo:
+    #querymongo = collectionMongo.find({"status":1}).sort("fecha",1)
+    async for x in collectionMongo.find({"status":1}).sort("fecha",1):
         db1 = client.ZGTU0015_6_2024
         collection1 = db1.madurador
         #query1 = collection1.find().sort("id",-1).limit(1)
