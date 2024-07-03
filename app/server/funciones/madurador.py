@@ -307,19 +307,139 @@ async def homologar_tunel_2() -> dict:
     dat =''
     db_cursor = db_connection.cursor()
     #ZGRU9015808
+    #buscar data en mysql del tunel
     db_cursor.execute("SELECT * FROM  contenedores WHERE nombre_contenedor='ZGTU0015'")
-    for db in db_cursor :
-        if db!="" :
-            print(db)
-            update_tunel= (
-                "UPDATE contenedores SET set_point = %s,set_point = %s,temp_supply_1 = %s,return_air = %s,evaporation_coil = %s,condensation_coil = %s"
-                ",compress_coil_1 = %s,ambient_air = %s,cargo_1_temp = %s,cargo_2_temp = %s,cargo_3_temp = %s,cargo_4_temp = %s,relative_humidity = %s"
-                ",avl = %s,suction_pressure = %s,discharge_pressure = %s,line_voltage = %s,line_frequency = %s,consumption_ph_1 = %s,consumption_ph_2 = %s"
-                ",consumption_ph_3 = %s,co2_reading = %s,o2_reading = %s,evaporator_speed = %s,condenser_speed = %s,battery_voltage = %s,power_kwh = %s"
-                ",power_trip_reading = %s,power_state = %s,created_at = %s"
-                "WHERE telemetria_id=1000000 ")
-            data_tunel =()
-            
+    #extramemos la informacion en bruto del equipo
+    bd = "REPOSITORIO_6_2024"
+    databaseMongo = client[bd]
+    collectionMongo = db.tunel
+    querymongo = collectionMongo.find({"status":1}).sort("fecha",1)
+    for x in querymongo:
+        db1 = client.ZGTU0015_6_2024
+        collection1 = db1.madurador
+        #query1 = collection1.find().sort("id",-1).limit(1)
+        query1 = collection1.find_one()
+        print(query1)
+        if query1:
+            query2 = collection1.find().sort("id",-1).limit(1)
+            for y in query2:
+                print(y)
+                id =y["id"] +1
+        else:
+            id =100000000
+        
+        print(id)
+        print(x['fecha'])
+        datito = x['data']
+        paquete = datito.split(',') 
+        print(datito)
+        print(float(paquete[42]))
+        #contruir objeto 
+        objeto1 = {
+            "id": id,
+            "set_point": float(paquete[3]), 
+            "temp_supply_1": float(paquete[4]),
+            "temp_supply_2": float(paquete[5]),
+            "return_air": float(paquete[6]), 
+            "evaporation_coil": float(paquete[7]),
+            "condensation_coil": float(paquete[8]),
+            "compress_coil_1": float(paquete[9]),
+            "compress_coil_2": float(paquete[10]), 
+            "ambient_air": float(paquete[11]), 
+            "cargo_1_temp": float(paquete[12]),
+            "cargo_2_temp": float(paquete[13]), 
+            "cargo_3_temp": float(paquete[14]), 
+            "cargo_4_temp": float(paquete[15]), 
+            "relative_humidity": float(paquete[16]), 
+            "avl": float(paquete[17]), 
+            "suction_pressure": float(paquete[18]), 
+            "discharge_pressure": float(paquete[19]), 
+            "line_voltage": float(paquete[20]), 
+            "line_frequency": float(paquete[21]), 
+            "consumption_ph_1": float(paquete[22]), 
+            "consumption_ph_2": float(paquete[23]), 
+            "consumption_ph_3": float(paquete[24]), 
+            "co2_reading": float(paquete[25]), 
+            "o2_reading": float(paquete[26]), 
+            "evaporator_speed": float(paquete[27]), 
+            "condenser_speed": float(paquete[28]),
+            "battery_voltage": float(paquete[29]),
+            "power_kwh": float(paquete[30]),
+            "power_trip_reading": float(paquete[31]),
+            "power_trip_duration": None,
+            "suction_temp": None,
+            "discharge_temp": None,
+            "supply_air_temp": None,
+            "return_air_temp": None,
+            "dl_battery_temp": None,
+            "dl_battery_charge": None,
+            "power_consumption": None,
+            "power_consumption_avg": None,
+            "alarm_present": None, 
+            "capacity_load": None,
+            "power_state": float(paquete[42]),
+            "controlling_mode": "1",
+            "humidity_control": None,
+            "humidity_set_point": None,
+            "fresh_air_ex_mode": None,
+            "fresh_air_ex_rate": None,
+            "fresh_air_ex_delay": None,
+            "set_point_o2": None,
+            "set_point_co2": None,
+            "defrost_term_temp": None,
+            "defrost_interval": None,
+            "water_cooled_conde": None,
+            "usda_trip": None,
+            "evaporator_exp_valve": None,
+            "suction_mod_valve": None,
+            "hot_gas_valve": None,
+            "economizer_valve": None,
+            "ethylene": None,
+            "stateProcess": None,
+            "stateInyection": None,
+            "timerOfProcess": None,
+            "modelo": "THERMOKING",
+            "latitud": -11.9803,
+            "longitud": -77.1226,
+            "created_at": x['fecha'],
+            "telemetria_id": 1000000,
+            "inyeccion_etileno": None,
+            "defrost_prueba": None,
+            "ripener_prueba": None,
+            "sp_ethyleno": None,
+            "inyeccion_hora": None,
+            "inyeccion_pwm": None,
+            "extra_1": 0,
+            "extra_2": 0,
+            "extra_3": 0,
+            "extra_4": 0,
+            "extra_5": 0
+        }
+        #print(objeto1)
+        #guardar en base de datos 
+        collection1.insert_one(objeto1)
+          
+        for db in db_cursor :
+            if db!="" :
+                print(db)
+                update_tunel= (
+                    "UPDATE contenedores SET set_point = %s,temp_supply_1 = %s,return_air = %s,evaporation_coil = %s,condensation_coil = %s"
+                    ",compress_coil_1 = %s,ambient_air = %s,cargo_1_temp = %s,cargo_2_temp = %s,cargo_3_temp = %s,cargo_4_temp = %s,relative_humidity = %s"
+                    ",avl = %s,suction_pressure = %s,discharge_pressure = %s,line_voltage = %s,line_frequency = %s,consumption_ph_1 = %s,consumption_ph_2 = %s"
+                    ",consumption_ph_3 = %s,co2_reading = %s,o2_reading = %s,evaporator_speed = %s,condenser_speed = %s,battery_voltage = %s,power_kwh = %s"
+                    ",power_trip_reading = %s,power_state = %s,created_at = %s"
+                    "WHERE telemetria_id=1000000 ")
+                data_tunel =(float(paquete[3]),float(paquete[4]),float(paquete[6]),float(paquete[7]),float(paquete[8]),float(paquete[9]),float(paquete[11])
+                             ,float(paquete[12]),float(paquete[13]),float(paquete[14]),float(paquete[15]),float(paquete[16]),float(paquete[17]),float(paquete[18])
+                             ,float(paquete[19]),float(paquete[20]),float(paquete[21]),float(paquete[22]),float(paquete[23]),float(paquete[24]),float(paquete[25])
+                             ,float(paquete[26]),float(paquete[27]),float(paquete[28]),float(paquete[29]),float(paquete[30]),float(paquete[31]),float(paquete[42]
+                              ,x['fecha']                                                                                                                       )
+                             )
+                # Insert new employee
+            db_cursor1 = db_connection.cursor()
+            db_cursor1.execute(update_tunel, data_tunel)
+            #emp_no = cursor.lastrowid
+                
             #actualizar datos del tunel 
 
 
