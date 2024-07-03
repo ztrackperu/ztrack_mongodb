@@ -438,7 +438,7 @@ async def homologar_tunel_2() -> dict:
                     ",compress_coil_1 = %s,ambient_air = %s,cargo_1_temp = %s,cargo_2_temp = %s,cargo_3_temp = %s,cargo_4_temp = %s,relative_humidity = %s"
                     ",avl = %s,suction_pressure = %s,discharge_pressure = %s,line_voltage = %s,line_frequency = %s,consumption_ph_1 = %s,consumption_ph_2 = %s"
                     ",consumption_ph_3 = %s,co2_reading = %s,o2_reading = %s,evaporator_speed = %s,condenser_speed = %s,battery_voltage = %s,power_kwh = %s"
-                    ",power_trip_reading = %s,power_state = %s,created_at = %s"
+                    ",power_trip_reading = %s,power_state = %s,ultima_fecha = %s"
                     "WHERE telemetria_id=1000000 ")
                 data_tunel =(float(paquete[3]),float(paquete[4]),float(paquete[6]),float(paquete[7]),float(paquete[8]),float(paquete[9]),float(paquete[11])
                              ,float(paquete[12]),float(paquete[13]),float(paquete[14]),float(paquete[15]),float(paquete[16]),float(paquete[17]),float(paquete[18])
