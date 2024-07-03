@@ -462,10 +462,11 @@ async def homologar_tunel_2() -> dict:
             db_cursor1.close()
         
         db_cursor.close()
-        db_connection.close()
-
-
         dat = db
+    db_connection.close()
+
+
+        
     #dat ="olitas"
     return dat
 
