@@ -307,8 +307,8 @@ async def homologar_tunel_2() -> dict:
     dat =''
 
     #extramemos la informacion en bruto del equipo
-    databaseMongo = client["REPOSITORIO_6_2024"]
-    #databaseMongo = client["REPOSITORIO_7_2024"]
+    #databaseMongo = client["REPOSITORIO_6_2024"]
+    databaseMongo = client["REPOSITORIO_7_2024"]
     
     collectionMongo = databaseMongo.get_collection("tunel")
 
