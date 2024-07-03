@@ -307,8 +307,8 @@ async def homologar_tunel_2() -> dict:
     dat =''
 
     #extramemos la informacion en bruto del equipo
-    databaseMongo = client["REPOSITORIO_6_2024"]
-    #databaseMongo = client["REPOSITORIO_7_2024"]
+    #databaseMongo = client["REPOSITORIO_6_2024"]
+    databaseMongo = client["REPOSITORIO_7_2024"]
     collectionMongo = databaseMongo.get_collection("tunel")
 
     #database =client["config_ztrack"]
@@ -324,8 +324,8 @@ async def homologar_tunel_2() -> dict:
         #db1 = client.ZGTU0015_6_2024
         #collection1 = db1.madurador
         #query1 = collection1.find().sort("id",-1).limit(1)
-        databaseMongo2 = client["ZGTU0015_6_2024"]
-        #databaseMongo2 = client["ZGTU0015_7_2024"]
+        #databaseMongo2 = client["ZGTU0015_6_2024"]
+        databaseMongo2 = client["ZGTU0015_7_2024"]
 
         collectionMongo2 = databaseMongo2.get_collection("madurador")
 
