@@ -312,7 +312,7 @@ async def homologar_tunel_2() -> dict:
     #extramemos la informacion en bruto del equipo
     bd = "REPOSITORIO_6_2024"
     databaseMongo = client[bd]
-    collectionMongo = db.tunel
+    collectionMongo = databaseMongo.tunel
     querymongo = collectionMongo.find({"status":1}).sort("fecha",1)
     for x in querymongo:
         db1 = client.ZGTU0015_6_2024
