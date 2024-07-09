@@ -521,6 +521,9 @@ async def homologar_wonderful_zgru1090804() -> dict:
                 datote =p2.split('*')
                 trama=trama+datote[0]
                 print(trama)
+                vali = trama.split(',')
+                if len(vali)==70:
+                    print("listo pa insertar")
     
 
         #print(f2[2])
