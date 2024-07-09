@@ -495,6 +495,12 @@ async def homologar_wonderful_zgru1090804() -> dict:
     databaseMongo = client[baseD]  
     collectionMongo = databaseMongo.get_collection("ZGRU1090804")
     trama=''
+        # inicio de id para las telemetrias como referencias 
+        #ZGRU1090804 -> 10000000000
+        #ZGRU2009227 -> 11000000000
+        #ZGRU2008220 -> 12000000000
+        #ZGRU2232647 -> 13000000000
+    idProgre = 10000000000
     async for x in collectionMongo.find({"status":1}).sort("fecha",1).limit(10):
         cad =x['data']
         #SECTORIZAR LA TRAMA PARA UNIRLA 
@@ -517,6 +523,7 @@ async def homologar_wonderful_zgru1090804() -> dict:
                 print('vamo construyendo 2')
         if f2[0]=='1CR3':
             if trama!='':
+                idProgre=idProgre+1
                 p2=f1[1]
                 datote =p2.split('*')
                 trama=trama+datote[0]
@@ -524,6 +531,104 @@ async def homologar_wonderful_zgru1090804() -> dict:
                 vali = trama.split(',')
                 if len(vali)==70:
                     print("listo pa insertar")
+                    #aqui realizar la insercion de datos 
+                    fecha_wonderful=x['fecha']
+                    #telemetria_id de los dispositivos
+                    #ZGRU1090804 -> 33
+                    #ZGRU2009227 -> 259
+                    #ZGRU2008220 -> 260
+                    #ZGRU2232647 -> 258
+                    tele_wonderful=33                    
+
+                    objetoV = {
+                        "id": idProgre,
+                        "set_point": float(vali[3]), 
+                        "temp_supply_1": float(vali[4]),
+                        "temp_supply_2": float(vali[5]),
+                        "return_air": float(vali[6]), 
+                        "evaporation_coil": float(vali[7]),
+                        "condensation_coil": float(vali[8]),
+                        "compress_coil_1": float(vali[9]),
+                        "compress_coil_2": float(vali[10]), 
+                        "ambient_air": float(vali[11]), 
+                        "cargo_1_temp": float(vali[12]),
+                        "cargo_2_temp": float(vali[13]), 
+                        "cargo_3_temp": float(vali[14]), 
+                        "cargo_4_temp": float(vali[15]), 
+                        "relative_humidity": float(vali[16]), 
+                        "avl": float(vali[17]), 
+                        "suction_pressure": float(vali[18]), 
+                        "discharge_pressure": float(vali[19]), 
+                        "line_voltage": float(vali[20]), 
+                        "line_frequency": float(vali[21]), 
+                        "consumption_ph_1": float(vali[22]), 
+                        "consumption_ph_2": float(vali[23]), 
+                        "consumption_ph_3": float(vali[24]), 
+                        "co2_reading": float(vali[25]), 
+                        "o2_reading": float(vali[26]), 
+                        "evaporator_speed": float(vali[27]), 
+                        "condenser_speed": float(vali[28]),
+                        "battery_voltage": float(vali[29]),
+                        "power_kwh": float(vali[30]),
+                        "power_trip_reading": float(vali[31]),
+                        "power_trip_duration": float(vali[32]),
+                        "suction_temp": float(vali[33]),
+                        "discharge_temp": float(vali[34]),
+                        "supply_air_temp": float(vali[35]),
+                        "return_air_temp": float(vali[36]),
+                        "dl_battery_temp": float(vali[37]),
+                        "dl_battery_charge": float(vali[38]),
+                        "power_consumption": float(vali[39]),
+                        "power_consumption_avg": float(vali[40]),
+                        "alarm_present": float(vali[41]), 
+                        "capacity_load": float(vali[42]),
+                        "power_state": float(vali[43]),
+                        "controlling_mode": float(vali[44]),
+                        "humidity_control": float(vali[45]),
+                        "humidity_set_point": float(vali[46]),
+                        "fresh_air_ex_mode": float(vali[47]),
+                        "fresh_air_ex_rate": float(vali[48]),
+                        "fresh_air_ex_delay": float(vali[49]),
+                        "set_point_o2": float(vali[50]),
+                        "set_point_co2": float(vali[51]),
+                        "defrost_term_temp": float(vali[52]),
+                        "defrost_interval": float(vali[53]),
+                        "water_cooled_conde": float(vali[54]),
+                        "usda_trip": float(vali[55]),
+                        "evaporator_exp_valve": float(vali[56]),
+                        "suction_mod_valve": float(vali[57]),
+                        "hot_gas_valve": float(vali[58]),
+                        "economizer_valve": float(vali[59]),
+                        "ethylene": float(vali[60]),
+                        "stateProcess": float(vali[61]),
+                        "stateInyection": float(vali[62]),
+                        "timerOfProcess": float(vali[63]),
+                        "modelo": float(vali[64]),
+                        "latitud": 35.7396,
+                        "longitud":  -119.238,
+                        "created_at": fecha_wonderful,
+                        "telemetria_id": tele_wonderful,
+                        "inyeccion_etileno": 0,
+                        "defrost_prueba": 0,
+                        "ripener_prueba": 0,
+                        "sp_ethyleno": float(vali[67]),
+                        "inyeccion_hora": float(vali[68]),
+                        "inyeccion_pwm": float(vali[69]),
+                        "extra_1": 0,
+                        "extra_2": 0,
+                        "extra_3": 0,
+                        "extra_4": 0,
+                        "extra_5": 0
+                    }
+
+                    #actualizar en base de mysql
+
+                    #insertaren bd mongodb 
+                    #crear dat h_ZGRU1090804
+                    databaseMongoH = client['Homologar']  
+                    collectionMongoH = databaseMongoH.get_collection("ZGRU1090804")
+                    collectionMongoH.insert_one(objetoV)
+
     
 
         #print(f2[2])
