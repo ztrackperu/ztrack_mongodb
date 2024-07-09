@@ -502,7 +502,28 @@ async def homologar_wonderful_zgru1090804() -> dict:
         p1=f1[0]
         f2=p1.split(',')
         print(cad)
-        print(f2[2])
+        if f2[0]=='1CR1':
+            trama=''
+            trama =trama+f1[0]
+            p2=f1[1]
+            datote =p2.split('*')
+            trama=trama+datote[0]
+            print('vamo construyendo 1')
+        if f2[0]=='1CR2':
+            if trama!='':
+                p2=f1[1]
+                datote =p2.split('*')
+                trama=trama+datote[0]
+                print('vamo construyendo 2')
+        if f2[0]=='1CR3':
+            if trama!='':
+                p2=f1[1]
+                datote =p2.split('*')
+                trama=trama+datote[0]
+                print(trama)
+    
+
+        #print(f2[2])
     return baseD
 
  
