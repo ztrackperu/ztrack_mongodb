@@ -492,9 +492,9 @@ async def homologar_wonderful_zgru1090804() -> dict:
     datazo = obtener_mes_y_anio_actual()
     #print(datazo)
     baseD = "WONDERFUL_"+datazo
-    databaseMongo = client["baseD"]
+    #databaseMongo = client["baseD"]
     
-    collectionMongo = databaseMongo.get_collection("tunel")
+    #collectionMongo = databaseMongo.get_collection("tunel")
     return datazo
 
 
