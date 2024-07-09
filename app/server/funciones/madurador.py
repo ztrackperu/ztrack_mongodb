@@ -494,8 +494,15 @@ async def homologar_wonderful_zgru1090804() -> dict:
     baseD = "WONDERFUL_"+datazo
     databaseMongo = client[baseD]  
     collectionMongo = databaseMongo.get_collection("ZGRU1090804")
+    trama=''
     async for x in collectionMongo.find({"status":1}).sort("fecha",1).limit(10):
-        print(x)
+        cad =x['data']
+        #SECTORIZAR LA TRAMA PARA UNIRLA 
+        f1 =cad.split('|')
+        p1=f1[0]
+        f2=p1.split(',')
+        print(cad)
+        print(f2[2])
     return baseD
 
-
+ 
