@@ -501,7 +501,9 @@ async def homologar_wonderful_zgru1090804() -> dict:
         #ZGRU2008220 -> 12000000000
         #ZGRU2232647 -> 13000000000
     idProgre = 10000000000
-    async for x in collectionMongo.find({"status":1}).sort("fecha",1).limit(10):
+    #async for x in collectionMongo.find({"status":1}).sort("fecha",1).limit(10):
+    async for x in collectionMongo.find({"status":1}).sort("fecha",1):
+
         cad =x['data']
         #SECTORIZAR LA TRAMA PARA UNIRLA 
         f1 =cad.split('|')
@@ -628,8 +630,6 @@ async def homologar_wonderful_zgru1090804() -> dict:
                     databaseMongoH = client['Homologar']  
                     collectionMongoH = databaseMongoH.get_collection("ZGRU1090804")
                     collectionMongoH.insert_one(objetoV)
-
-    
 
         #print(f2[2])
     return baseD
