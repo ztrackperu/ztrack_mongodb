@@ -472,4 +472,25 @@ async def homologar_tunel_2() -> dict:
     #dat ="olitas"
     return dat
 
+def obtener_mes_y_anio_actual():
+    # Obtener la fecha y hora actual
+    fecha_actual = datetime.now()
+    
+    # Obtener el mes y el año
+    mes_actual = fecha_actual.month
+    anio_actual = fecha_actual.year
+    
+    # Formatear la cadena mes_año
+    mes_anio_str = f"{mes_actual}_{anio_actual}"
+    return mes_anio_str
+
+# Ejemplo de uso
+#print(obtener_mes_y_anio_actual())
+
+async def homologar_wonderful_zgru1090804() -> dict:
+    #preguntar fecha mes_año 07_2024
+    datazo = obtener_mes_y_anio_actual()
+    print(datazo)
+    return datazo
+
 

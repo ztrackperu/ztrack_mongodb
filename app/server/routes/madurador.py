@@ -12,6 +12,7 @@ from server.funciones.madurador import (
     data_tunel,
     data_wonderful,
     homologar_tunel_2,
+    homologar_wonderful_zgru1090804,
     
 
 
@@ -77,5 +78,13 @@ async def homologar_data_tunel():
     if notificacions:
         return ResponseModel(notificacions, "Datos homologados!")
     return ResponseModel(notificacions, "Lista vacía devuelta")
+
+@router.get("/zgru1090804", response_description="Datos de tunel se homologan con ztrack")
+async def homologar_zgru1090804():
+    notificacions = await homologar_wonderful_zgru1090804()
+    if notificacions:
+        return ResponseModel(notificacions, "Datos homologados zgru1090804!")
+    return ResponseModel(notificacions, "Lista vacía devuelta")
+
 
 
