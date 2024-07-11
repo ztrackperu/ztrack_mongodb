@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi_pagination import Page, add_pagination
+from fastapi.middleware.cors import CORSMiddleware
 #from server.routes.usuarios import router as UsuariosRouter
 from server.routes.madurador import router as MaduradorRouter
 
@@ -8,7 +9,16 @@ app = FastAPI(
     title="Integracion ZTRACK MONGODB",
     summary="Modulos de datos bidireccional",
     version="0.0.1",
+)
 
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 #añadir el conjunto de rutas de notificaciones
