@@ -779,10 +779,10 @@ async def homologar_wonderful_zgru2009227() -> dict:
                     #ZGRU2009227 -> 259
                     #ZGRU2008220 -> 260
                     #ZGRU2232647 -> 258
-                    databaseMongoH = client['Homologar']  
-                    collectionMongoH = databaseMongoH.get_collection("ZGRU2009227")
-                    #databaseMongoH = client['ztrack_ja']  
-                    #collectionMongoH = databaseMongoH.get_collection("madurador")
+                    #databaseMongoH = client['Homologar']  
+                    #collectionMongoH = databaseMongoH.get_collection("ZGRU2009227")
+                    databaseMongoH = client['ztrack_ja']  
+                    collectionMongoH = databaseMongoH.get_collection("madurador")
                     collectionMongoH.insert_one(objetoV)
 
     return baseD
