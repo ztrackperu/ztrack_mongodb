@@ -642,7 +642,7 @@ async def homologar_wonderful_zgru2009227() -> dict:
     datazo = obtener_mes_y_anio_actual()
     baseD = "WONDERFUL_"+datazo
     databaseMongo = client[baseD]  
-    collectionMongo = databaseMongo.get_collection("ZGRU1090804")
+    collectionMongo = databaseMongo.get_collection("ZGRU2009227")
     trama=''
         # inicio de id para las telemetrias como referencias 
         #ZGRU1090804 -> 10000000000
