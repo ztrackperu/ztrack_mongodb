@@ -626,8 +626,10 @@ async def homologar_wonderful_zgru1090804() -> dict:
                     #actualizar en base de mysql
                     #insertaren bd mongodb 
                     #crear dat h_ZGRU1090804
-                    databaseMongoH = client['Homologar']  
-                    collectionMongoH = databaseMongoH.get_collection("ZGRU1090804")
+                    #databaseMongoH = client['Homologar']  
+                    #collectionMongoH = databaseMongoH.get_collection("ZGRU1090804")
+                    databaseMongoH = client['ztrack_ja']  
+                    collectionMongoH = databaseMongoH.get_collection("madurador")
                     collectionMongoH.insert_one(objetoV)
 
         #print(f2[2])
