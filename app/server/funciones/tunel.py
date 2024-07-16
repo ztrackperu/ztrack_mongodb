@@ -14,16 +14,16 @@ def per_actual():
 async def data_hortifruit(notificacion_data: dict) -> dict:
     #capturar hora 
     #desglozar la data y almacenar en base de datos REPOSITORIO_MES_AÑO
-    palm = "HORTIFRUIT"+per_actual()
+    palm = "HORTIFRUIT_"+per_actual()
     database = client[palm]
     cadenaWonderful = notificacion_data['data']
     listaWonderful = cadenaWonderful.split(",")
-    device = listaWonderful[2]
-    deviceW = device.split("|")
-    deviceW1 =deviceW[0]
+    device = listaWonderful[3]
+    #deviceW = device.split("|")
+    #deviceW1 =deviceW[0]
 
-    #tunel = database.get_collection("tunel")
-    tunel = database.get_collection(deviceW1)
+    tunel = database.get_collection(device)
+    #tunel = database.get_collection(deviceW1)
     fet =datetime.now()
     notificacion_data['fecha'] = fet
     print(notificacion_data)
