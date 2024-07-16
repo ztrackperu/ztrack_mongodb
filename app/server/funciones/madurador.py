@@ -12,7 +12,6 @@ db_connection = mysql.connector.connect(
     database="zgroupztrack"
 )
 
-
 def per_actual():
     now = datetime.now()
     mes = now.month 
@@ -200,8 +199,6 @@ async def data_wonderful(notificacion_data: dict) -> dict:
     #return notificacion_helper(new_notificacion)
     print(palm)
     return new_notificacion
-
-
 
 
 async def data_madurador(notificacion_data: dict) -> dict:
@@ -466,9 +463,7 @@ async def homologar_tunel_2() -> dict:
         db_cursor.close()
         dat = db
     db_connection.close()
-
-
-        
+      
     #dat ="olitas"
     return dat
 
@@ -636,8 +631,6 @@ async def homologar_wonderful_zgru1090804() -> dict:
     return baseD
 
  
-
-
 async def homologar_wonderful_zgru2009227() -> dict:
     datazo = obtener_mes_y_anio_actual()
     baseD = "WONDERFUL_"+datazo
@@ -933,7 +926,7 @@ async def homologar_wonderful_zgru2008220() -> dict:
                     #collectionMongoH = databaseMongoH.get_collection("ZGRU2009227")
                     databaseMongoH = client['ztrack_ja']  
                     collectionMongoH = databaseMongoH.get_collection("madurador")
-                    collectionMongoH.insert_one(objetoV)
+                    #collectionMongoH.insert_one(objetoV)
 
     return baseD
 
@@ -1083,6 +1076,6 @@ async def homologar_wonderful_zgru2232647() -> dict:
                     #collectionMongoH = databaseMongoH.get_collection("ZGRU2009227")
                     databaseMongoH = client['ztrack_ja']  
                     collectionMongoH = databaseMongoH.get_collection("madurador")
-                    collectionMongoH.insert_one(objetoV)
+                    #collectionMongoH.insert_one(objetoV)
 
     return baseD
