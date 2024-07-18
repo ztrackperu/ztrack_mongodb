@@ -235,8 +235,10 @@ async def homologar_hortifruit_123321() -> dict:
         objeto_generado = procesaObjeto(nova_cadena,idProgre,fecha_dato,tele_dato)
         print(objeto_generado)
 
-        databaseMongoH = client['homologado_ecuador']  
-        collectionMongoH = databaseMongoH.get_collection("123321")
+        #databaseMongoH = client['homologado_ecuador']  
+        #collectionMongoH = databaseMongoH.get_collection("123321")
+        databaseMongoH = client['ztrack_ja']  
+        collectionMongoH = databaseMongoH.get_collection("madurador")
 
         if proceso==0:
             fecha_anterior=x['fecha']
