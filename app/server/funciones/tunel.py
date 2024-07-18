@@ -134,6 +134,21 @@ def procesaObjeto(trama,idProgre,fecha_wonderful,tele_wonderful):
     }
     return objetoV
 
+def diferencia_fecha(fecha1, fecha2):
+    # Convertir las cadenas de fecha en objetos datetime
+    try:
+        fecha1 = datetime.strptime(fecha1, '%Y-%m-%d %H:%M:%S')
+        fecha2 = datetime.strptime(fecha2, '%Y-%m-%d %H:%M:%S')
+    except ValueError:
+        raise ValueError("Las fechas deben estar en formato 'YYYY-MM-DD HH:MM:SS'")
+    # Calcular la diferencia entre las fechas
+    diferencia = abs(fecha1 - fecha2)
+    
+    # Comparar la diferencia con 30 segundos
+    if diferencia > timedelta(seconds=30):
+        return 1
+    else:
+        return 0
 
 def generar_cadena_extendida(cadena_original, nuevas_posiciones, numero_elementos):
     # Convertimos la cadena original en una lista separada por comas
@@ -216,7 +231,8 @@ async def homologar_hortifruit_123321() -> dict:
             proceso=1
         else:
             #dato proceso de fecha
-            if (x['fecha']-fecha_anterior)>30 :
+            if diferencia_fecha(fecha_anterior, x['fecha'])==1:
+            #if (x['fecha']-fecha_anterior)>30 :
                 databaseMongoH = client['homologado_ecuador']  
                 collectionMongoH = databaseMongoH.get_collection("123321")
                 print('insertar')
