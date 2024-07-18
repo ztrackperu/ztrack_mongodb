@@ -54,19 +54,19 @@ def procesaObjeto(trama,idProgre,fecha_wonderful,tele_wonderful):
     vali = trama.split(',')
     objetoV = {
         "id": idProgre,
-        "set_point": validar_dato(vali[3]), 
-        "temp_supply_1": validar_dato(vali[4]),
+        "set_point": validar_dato(validar_numero(vali[3])), 
+        "temp_supply_1": validar_dato(validar_numero(vali[4])),
         "temp_supply_2": validar_dato(vali[5]),
-        "return_air": validar_dato(vali[6]), 
+        "return_air": validar_dato(validar_numero(vali[6])), 
         "evaporation_coil": validar_dato(vali[7]),
         "condensation_coil": validar_dato(vali[8]),
         "compress_coil_1": validar_dato(vali[9]),
         "compress_coil_2": validar_dato(vali[10]), 
         "ambient_air": validar_dato(vali[11]), 
-        "cargo_1_temp": validar_dato(vali[12]),
-        "cargo_2_temp": validar_dato(vali[13]), 
-        "cargo_3_temp": validar_dato(vali[14]), 
-        "cargo_4_temp": validar_dato(vali[15]), 
+        "cargo_1_temp": validar_dato(validar_numero(vali[12])),
+        "cargo_2_temp": validar_dato(validar_numero(vali[13])), 
+        "cargo_3_temp": validar_dato(validar_numero(vali[14])), 
+        "cargo_4_temp": validar_dato(validar_numero(vali[15])), 
         "relative_humidity": validar_dato(vali[16]), 
         "avl": validar_dato(vali[17]), 
         "suction_pressure": validar_dato(vali[18]), 
@@ -172,6 +172,15 @@ def generar_cadena_extendida(cadena_original, nuevas_posiciones, numero_elemento
     # Convertimos la lista resultado de nuevo a cadena separada por comas y la retornamos
     return ','.join(resultado)
 
+def validar_numero(dato):
+    if isinstance(dato, (int, float)) and -60 <= dato <= 130:
+        if dato==-38.5 or dato==-51.2:
+            return dato
+        else :
+            return 'NA'
+    else:
+        return 'NA'
+    
 async def data_hortifruit(notificacion_data: dict) -> dict:
     #capturar hora 
     #desglozar la data y almacenar en base de datos REPOSITORIO_MES_AÑO
