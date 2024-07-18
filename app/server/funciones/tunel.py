@@ -174,7 +174,7 @@ def generar_cadena_extendida(cadena_original, nuevas_posiciones, numero_elemento
 
 def validar_numero(dato):
     if isinstance(dato, (int, float)) and -60 <= dato <= 130:
-        if dato==-38.5 or dato==-51.2:
+        if dato==-38.5 or dato==-51.2 or dato==-51.1:
             return None
         else :
             return dato
