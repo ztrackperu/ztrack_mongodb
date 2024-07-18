@@ -149,6 +149,17 @@ def diferencia_fecha(fecha1, fecha2):
         return 1
     else:
         return 0
+    
+
+def diferencia_fecha2(fecha1, fecha2):
+
+    # Calcular la diferencia entre las fechas
+    diferencia = abs(fecha1 - fecha2)  
+    # Comparar la diferencia con 30 segundos
+    if diferencia > timedelta(seconds=30):
+        return 1
+    else:
+        return 0
 
 def generar_cadena_extendida(cadena_original, nuevas_posiciones, numero_elementos):
     # Convertimos la cadena original en una lista separada por comas
@@ -231,7 +242,7 @@ async def homologar_hortifruit_123321() -> dict:
             proceso=1
         else:
             #dato proceso de fecha
-            if diferencia_fecha(fecha_anterior, x['fecha'])==1:
+            if diferencia_fecha2(fecha_anterior, x['fecha'])==1:
             #if (x['fecha']-fecha_anterior)>30 :
                 databaseMongoH = client['homologado_ecuador']  
                 collectionMongoH = databaseMongoH.get_collection("123321")
