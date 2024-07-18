@@ -236,8 +236,8 @@ async def homologar_hortifruit_123321() -> dict:
 
         if proceso==0:
             fecha_anterior=x['fecha']
-            databaseMongoH = client['ztrack_ja']  
-            collectionMongoH = databaseMongoH.get_collection("madurador")
+            databaseMongoH = client['homologado_ecuador']  
+            collectionMongoH = databaseMongoH.get_collection("123321")
             print('insertar')
             proceso=1
         else:
