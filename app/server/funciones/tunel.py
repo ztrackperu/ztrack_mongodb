@@ -234,18 +234,19 @@ async def homologar_hortifruit_123321() -> dict:
         objeto_generado = procesaObjeto(nova_cadena,idProgre,fecha_dato,tele_dato)
         print(objeto_generado)
 
+        databaseMongoH = client['homologado_ecuador']  
+        collectionMongoH = databaseMongoH.get_collection("123321")
+
         if proceso==0:
             fecha_anterior=x['fecha']
-            databaseMongoH = client['homologado_ecuador']  
-            collectionMongoH = databaseMongoH.get_collection("123321")
+            collectionMongoH.insert_one(objeto_generado)
             print('insertar')
             proceso=1
         else:
             #dato proceso de fecha
             if diferencia_fecha2(fecha_anterior, x['fecha'])==1:
             #if (x['fecha']-fecha_anterior)>30 :
-                databaseMongoH = client['homologado_ecuador']  
-                collectionMongoH = databaseMongoH.get_collection("123321")
-                print('insertar')
+                collectionMongoH.insert_one(objeto_generado)
+                print('diferencia mayor a 30 segundos')
             proceso=0
     return baseD
