@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 #aqui pedimos las funciones que incluyen nuestro CRUD
 from server.funciones.tunel import (
     data_hortifruit,
+    homologar_hortifruit_123321,
 
     
 )
@@ -30,3 +31,10 @@ async def add_tunel_hortifruit_data(notificacion: TunelSchema = Body(...)):
     notificacion = jsonable_encoder(notificacion)   
     new_notificacion = await data_hortifruit(notificacion)
     return ResponseModel(new_notificacion, "ok")
+
+@router.get("/HortifruitA/123321", response_description="Datos de tunel se homologan con ztrack")
+async def homologar_HortifruitA_123321():
+    notificacions = await homologar_hortifruit_123321()
+    if notificacions:
+        return ResponseModel(notificacions, "Datos homologados 123321!")
+    return ResponseModel(notificacions, "Lista vacía devuelta")

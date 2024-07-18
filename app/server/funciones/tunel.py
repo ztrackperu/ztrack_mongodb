@@ -56,7 +56,6 @@ async def homologar_hortifruit_123321() -> dict:
     collectionMongo = databaseMongo.get_collection("123321")
     trama=''
         # inicio de id para las telemetrias como referencias 
-
         # 123321 -> 14000000000
         # 234432 -> 15000000000
         # 345543 -> 16000000000
@@ -145,6 +144,7 @@ async def homologar_hortifruit_123321() -> dict:
                         "condenser_speed": float(vali[28]),
                         "power_kwh": float(vali[29]),
                         "power_trip_reading": float(vali[30]),
+                        
                         "suction_temp": float(vali[31]),
                         "discharge_temp": float(vali[32]),
                         "supply_air_temp": float(vali[33]),
