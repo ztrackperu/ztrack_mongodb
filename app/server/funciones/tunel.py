@@ -228,7 +228,8 @@ async def homologar_hortifruit_123321() -> dict:
         nuevas_posiciones = [65,2,1,3,42,13,14,15,16,5,7,4,40]
         numero_elementos = 70
         fecha_dato=x['fecha']
-        tele_dato=25800 
+        tele_dato=14856 
+        idProgre=idProgre+1
         nova_cadena = generar_cadena_extendida(cad, nuevas_posiciones, numero_elementos)
         print(nova_cadena)
         objeto_generado = procesaObjeto(nova_cadena,idProgre,fecha_dato,tele_dato)
