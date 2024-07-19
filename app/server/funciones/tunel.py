@@ -247,8 +247,8 @@ async def homologar_hortifruit_123321() -> dict:
     #async for x in collectionMongo.find({"status":1}).sort("fecha",1).limit(10):
     proceso =0
     fecha_anterior=None
-    Session=Depends(get_db)
-    datos = await get_user(Session,471)
+    #Session=Depends(get_db)
+    datos = await get_user(Depends(get_db),471)
     #datos = await get_user(Session=Depends(get_db),471)
     print(datos)
     async for x in collectionMongo.find({"status":10}).sort("fecha",1):
@@ -285,5 +285,5 @@ async def homologar_hortifruit_123321() -> dict:
             proceso=0
     return baseD
 
-async def get_user(db,user_id:int):
+async def get_user(db: Session, user_id: int):
     return db.query(ModelContenedor).filter(ModelContenedor.id == user_id).first()
