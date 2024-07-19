@@ -1,11 +1,17 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String,Date,Float
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String,Date,Float,TIMESTAMP
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from sqlalchemy import text
 from server.database import (
     Base
 )
 def _get_date():
     return datetime.datetime.now()
+
+#    Column(
+#       'last_updated',
+#        TIMESTAMP,server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+#    )
 
 class ModelContenedor(Base):
     __tablename__ = "contenedores_orm"
@@ -14,8 +20,10 @@ class ModelContenedor(Base):
     tipo = Column(String(50),default=None )
     estado = Column(Integer, default=1)
     descripcionC = Column(String(255),default=None)
-    created_at  = Column(Date, default=_get_date)
-    updated_at = Column(Date, default=_get_date)
+    #created_at  = Column(Date, default=_get_date)
+    #updated_at = Column(Date, default=_get_date)
+    created_at  = Column(TIMESTAMP,server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    updated_at = Column(TIMESTAMP,server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     empresa_id = Column(Integer, default=1)
     generador_id = Column(Integer, default=1)
     telemetria_id = Column(Integer, default=1)
