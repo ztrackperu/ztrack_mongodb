@@ -26,6 +26,9 @@ pip install python-dotenv
 #para paginacion
 pip install fastapi-pagination
 
+3. pip install sqlalchemy
+4. pip install pymysql
+
 pip install mysql-connector-python
 #para todo s 
 pip install "fastapi[all]"

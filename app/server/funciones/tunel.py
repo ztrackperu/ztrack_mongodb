@@ -1,8 +1,32 @@
 import json
 #import mysql.connector
-from server.database import client
+from server.database import client ,Base
 from bson import regex
 from datetime import datetime,timedelta
+
+from sqlalchemy.orm import Session
+from server.models_orm.contenedores import(
+    ModelContenedor,
+) 
+from server.schemas_orm.contenedores import(
+    SchemasContenedorBase,
+    SchemasContenedorCreate,
+    SchemasContenedor,
+)
+from fastapi import Depends
+from server.database import SessionLocal,engine
+
+ModelContenedor.Base.metadata.create_all(bind=engine)
+
+#Dependency
+def get_db():
+    db = SessionLocal()
+    try : 
+        yield db
+    finally:
+        db.close()
+
+
 
 def per_actual():
     now = datetime.now()
@@ -203,18 +227,6 @@ async def data_hortifruit(notificacion_data: dict) -> dict:
     print(palm)
     return new_notificacion
 
-#procesamiento de informacion 
-
-
-# Ejemplo de uso:
-#cadena_original = "COD,PAR,POR,TRA,JOB,TEL,SPU"
-#nuevas_posiciones = [1, 4, 7, 8, 13, 21, 22]
-#numero_elementos = 25
-
-#resultado = generar_cadena_extendida(cadena_original, nuevas_posiciones, numero_elementos)
-#print(resultado)
-
-
 async def homologar_hortifruit_123321() -> dict:
     datazo = obtener_mes_y_anio_actual()
     baseD = "HORTIFRUIT_"+datazo
@@ -232,7 +244,11 @@ async def homologar_hortifruit_123321() -> dict:
     #async for x in collectionMongo.find({"status":1}).sort("fecha",1).limit(10):
     proceso =0
     fecha_anterior=None
-    async for x in collectionMongo.find({"status":1}).sort("fecha",1):
+    Session=Depends(get_db)
+    datos = await get_user(Session,471)
+    #datos = await get_user(Session=Depends(get_db),471)
+    print(datos)
+    async for x in collectionMongo.find({"status":10}).sort("fecha",1):
         cad =x['data']
         nuevas_posiciones = [65,2,1,3,42,13,14,15,16,5,7,4,40]
         numero_elementos = 70
@@ -240,9 +256,9 @@ async def homologar_hortifruit_123321() -> dict:
         tele_dato=14856 
         idProgre=idProgre+1
         nova_cadena = generar_cadena_extendida(cad, nuevas_posiciones, numero_elementos)
-        print(nova_cadena)
+        #print(nova_cadena)
         objeto_generado = procesaObjeto(nova_cadena,idProgre,fecha_dato,tele_dato)
-        print(objeto_generado)
+        #print(objeto_generado)
 
         #databaseMongoH = client['homologado_ecuador']  
         #collectionMongoH = databaseMongoH.get_collection("123321")
@@ -252,13 +268,19 @@ async def homologar_hortifruit_123321() -> dict:
         if proceso==0:
             fecha_anterior=x['fecha']
             collectionMongoH.insert_one(objeto_generado)
-            print('insertar')
+            #print('insertar')
+            
             proceso=1
         else:
             #dato proceso de fecha
             if diferencia_fecha2(fecha_anterior, x['fecha'])==1:
             #if (x['fecha']-fecha_anterior)>30 :
                 collectionMongoH.insert_one(objeto_generado)
-                print('diferencia mayor a 30 segundos')
+                #print('diferencia mayor a 30 segundos')
+                #actualizar linea en mysql para tener data actualiza
+                #cambiar estado a 0 de la trama trabajada 
             proceso=0
     return baseD
+
+async def get_user(db,user_id:int):
+    return db.query(ModelContenedor).filter(ModelContenedor.id == user_id).first()
