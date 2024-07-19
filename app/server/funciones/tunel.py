@@ -7,6 +7,7 @@ from datetime import datetime,timedelta
 from sqlalchemy.orm import Session
 from server.models_orm.contenedores import(
     ModelContenedor,
+    Base,
 ) 
 from server.schemas_orm.contenedores import(
     SchemasContenedorBase,
@@ -16,7 +17,9 @@ from server.schemas_orm.contenedores import(
 from fastapi import Depends
 from server.database import SessionLocal,engine
 
-ModelContenedor.Base.metadata.create_all(bind=engine)
+#ModelContenedor.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
+
 
 #Dependency
 def get_db():

@@ -1,8 +1,9 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String,Date,Float
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from server.database import Base
-
+from server.database import (
+    Base
+)
 def _get_date():
     return datetime.datetime.now()
 
