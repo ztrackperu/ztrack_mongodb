@@ -24,6 +24,8 @@ class ModelContenedor(Base):
     #updated_at = Column(Date, default=_get_date)
     created_at  = Column(TIMESTAMP,server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     updated_at = Column(TIMESTAMP,server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    #estado = Column(Integer, default=1)
+    #tipo = Column(String, default="NA")
     empresa_id = Column(Integer, default=1)
     generador_id = Column(Integer, default=1)
     telemetria_id = Column(Integer, default=1)
