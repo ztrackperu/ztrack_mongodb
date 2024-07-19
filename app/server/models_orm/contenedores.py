@@ -94,9 +94,9 @@ class ModelContenedor(Base):
     modelo = Column(String(50),default=None)
     alarm_number = Column(Float,default=None)
     NA = Column(String(10),default=None)
-    ripener_prueba = Column(Integer,default=None)
-    defrost_prueba = Column(Integer,default=None)
-    sp_ethyleno = Column(Float,default=None)
+    ripener_prueba = Column(Integer,server_default=text("1"))
+    defrost_prueba = Column(Integer,server_default=text("1"))
+    sp_ethyleno = Column(Float,server_default=text("1"))
     extra_1 = Column(Integer,server_default=text("0"))
     extra_2 = Column(Integer,server_default=text("0"))
 
