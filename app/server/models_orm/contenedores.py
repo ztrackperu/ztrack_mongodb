@@ -93,7 +93,7 @@ class ModelContenedor(Base):
     timerOfProcess = Column(Float,default=None)
     modelo = Column(String(50),default=None)
     alarm_number = Column(Float,default=None)
-    NA = Column(String(10),default=None)
+    NA = Column(String(10),server_default=text("NA"))
     ripener_prueba = Column(Integer,server_default=text("1"))
     defrost_prueba = Column(Integer,server_default=text("1"))
     sp_ethyleno = Column(Float,server_default=text("1"))
