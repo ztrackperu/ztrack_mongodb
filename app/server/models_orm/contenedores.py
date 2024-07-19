@@ -97,8 +97,8 @@ class ModelContenedor(Base):
     ripener_prueba = Column(Integer,default=None)
     defrost_prueba = Column(Integer,default=None)
     sp_ethyleno = Column(Float,default=None)
-    extra_1 = Column(Integer,default=None)
-    extra_2 = Column(Integer,default=None)
+    extra_1 = Column(Integer,server_default=text("0"))
+    extra_2 = Column(Integer,server_default=text("0"))
 
 
 
