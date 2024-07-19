@@ -18,7 +18,7 @@ class ModelContenedor(Base):
     id = Column(Integer,primary_key=True,index=True)
     nombre_contenedor = Column(String(100),default=None)
     tipo = Column(String(50),default=None )
-    estado = Column(Integer, default=1)
+    estado = Column(Integer, server_default=text("1"))
     descripcionC = Column(String(255),default=None)
     #created_at  = Column(Date, default=_get_date)
     #updated_at = Column(Date, default=_get_date)
@@ -93,12 +93,12 @@ class ModelContenedor(Base):
     timerOfProcess = Column(Float,default=None)
     modelo = Column(String(50),default=None)
     alarm_number = Column(Float,default=None)
-    NA = Column(String(10),default=None)
-    ripener_prueba = Column(Integer,default=None)
-    defrost_prueba = Column(Integer,default=None)
-    sp_ethyleno = Column(Float,default=None)
-    extra_1 = Column(Integer,default=None)
-    extra_2 = Column(Integer,default=None)
+    NA = Column(String(10),server_default=text("NA"))
+    ripener_prueba = Column(Integer,server_default=text("1"))
+    defrost_prueba = Column(Integer,server_default=text("1"))
+    sp_ethyleno = Column(Float,server_default=text("0.00"))
+    extra_1 = Column(Integer,dserver_default=text("0"))
+    extra_2 = Column(Integer,server_default=text("0"))
 
 
 
