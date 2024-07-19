@@ -96,7 +96,7 @@ class ModelContenedor(Base):
     NA = Column(String(10),server_default=text("NA"))
     ripener_prueba = Column(Integer,server_default=text("1"))
     defrost_prueba = Column(Integer,server_default=text("1"))
-    sp_ethyleno = Column(Float,server_default=text("0.00"))
+    sp_ethyleno = Column(Float,default=None)
     extra_1 = Column(Integer,server_default=text("0"))
     extra_2 = Column(Integer,server_default=text("0"))
 
