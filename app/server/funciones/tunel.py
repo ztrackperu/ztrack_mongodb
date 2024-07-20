@@ -186,9 +186,9 @@ def validar_numero(dato):
     else:
         return None
 
-def get_user(db: Session, user_id: int):
-    return db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first()
-
+def get_user(db: Session, user_id: int)->dict:
+    data =  db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first()
+    return contenedorSchema.SchemasContenedor(data)
 
 async def data_hortifruit(notificacion_data: dict) -> dict:
     #capturar hora 
