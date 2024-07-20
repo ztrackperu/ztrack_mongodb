@@ -290,3 +290,4 @@ async def homologar_hortifruit_123321(dataContenido) -> dict:
 
 async def get_user(db: Session, user_id: int):
     return db.query(ModelContenedor).filter(ModelContenedor.id == user_id).first()
+

@@ -31,6 +31,7 @@ contenedorModel.Base.metadata.create_all(bind=engine)
 #aqui se definen las rutas de la API REST
 router = APIRouter()
 
+# Dependency
 def get_db():
     db = SessionLocal()
     try:
@@ -38,7 +39,7 @@ def get_db():
     finally:
         db.close()
 
-def read_user(user_id: int, db: Session = Depends(get_db)):
+async def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
         return 0
@@ -58,6 +59,7 @@ async def add_tunel_hortifruit_data(notificacion: TunelSchema = Body(...)):
 async def homologar_HortifruitA_123321():
     #aqui consultamos para traer los datos de mysql con una consulta de los datos del contenedor
     dataContenido = await read_user(471)
+    print('jaja')
     notificacions = await homologar_hortifruit_123321(dataContenido)
     if notificacions:
         return ResponseModel(notificacions, "Datos homologados 123321!")
