@@ -39,7 +39,7 @@ def get_db():
     finally:
         db.close()
 
-async def read_user(user_id: int, db: Session = Depends(get_db)):
+def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
         return 0
@@ -58,7 +58,7 @@ async def add_tunel_hortifruit_data(notificacion: TunelSchema = Body(...)):
 @router.get("/HortifruitA/123321", response_description="Datos de tunel se homologan con ztrack")
 async def homologar_HortifruitA_123321():
     #aqui consultamos para traer los datos de mysql con una consulta de los datos del contenedor
-    dataContenido = await read_user(471)
+    dataContenido = read_user(471)
     print('jaja')
     notificacions = await homologar_hortifruit_123321(dataContenido)
     if notificacions:
