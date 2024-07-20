@@ -64,9 +64,10 @@ async def homologar_HortifruitA_123321(db: Session = Depends(get_db)):
         return ResponseModel(notificacions, "Datos homologados 123321!")
     return ResponseModel(notificacions, "Lista vacía devuelta")
 
-@router.get("/users/{user_id}/",response_model=contenedorSchema.SchemasContenedor)
-def get_user(user_id:int, db:Session=Depends(get_db)):
-    db_user = get_user(db,user_id =user_id )
+
+@router.get("/users/{user_id}", response_model=contenedorSchema.SchemasContenedor)
+def read_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
