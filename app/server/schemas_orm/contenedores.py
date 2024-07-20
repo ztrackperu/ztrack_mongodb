@@ -2,7 +2,8 @@ from pydantic import BaseModel
 
 class SchemasContenedorBase(BaseModel):
     nombre_contenedor: str
-    created_at:str
+    empresa_id:str
+    #created_at:str
     #name: str
 
 
