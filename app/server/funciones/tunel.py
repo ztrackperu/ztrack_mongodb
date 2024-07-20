@@ -186,7 +186,7 @@ def validar_numero(dato):
     else:
         return None
 
-def get_user(db: Session, user_id: int):
+def get_user(db: Session, user_id: int)-> dict:
     return db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first()
 
 
