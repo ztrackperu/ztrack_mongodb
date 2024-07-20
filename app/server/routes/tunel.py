@@ -54,6 +54,8 @@ async def homologar_HortifruitA_123321(db: Session = Depends(get_db)):
     #aqui consultamos para traer los datos de mysql con una consulta de los datos del contenedor
     #dataContenido = await read_user(471)
     dataContenido = get_user(db, user_id=471)
+    print('jeje')
+    print(dataContenido)
     print('jaja')
     notificacions = await homologar_hortifruit_123321(dataContenido)
     if notificacions:
