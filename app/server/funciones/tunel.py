@@ -30,7 +30,6 @@ def get_db():
         db.close()
 
 
-
 def per_actual():
     now = datetime.now()
     mes = now.month 
@@ -248,7 +247,9 @@ async def homologar_hortifruit_123321() -> dict:
     proceso =0
     fecha_anterior=None
     #Session=Depends(get_db)
-    datos = await get_user(Session=Depends(get_db),user_id=471)
+    #datos = await get_user(Session=Depends(get_db),user_id=471)
+    datos = await get_user(Depends(get_db),user_id=471)
+
     #datos = await get_user(Session=Depends(get_db),471)
     print(datos)
     async for x in collectionMongo.find({"status":10}).sort("fecha",1):
