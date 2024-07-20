@@ -34,6 +34,7 @@ def get_db():
     finally:
         db.close()
 
+@router.get("/extra")
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
