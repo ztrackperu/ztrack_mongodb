@@ -5,29 +5,8 @@ from bson import regex
 from datetime import datetime,timedelta
 
 from sqlalchemy.orm import Session
-from server.models_orm.contenedores import(
-    ModelContenedor,
-    
-) 
-from server.schemas_orm.contenedores import(
-    SchemasContenedorBase,
-    SchemasContenedorCreate,
-    SchemasContenedor,
-)
-#from fastapi import Depends
-#from server.database import SessionLocal,engine
-
-#ModelContenedor.Base.metadata.create_all(bind=engine)
-#Base.metadata.create_all(bind=engine)
-
-
-#Dependency
-#def get_db():
-    #db = SessionLocal()
-    #try : 
-        #yield db
-    #finally:
-        #db.close()
+from server.models_orm import contenedores as contenedorModel
+from server.schemas_orm import contenedores as contenedorSchema
 
 
 def per_actual():
@@ -206,7 +185,10 @@ def validar_numero(dato):
             return dato
     else:
         return None
-    
+
+def get_user(db: Session, user_id: int):
+    return db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first()
+
 async def data_hortifruit(notificacion_data: dict) -> dict:
     #capturar hora 
     #desglozar la data y almacenar en base de datos REPOSITORIO_MES_AÑO
@@ -288,6 +270,5 @@ async def homologar_hortifruit_123321(dataContenido) -> dict:
             proceso=0
     return baseD
 
-async def get_user(db: Session, user_id: int):
-    return db.query(ModelContenedor).filter(ModelContenedor.id == user_id).first()
+
 

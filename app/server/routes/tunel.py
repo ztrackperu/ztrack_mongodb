@@ -2,7 +2,13 @@ from fastapi import Depends,APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
-
+from sqlalchemy.orm import Session
+#Aqui importamos el modelo necesario para la clase 
+from server.models.tunel import (
+    ErrorResponseModel,
+    ResponseModel,
+    TunelSchema,
+)
 #aqui pedimos las funciones que incluyen nuestro CRUD
 from server.funciones.tunel import (
     data_hortifruit,
@@ -10,21 +16,10 @@ from server.funciones.tunel import (
     get_user,
 
 )
-#Aqui importamos el modelo necesario para la clase 
-from server.models.tunel import (
-    ErrorResponseModel,
-    ResponseModel,
-    TunelSchema,
-)
 from server.models_orm import contenedores as contenedorModel
 from server.schemas_orm import contenedores as contenedorSchema
 
-from server.database import (
-    SessionLocal, 
-    engine
-)
-
-from sqlalchemy.orm import Session
+from server.database import SessionLocal, engine
 
 contenedorModel.Base.metadata.create_all(bind=engine)
 
@@ -44,8 +39,6 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     if db_user is None:
         return 0
     return db_user
-
-
 
 @router.post("/Hortifruit/", response_description="Datos del tunel agregados a la base de datos.")
 #La funcion espera "ConceptoOTSchema"
