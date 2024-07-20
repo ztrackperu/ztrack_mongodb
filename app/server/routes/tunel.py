@@ -23,6 +23,7 @@ from server.database import SessionLocal, engine
 
 contenedorModel.Base.metadata.create_all(bind=engine)
 
+import requests
 #aqui se definen las rutas de la API REST
 router = APIRouter()
 
@@ -52,11 +53,19 @@ async def add_tunel_hortifruit_data(notificacion: TunelSchema = Body(...)):
 @router.get("/HortifruitA/123321", response_description="Datos de tunel se homologan con ztrack")
 async def homologar_HortifruitA_123321(db: Session = Depends(get_db)):
     #aqui consultamos para traer los datos de mysql con una consulta de los datos del contenedor
-    dataContenido = await read_user(471)
+    #dataContenido = await read_user(471)
     #dataContenido = get_user(db, user_id=471)
     print('jeje') 
-    print(dataContenido)
-    print('jaja')
+    #print(dataContenido)
+    URL = "http://localhost:9020/tunel/users/471"
+    response = requests.get(URL)
+
+    if response.status_code == 200:
+        print('Successful request')
+        print('Data:', response.json())
+    else:
+        print('Error in the request, details:', response.text)
+        print('jaja')
     #notificacions = await homologar_hortifruit_123321(dataContenido)
     notificacions = await homologar_hortifruit_123321()
 
