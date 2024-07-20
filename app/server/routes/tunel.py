@@ -26,6 +26,7 @@ from server.database import (
 
 from sqlalchemy.orm import Session
 
+contenedorModel.Base.metadata.create_all(bind=engine)
 
 #aqui se definen las rutas de la API REST
 router = APIRouter()
