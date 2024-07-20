@@ -7,27 +7,27 @@ from datetime import datetime,timedelta
 from sqlalchemy.orm import Session
 from server.models_orm.contenedores import(
     ModelContenedor,
-    Base,
+    
 ) 
 from server.schemas_orm.contenedores import(
     SchemasContenedorBase,
     SchemasContenedorCreate,
     SchemasContenedor,
 )
-from fastapi import Depends
-from server.database import SessionLocal,engine
+#from fastapi import Depends
+#from server.database import SessionLocal,engine
 
 #ModelContenedor.Base.metadata.create_all(bind=engine)
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
 
 
 #Dependency
-def get_db():
-    db = SessionLocal()
-    try : 
-        yield db
-    finally:
-        db.close()
+#def get_db():
+    #db = SessionLocal()
+    #try : 
+        #yield db
+    #finally:
+        #db.close()
 
 
 def per_actual():
@@ -229,7 +229,7 @@ async def data_hortifruit(notificacion_data: dict) -> dict:
     print(palm)
     return new_notificacion
 
-async def homologar_hortifruit_123321() -> dict:
+async def homologar_hortifruit_123321(dataContenido) -> dict:
     datazo = obtener_mes_y_anio_actual()
     baseD = "HORTIFRUIT_"+datazo
     databaseMongo = client[baseD]  
@@ -246,13 +246,14 @@ async def homologar_hortifruit_123321() -> dict:
     #async for x in collectionMongo.find({"status":1}).sort("fecha",1).limit(10):
     proceso =0
     fecha_anterior=None
-    Session=Depends(get_db)
+    #Session=Depends(get_db)
     #datos = await get_user(Session=Depends(get_db),user_id=471)
     #datos = await get_user(Depends(get_db),user_id=471)
-    datos = await get_user(Session,user_id=471)
+    #datos = await get_user(Session,user_id=471)
 
     #datos = await get_user(Session=Depends(get_db),471)
-    print(datos)
+    #print(datos)
+    print(dataContenido)
     async for x in collectionMongo.find({"status":10}).sort("fecha",1):
         cad =x['data']
         nuevas_posiciones = [65,2,1,3,42,13,14,15,16,5,7,4,40]
