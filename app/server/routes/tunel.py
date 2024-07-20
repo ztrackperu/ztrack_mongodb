@@ -70,6 +70,7 @@ async def homologar_HortifruitA_123321(db: Session = Depends(get_db)):
 
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = get_user(db, user_id=user_id)
+    db_user=contenedorSchema.SchemasContenedor(db_user)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     print(db_user)

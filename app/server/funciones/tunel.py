@@ -186,9 +186,9 @@ def validar_numero(dato):
     else:
         return None
 
-def get_user(db: Session, user_id: int)->dict:
-    data =  db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first()
-    return contenedorSchema.SchemasContenedor(data)
+def get_user(db: Session, user_id: int):
+    return db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first()
+
 
 async def data_hortifruit(notificacion_data: dict) -> dict:
     #capturar hora 
@@ -212,7 +212,7 @@ async def data_hortifruit(notificacion_data: dict) -> dict:
     print(palm)
     return new_notificacion
 
-async def homologar_hortifruit_123321() -> dict:
+async def homologar_hortifruit_123321(dataContenido) -> dict:
     datazo = obtener_mes_y_anio_actual()
     baseD = "HORTIFRUIT_"+datazo
     databaseMongo = client[baseD]  
