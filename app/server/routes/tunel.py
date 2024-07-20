@@ -34,18 +34,18 @@ def get_db():
     finally:
         db.close()
 
-@router.get("/extra")
-def read_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = get_user(db, user_id=user_id)
-    if db_user is None:
-        return 0
-    return db_user
+#@router.get("/extra")
+#def read_user(user_id: int, db: Session = Depends(get_db)):
+    #db_user = get_user(db, user_id=user_id)
+    #if db_user is None:
+        #return 0
+    #return db_user
 
 @router.post("/Hortifruit/", response_description="Datos del tunel agregados a la base de datos.")
 #La funcion espera "ConceptoOTSchema"
 async def add_tunel_hortifruit_data(notificacion: TunelSchema = Body(...)):
     #convertir en json
-    notificacion = jsonable_encoder(notificacion)   
+    notificacion = jsonable_encoder(notificacion)    
     new_notificacion = await data_hortifruit(notificacion)
     return ResponseModel(new_notificacion, "ok")
 
@@ -54,7 +54,7 @@ async def homologar_HortifruitA_123321(db: Session = Depends(get_db)):
     #aqui consultamos para traer los datos de mysql con una consulta de los datos del contenedor
     #dataContenido = await read_user(471)
     dataContenido = get_user(db, user_id=471)
-    print('jeje')
+    print('jeje') 
     print(dataContenido)
     print('jaja')
     notificacions = await homologar_hortifruit_123321(dataContenido)

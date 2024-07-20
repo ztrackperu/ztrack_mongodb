@@ -187,7 +187,14 @@ def validar_numero(dato):
         return None
 
 def get_user(db: Session, user_id: int):
-    return db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first()
+    #return db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first()
+    zata =  db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first()
+
+    notificacions = []
+    for notificacion in zata:
+        print(notificacion)
+        notificacions.append(notificacion)
+    return notificacions[0]
 
 async def data_hortifruit(notificacion_data: dict) -> dict:
     #capturar hora 
