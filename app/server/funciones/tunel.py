@@ -187,14 +187,8 @@ def validar_numero(dato):
         return None
 
 def get_user(db: Session, user_id: int):
-    #return db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first()
-    zata =  db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first()
+    return db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first()
 
-    notificacions = []
-    for notificacion in zata:
-        print(notificacion)
-        notificacions.append(notificacion)
-    return notificacions[0]
 
 async def data_hortifruit(notificacion_data: dict) -> dict:
     #capturar hora 
@@ -218,7 +212,7 @@ async def data_hortifruit(notificacion_data: dict) -> dict:
     print(palm)
     return new_notificacion
 
-async def homologar_hortifruit_123321(dataContenido) -> dict:
+async def homologar_hortifruit_123321() -> dict:
     datazo = obtener_mes_y_anio_actual()
     baseD = "HORTIFRUIT_"+datazo
     databaseMongo = client[baseD]  
@@ -242,7 +236,7 @@ async def homologar_hortifruit_123321(dataContenido) -> dict:
 
     #datos = await get_user(Session=Depends(get_db),471)
     #print(datos)
-    print(dataContenido)
+    #print(dataContenido)
     async for x in collectionMongo.find({"status":10}).sort("fecha",1):
         cad =x['data']
         nuevas_posiciones = [65,2,1,3,42,13,14,15,16,5,7,4,40]

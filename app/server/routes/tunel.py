@@ -1,4 +1,4 @@
-from fastapi import Depends,APIRouter, Body
+from fastapi import Depends,APIRouter, Body ,HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
@@ -53,11 +53,20 @@ async def add_tunel_hortifruit_data(notificacion: TunelSchema = Body(...)):
 async def homologar_HortifruitA_123321(db: Session = Depends(get_db)):
     #aqui consultamos para traer los datos de mysql con una consulta de los datos del contenedor
     #dataContenido = await read_user(471)
-    dataContenido = get_user(db, user_id=471)
+    #dataContenido = get_user(db, user_id=471)
     print('jeje') 
-    print(dataContenido)
+    #print(dataContenido)
     print('jaja')
-    notificacions = await homologar_hortifruit_123321(dataContenido)
+    #notificacions = await homologar_hortifruit_123321(dataContenido)
+    notificacions = await homologar_hortifruit_123321()
+
     if notificacions:
         return ResponseModel(notificacions, "Datos homologados 123321!")
     return ResponseModel(notificacions, "Lista vacía devuelta")
+
+@router.get("/users/{user_id}/",response_model=contenedorSchema.SchemasContenedor)
+def get_user(user_id:int, db:Session=Depends(get_db)):
+    db_user = get_user(db,user_id =user_id )
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
