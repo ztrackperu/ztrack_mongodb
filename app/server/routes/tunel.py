@@ -65,8 +65,8 @@ async def homologar_HortifruitA_123321(db: Session = Depends(get_db)):
     return ResponseModel(notificacions, "Lista vacía devuelta")
 
 
-#@router.get("/users/{user_id}", response_model=contenedorSchema.SchemasContenedor)
-@router.get("/users/{user_id}")
+@router.get("/users/{user_id}", response_model=contenedorSchema.SchemasContenedor)
+#@router.get("/users/{user_id}")
 
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = get_user(db, user_id=user_id)

@@ -8,17 +8,6 @@ from sqlalchemy.orm import Session
 from server.models_orm import contenedores as contenedorModel
 from server.schemas_orm import contenedores as contenedorSchema
 
-def contenedor_helper(notificacion) -> dict: 
-    return {
-        "nombre_contenedor": notificacion["nombre_contenedor"],
-        "created_at": notificacion["created_at"],
-        #"numOT":notificacion.get("numOT",None),
-        #"numSolicitud":  notificacion.get("numSolicitud",None),
-        #"fechaN": notificacion["fechaN"],
-        #"trabajo": notificacion["trabajo"],
-        #"perfil": notificacion["perfil"],
-        #"estadoN": notificacion["estadoN"],
-    } 
 
 def per_actual():
     now = datetime.now()
@@ -198,7 +187,7 @@ def validar_numero(dato):
         return None
 
 def get_user(db: Session, user_id: int)-> dict:
-    return contenedor_helper(db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first())
+    return db.query(contenedorModel.ModelContenedor).filter(contenedorModel.ModelContenedor.id == user_id).first()
 
 
 async def data_hortifruit(notificacion_data: dict) -> dict:

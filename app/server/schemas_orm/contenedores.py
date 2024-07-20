@@ -4,6 +4,8 @@ class SchemasContenedorBase(BaseModel):
     nombre_contenedor: str
     #name: str
 
+
+
 class SchemasContenedorCreate(SchemasContenedorBase):
     pass 
 
