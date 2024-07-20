@@ -58,7 +58,7 @@ async def add_tunel_hortifruit_data(notificacion: TunelSchema = Body(...)):
 @router.get("/HortifruitA/123321", response_description="Datos de tunel se homologan con ztrack")
 async def homologar_HortifruitA_123321():
     #aqui consultamos para traer los datos de mysql con una consulta de los datos del contenedor
-    dataContenido = read_user(471)
+    dataContenido = await read_user(471)
     print('jaja')
     notificacions = await homologar_hortifruit_123321(dataContenido)
     if notificacions:
