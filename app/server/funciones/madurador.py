@@ -648,7 +648,9 @@ async def homologar_wonderful_zgru2009227() -> dict:
     #async for x in collectionMongo.find({"status":1}).sort("fecha",1).limit(10):
     async for x in collectionMongo.find({"status":1}).sort("fecha",1):
         id_actualizar=x['_id']
-        collectionMongo.update_one({"_id":id_actualizar},{"status":0})
+        print(id_actualizar)
+        #{"$set": {"key": "value"}}
+        collectionMongo.update_one({"_id":id_actualizar},{"$set": {"status":0}})
 
         cad =x['data']
         #SECTORIZAR LA TRAMA PARA UNIRLA 
