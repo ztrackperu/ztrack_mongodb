@@ -638,6 +638,8 @@ async def homologar_wonderful_zgru2009227() -> dict:
     baseD = "WONDERFUL_"+datazo
     databaseMongo = client[baseD]  
     collectionMongo = databaseMongo.get_collection("ZGRU2009227")
+    #analizar el resultado de la coleccion de control 
+    collectionControl =databaseMongo.get_collection("control")
     trama=''
         # inicio de id para las telemetrias como referencias 
         #ZGRU1090804 -> 10000000000
@@ -650,7 +652,9 @@ async def homologar_wonderful_zgru2009227() -> dict:
         id_actualizar=x['_id']
         print(id_actualizar)
         #{"$set": {"key": "value"}}
-        collectionMongo.update_one({"_id":id_actualizar},{"$set": {"status":0}})
+        #collectionMongo.update_one({"_id":id_actualizar},{"$set": {"status":0}})
+        controlTelemetria = collectionControl.find_one({"telemetria_id":259})
+
 
         cad =x['data']
         #SECTORIZAR LA TRAMA PARA UNIRLA 
