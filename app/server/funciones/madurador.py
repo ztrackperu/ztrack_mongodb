@@ -647,6 +647,7 @@ async def homologar_wonderful_zgru2009227() -> dict:
     idProgre = 11000000000
     #async for x in collectionMongo.find({"status":1}).sort("fecha",1).limit(10):
     async for x in collectionMongo.find({"status":1}).sort("fecha",1):
+        id_actualizar=x['_id']
         collectionMongo.update_one({"_id":id_actualizar},{"status":0})
 
         cad =x['data']
@@ -680,7 +681,7 @@ async def homologar_wonderful_zgru2009227() -> dict:
                     print("listo pa insertar")
                     #aqui realizar la insercion de datos 
                     fecha_wonderful=x['fecha']
-                    id_actualizar=x['_id']
+                    
                     #telemetria_id de los dispositivos
                     #ZGRU1090804 -> 33
                     #ZGRU2009227 -> 259
