@@ -57,8 +57,7 @@ async def homologar_HortifruitA_123321():
     #dataContenido = get_user(db, user_id=471)
     print('jeje') 
     #print(dataContenido)
-    #URL = "http://:9020/tunel/users/471"
-    URL ="161.132.206.104:9020/tunel/users/471"
+    URL = "http://localhost:9020/tunel/users/471"
     response = requests.get(URL)
 
     if response.status_code == 200:

@@ -625,7 +625,9 @@ async def homologar_wonderful_zgru1090804() -> dict:
                     #collectionMongoH = databaseMongoH.get_collection("ZGRU1090804")
                     databaseMongoH = client['ztrack_ja']  
                     collectionMongoH = databaseMongoH.get_collection("madurador")
-                    #collectionMongoH.insert_one(objetoV)
+                    #actualizar el estado de la trama 
+                    collectionMongo.update
+                    collectionMongoH.insert_one(objetoV)
 
         #print(f2[2])
     return baseD
@@ -677,6 +679,7 @@ async def homologar_wonderful_zgru2009227() -> dict:
                     print("listo pa insertar")
                     #aqui realizar la insercion de datos 
                     fecha_wonderful=x['fecha']
+                    id_actualizar=x['_id']
                     #telemetria_id de los dispositivos
                     #ZGRU1090804 -> 33
                     #ZGRU2009227 -> 259
@@ -776,7 +779,9 @@ async def homologar_wonderful_zgru2009227() -> dict:
                     #collectionMongoH = databaseMongoH.get_collection("ZGRU2009227")
                     databaseMongoH = client['ztrack_ja']  
                     collectionMongoH = databaseMongoH.get_collection("madurador")
-                    #collectionMongoH.insert_one(objetoV)
+                    #result = await coll.update_one({"i": 51}, {"$set": {"key": "value"}})
+                    collectionMongoH.update_one({"_id":id_actualizar},{"status":0})
+                    collectionMongoH.insert_one(objetoV)
 
     return baseD
 
