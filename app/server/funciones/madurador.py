@@ -647,6 +647,7 @@ async def homologar_wonderful_zgru2009227() -> dict:
     idProgre = 11000000000
     #async for x in collectionMongo.find({"status":1}).sort("fecha",1).limit(10):
     async for x in collectionMongo.find({"status":1}).sort("fecha",1):
+        collectionMongo.update_one({"_id":id_actualizar},{"status":0})
 
         cad =x['data']
         #SECTORIZAR LA TRAMA PARA UNIRLA 
@@ -780,7 +781,7 @@ async def homologar_wonderful_zgru2009227() -> dict:
                     databaseMongoH = client['ztrack_ja']  
                     collectionMongoH = databaseMongoH.get_collection("madurador")
                     #result = await coll.update_one({"i": 51}, {"$set": {"key": "value"}})
-                    collectionMongoH.update_one({"_id":id_actualizar},{"status":0})
+                    #collectionMongoH.update_one({"_id":id_actualizar},{"status":0})
                     collectionMongoH.insert_one(objetoV)
 
     return baseD
