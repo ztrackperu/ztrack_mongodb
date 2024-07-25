@@ -669,7 +669,7 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
 
     cnx = db_connection
     # Get two buffered cursors
-    curA = cnx.cursor()
+    curA = cnx.cursor(buffered=True)
     #curB = cnx.cursor(buffered=True)
 
     # Query to get employees who joined in a period defined by two dates
