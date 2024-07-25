@@ -633,6 +633,16 @@ async def homologar_wonderful_zgru1090804() -> dict:
     return baseD
 
  
+async def homologar_wonderful_zgru2009227_2() -> dict:
+    datazo = obtener_mes_y_anio_actual()
+    baseD = "WONDERFUL_"+datazo
+    databaseMongo = client[baseD]
+    collectionControl =databaseMongo.get_collection("control")
+    controlTelemetria = collectionControl.find_one({"telemetria_id":259})
+    if controlTelemetria :
+        print("tenemos datos")
+    return controlTelemetria
+
 async def homologar_wonderful_zgru2009227() -> dict:
     datazo = obtener_mes_y_anio_actual()
     baseD = "WONDERFUL_"+datazo
@@ -653,7 +663,7 @@ async def homologar_wonderful_zgru2009227() -> dict:
         print(id_actualizar)
         #{"$set": {"key": "value"}}
         #collectionMongo.update_one({"_id":id_actualizar},{"$set": {"status":0}})
-        controlTelemetria = collectionControl.find_one({"telemetria_id":259})
+        #controlTelemetria = collectionControl.find_one({"telemetria_id":259})
 
 
         cad =x['data']
