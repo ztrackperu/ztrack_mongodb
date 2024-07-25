@@ -649,7 +649,7 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
     databaseMongo = client[baseD]
     collectionControl =databaseMongo.get_collection("control")
     tele_wonderful =259
-    nombre_dispositivo="ZGRU2009227"
+    nombre_dispositivo='ZGRU2009227'
     controlTelemetria = await collectionControl.find_one({"telemetria_id":tele_wonderful})
     #print(controlTelemetria)
     idProgre = 11000000000
@@ -676,14 +676,20 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
     query = ("SELECT * FROM contenedores "
                 "WHERE nombre_contenedor= %s LIMIT 1")
     
-    dataContenedor = curA.execute(query, (nombre_dispositivo,))
+    #dataContenedor = curA.execute(query, (nombre_dispositivo,))
+    dataContenedor = curA.execute("SELECT * FROM contenedores WHERE nombre_contenedor='ZGRU2009227'")
+    rows = curA.fetchall()
 
-    for (nombre_contenedor, ultima_fecha, power_state) in dataContenedor:
-        print("datito")
-        print(nombre_contenedor)
-        print(power_state)
-        print(ultima_fecha)
-        print("datito")
+    for row in rows :
+        print(row)
+    curA.close()
+
+    #for (nombre_contenedor, ultima_fecha, power_state) in dataContenedor:
+        #print("datito")
+        #print(nombre_contenedor)
+        #print(power_state)
+        #print(ultima_fecha)
+        #print("datito")
     #print(dataContenedor)
 
 
