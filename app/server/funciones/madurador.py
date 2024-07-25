@@ -778,7 +778,7 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
                             "extra_5": 0
                         }
                     
-                    databaseMongoH = client['ztrack_jax']  
+                    databaseMongoH = client['ztrack_ja']  
                     collectionMongoH = databaseMongoH.get_collection("madurador")
                     collectionMongoH.insert_one(objetoV)
                     objetoControl ={
@@ -793,16 +793,6 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
                         #grabar
                         collectionControl.insert_one(objetoControl)
                         estadoC=1
-
-
-
-
-
-
-
-
-
-
     return idProgre
 
 async def homologar_wonderful_zgru2009227() -> dict:
