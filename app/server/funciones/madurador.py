@@ -639,9 +639,10 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
     databaseMongo = client[baseD]
     collectionControl =databaseMongo.get_collection("control")
     controlTelemetria = collectionControl.find_one({"telemetria_id":259})
+    print(controlTelemetria)
     if controlTelemetria :
         print("tenemos datos")
-    return controlTelemetria
+    return "ola a todos "
 
 async def homologar_wonderful_zgru2009227() -> dict:
     datazo = obtener_mes_y_anio_actual()
