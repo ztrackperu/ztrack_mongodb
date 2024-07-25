@@ -669,7 +669,7 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
 
     cnx = db_connection
     # Get two buffered cursors
-    curA = cnx.cursor(buffered=True)
+    curA = cnx.cursor()
     #curB = cnx.cursor(buffered=True)
 
     # Query to get employees who joined in a period defined by two dates
@@ -839,7 +839,7 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
 
 
                     #actualizar data en mysql
-                    curB = cnx.cursor(buffered=True)
+                    curB = cnx.cursor()
                     update_old_salary = (
                     "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
                     ", ambient_air= %s ,relative_humidity= %s WHERE estado = 1 AND telemetria_id = %s")
