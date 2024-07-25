@@ -667,8 +667,15 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
     trama=''
     collectionMongo = databaseMongo.get_collection("ZGRU2009227")
 
-    cnx = db_connection
+    #cnx = db_connection
     # Get two buffered cursors
+
+    cnx = mysql.connector.connect(
+        host= "localhost",
+        user= "ztrack2023",
+        passwd= "lpmp2018",
+        database="zgroupztrack"
+    )
     curA = cnx.cursor(buffered=True)
     curB = cnx.cursor(buffered=True)
 
