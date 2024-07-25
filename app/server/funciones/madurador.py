@@ -658,12 +658,15 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
         #print("tenemos datos")
         idProgre = controlTelemetria["id"]
         fechaId = controlTelemetria["fecha"]
+        print(fechaId)
         factorBusqueda ={"fecha":{"$gt":fechaId}}
+        print(factorBusqueda)
         estadoC=1
     trama=''
     collectionMongo = databaseMongo.get_collection("ZGRU2009227")
     async for x in collectionMongo.find(factorBusqueda).sort("fecha",1):
         cad =x['data']
+        print(x)
         fecha_wonderful=x['fecha']
         #SECTORIZAR LA TRAMA PARA UNIRLA 
         f1 =cad.split('|')
