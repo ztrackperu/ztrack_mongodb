@@ -641,9 +641,46 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
     controlTelemetria = await collectionControl.find_one({"telemetria_id":259})
     #print(controlTelemetria)
     idProgre = 11000000000
+    factorBusqueda ={}
     if controlTelemetria :
         #print("tenemos datos")
         idProgre = controlTelemetria["id"]
+        fechaId = controlTelemetria["fecha"]
+        factorBusqueda ={"fecha":{"$gt":fechaId}}
+    trama=''
+    collectionMongo = databaseMongo.get_collection("ZGRU2009227")
+    async for x in collectionMongo.find(factorBusqueda).sort("fecha",1):
+        cad =x['data']
+        #SECTORIZAR LA TRAMA PARA UNIRLA 
+        f1 =cad.split('|')
+        p1=f1[0]
+        f2=p1.split(',')
+        print(cad)
+
+        if f2[0]=='1CR1':
+            trama=''
+            trama =trama+f1[0]
+            p2=f1[1]
+            datote =p2.split('*')
+            trama=trama+datote[0]
+            print('vamo construyendo 1')
+        if f2[0]=='1CR2':
+            if trama!='':
+                p2=f1[1]
+                datote =p2.split('*')
+                trama=trama+datote[0]
+                print('vamo construyendo 2')
+        if f2[0]=='1CR3':
+            if trama!='':
+                idProgre=idProgre+1
+                p2=f1[1]
+                datote =p2.split('*')
+                trama=trama+datote[0]
+                print(trama)
+                vali = trama.split(',')
+                #aqui debe de guardarse en la tabal control para que quede constancia de la ultima trama guardada
+
+
     return idProgre
 
 async def homologar_wonderful_zgru2009227() -> dict:
