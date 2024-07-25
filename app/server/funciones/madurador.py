@@ -666,6 +666,20 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
         estadoC=1
     trama=''
     collectionMongo = databaseMongo.get_collection("ZGRU2009227")
+
+    cnx = db_connection
+    # Get two buffered cursors
+    curA = cnx.cursor(buffered=True)
+    #curB = cnx.cursor(buffered=True)
+
+    # Query to get employees who joined in a period defined by two dates
+    query = ("SELECT * FROM contenedores "
+                "WHERE nombre_contenedor= %s")
+    
+    dataContenedor = curA.execute(query, (nombre_dispositivo,))
+    print(dataContenedor)
+
+
     async for x in collectionMongo.find(factorBusqueda).sort("fecha",1):
         cad =x['data']
         print(x)
@@ -797,14 +811,7 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
 
                     # Connect with the MySQL Server
                     #cnx = mysql.connector.connect(user='scott', database='employees')
-                    cnx = db_connection
-                    # Get two buffered cursors
-                    curA = cnx.cursor(buffered=True)
-                    #curB = cnx.cursor(buffered=True)
 
-                    # Query to get employees who joined in a period defined by two dates
-                    query = ("SELECT * FROM contenedores "
-                             "WHERE nombre_contenedor= %s")
 
                     # UPDATE and INSERT statements for the old and new salary
                     update_old_contenedor = (
@@ -815,8 +822,6 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
                     #"VALUES (%s, %s, %s, %s)")
 
                     # Select the employees getting a raise
-                    dataContenedor = curA.execute(query, (nombre_dispositivo,))
-                    print(dataContenedor)
 
     return idProgre
 
