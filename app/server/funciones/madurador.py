@@ -482,6 +482,200 @@ def obtener_mes_y_anio_actual():
 # Ejemplo de uso
 #print(obtener_mes_y_anio_actual())
 
+def convertir_a_float(dato):
+    if isinstance(dato, float):
+        return dato
+    try:
+        float_value = float(dato)
+        return float_value
+    except ValueError:
+        return None
+    
+
+async def homologar_wonderful_zgru1090804_2() -> dict:
+    #ZGRU1090804 -> 33
+    #ZGRU2009227 -> 259
+    #ZGRU2008220 -> 260
+    #ZGRU2232647 -> 258
+    datazo = obtener_mes_y_anio_actual()
+    baseD = "WONDERFUL_"+datazo
+    databaseMongo = client[baseD]
+    collectionControl =databaseMongo.get_collection("control")
+    tele_wonderful =33
+    nombre_dispositivo='ZGRU1090804'
+    controlTelemetria = await collectionControl.find_one({"telemetria_id":tele_wonderful})
+    #print(controlTelemetria)
+    idProgre = 10000000000
+    factorBusqueda ={}
+    estadoC=0
+    print(controlTelemetria)
+    if controlTelemetria :
+        #print("tenemos datos")
+        idProgre = controlTelemetria["id"]
+        fechaId = controlTelemetria["fecha"]
+        print(fechaId)
+        factorBusqueda ={"fecha":{"$gt":fechaId}}
+        print(factorBusqueda)
+        estadoC=1
+    trama=''
+    collectionMongo = databaseMongo.get_collection("ZGRU1090804")
+    cnx = mysql.connector.connect(
+        host= "localhost",
+        user= "ztrack2023",
+        passwd= "lpmp2018",
+        database="zgroupztrack"
+    )
+    curA = cnx.cursor(buffered=True)
+    curB = cnx.cursor(buffered=True)
+    dataContenedor = curA.execute("SELECT * FROM contenedores WHERE nombre_contenedor='ZGRU1090804'")
+    rows = curA.fetchall()
+    conMysql =[]
+    for row in rows :
+        conMysql.append(row)
+        print(row)
+
+    async for x in collectionMongo.find(factorBusqueda).sort("fecha",1):
+        cad =x['data']
+        print(x)
+        fecha_wonderful=x['fecha']
+        #SECTORIZAR LA TRAMA PARA UNIRLA 
+        f1 =cad.split('|')
+        p1=f1[0]
+        f2=p1.split(',')
+        print(cad)
+        if f2[0]=='1CR1':
+            trama=''
+            trama =trama+f1[0]
+            p2=f1[1]
+            datote =p2.split('*')
+            trama=trama+datote[0]
+            print('vamo construyendo 1')
+        if f2[0]=='1CR2':
+            if trama!='':
+                p2=f1[1]
+                datote =p2.split('*')
+                trama=trama+datote[0]
+                print('vamo construyendo 2')
+        if f2[0]=='1CR3':
+            if trama!='':
+                idProgre=idProgre+1
+                p2=f1[1]
+                datote =p2.split('*')
+                trama=trama+datote[0]
+                print(trama)
+                vali = trama.split(',')
+                #aqui debe de guardarse en la tabal control para que quede constancia de la ultima trama 
+                if  len(vali)==70:
+                    objetoV = {
+                            "id": idProgre,
+                            "set_point": convertir_a_float(vali[3]), 
+                            "temp_supply_1": convertir_a_float(vali[4]),
+                            "temp_supply_2": convertir_a_float(vali[5]),
+                            "return_air": convertir_a_float(vali[6]), 
+                            "evaporation_coil": convertir_a_float(vali[7]),
+                            "condensation_coil": convertir_a_float(vali[8]),
+                            "compress_coil_1": convertir_a_float(vali[9]),
+                            "compress_coil_2": convertir_a_float(vali[10]), 
+                            "ambient_air": convertir_a_float(vali[11]), 
+                            "cargo_1_temp": convertir_a_float(vali[12]),
+                            "cargo_2_temp": convertir_a_float(vali[13]), 
+                            "cargo_3_temp": convertir_a_float(vali[14]), 
+                            "cargo_4_temp": convertir_a_float(vali[15]), 
+                            "relative_humidity": convertir_a_float(vali[16]), 
+                            "avl": convertir_a_float(vali[17]), 
+                            "suction_pressure": convertir_a_float(vali[18]), 
+                            "discharge_pressure": convertir_a_float(vali[19]), 
+                            "line_voltage": convertir_a_float(vali[20]), 
+                            "line_frequency": convertir_a_float(vali[21]), 
+                            "consumption_ph_1": convertir_a_float(vali[22]), 
+                            "consumption_ph_2": convertir_a_float(vali[23]), 
+                            "consumption_ph_3": convertir_a_float(vali[24]), 
+                            "co2_reading": convertir_a_float(vali[25]), 
+                            "o2_reading": convertir_a_float(vali[26]), 
+                            "evaporator_speed": convertir_a_float(vali[27]), 
+                            "condenser_speed": convertir_a_float(vali[28]),
+                            "power_kwh": convertir_a_float(vali[29]),
+                            "power_trip_reading": convertir_a_float(vali[30]),
+                            "suction_temp": convertir_a_float(vali[31]),
+                            "discharge_temp": convertir_a_float(vali[32]),
+                            "supply_air_temp": convertir_a_float(vali[33]),
+                            "return_air_temp": convertir_a_float(vali[34]),
+                            "dl_battery_temp": convertir_a_float(vali[35]),
+                            "dl_battery_charge": convertir_a_float(vali[36]),
+                            "power_consumption": convertir_a_float(vali[37]),
+                            "power_consumption_avg": convertir_a_float(vali[38]),
+                            "alarm_present": convertir_a_float(vali[39]),
+                            "capacity_load": convertir_a_float(vali[40]),
+                            "power_state": convertir_a_float(vali[41]), 
+                            "controlling_mode": vali[42],
+                            "humidity_control": convertir_a_float(vali[43]),
+                            "humidity_set_point": convertir_a_float(vali[44]),
+                            "fresh_air_ex_mode": convertir_a_float(vali[45]),
+                            "fresh_air_ex_rate": convertir_a_float(vali[46]),
+                            "fresh_air_ex_delay": convertir_a_float(vali[47]),
+                            "set_point_o2": convertir_a_float(vali[48]),
+                            "set_point_co2": convertir_a_float(vali[49]),
+                            "defrost_term_temp": convertir_a_float(vali[50]),
+                            "defrost_interval": convertir_a_float(vali[51]),
+                            "water_cooled_conde": convertir_a_float(vali[52]),
+                            "usda_trip": convertir_a_float(vali[53]),
+                            "evaporator_exp_valve": convertir_a_float(vali[54]),
+                            "suction_mod_valve": convertir_a_float(vali[55]),
+                            "hot_gas_valve": convertir_a_float(vali[56]),
+                            "economizer_valve": convertir_a_float(vali[57]),
+                            "ethylene": convertir_a_float(vali[58]),
+                            "stateProcess": vali[59],
+                            "stateInyection": vali[60],
+                            "timerOfProcess": convertir_a_float(vali[61]),
+                            "battery_voltage": convertir_a_float(vali[62]),
+                            "power_trip_duration":convertir_a_float(vali[63]),
+                            "modelo": vali[64],
+                            "latitud": 35.7396,
+                            "longitud":  -119.238,
+                            "created_at": fecha_wonderful,
+                            "telemetria_id": tele_wonderful,
+                            "inyeccion_etileno": 0,
+                            "defrost_prueba": 0,
+                            "ripener_prueba": 0,
+                            "sp_ethyleno": convertir_a_float(vali[67]),
+                            "inyeccion_hora": convertir_a_float(vali[68]),
+                            "inyeccion_pwm": convertir_a_float(vali[69]),
+                            "extra_1": 0,
+                            "extra_2": 0,
+                            "extra_3": 0,
+                            "extra_4": 0,
+                            "extra_5": 0
+                        }
+                    databaseMongoH = client['ztrack_ja']  
+                    collectionMongoH = databaseMongoH.get_collection("madurador")
+                    collectionMongoH.insert_one(objetoV)
+                    objetoControl ={
+                        "id":idProgre,
+                        "telemetria_id":tele_wonderful,
+                        "fecha":fecha_wonderful
+                    }
+                    if estadoC==1 :
+                        #actualizar
+                        collectionControl.update_one({"telemetria_id":tele_wonderful,},{"$set": {"id":idProgre,"fecha":fecha_wonderful}})
+                    else :
+                        #grabar
+                        collectionControl.insert_one(objetoControl)
+                        estadoC=1
+                    curB = cnx.cursor()
+                    update_old_salary = (
+                    "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
+                    ", ambient_air= %s ,relative_humidity= %s WHERE estado = 1 AND telemetria_id = %s")
+                    curB.execute(update_old_salary, (fecha_wonderful, objetoV['set_point'],objetoV['temp_supply_1'], 
+                                                     objetoV['return_air'], objetoV['ambient_air'], objetoV['relative_humidity'], 
+                                                     objetoV['telemetria_id'],  ))
+                    cnx.commit()
+    cnx.close()
+    return idProgre
+
+
+
+
+
 async def homologar_wonderful_zgru1090804() -> dict:
     #preguntar fecha mes_año 07_2024
     datazo = obtener_mes_y_anio_actual()
@@ -632,15 +826,7 @@ async def homologar_wonderful_zgru1090804() -> dict:
         #print(f2[2])
     return baseD
 
- 
-def convertir_a_float(dato):
-    if isinstance(dato, float):
-        return dato
-    try:
-        float_value = float(dato)
-        return float_value
-    except ValueError:
-        return None
+
 
 
 async def homologar_wonderful_zgru2009227_2() -> dict:
@@ -853,9 +1039,10 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
                                                      objetoV['return_air'], objetoV['ambient_air'], objetoV['relative_humidity'], 
                                                      objetoV['telemetria_id'],  ))
                     cnx.commit()
-                    #cnx.close()
+    cnx.close()
 
     return idProgre
+
 
 async def homologar_wonderful_zgru2009227() -> dict:
     datazo = obtener_mes_y_anio_actual()
@@ -1019,6 +1206,191 @@ async def homologar_wonderful_zgru2009227() -> dict:
     return baseD
 
 
+
+async def homologar_wonderful_zgru2008220_2() -> dict:
+    #ZGRU1090804 -> 33
+    #ZGRU2009227 -> 259
+    #ZGRU2008220 -> 260
+    #ZGRU2232647 -> 258
+    datazo = obtener_mes_y_anio_actual()
+    baseD = "WONDERFUL_"+datazo
+    databaseMongo = client[baseD]
+    collectionControl =databaseMongo.get_collection("control")
+    tele_wonderful =260
+    nombre_dispositivo='ZGRU2008220'
+    controlTelemetria = await collectionControl.find_one({"telemetria_id":tele_wonderful})
+    #print(controlTelemetria)
+    idProgre = 12000000000
+    factorBusqueda ={}
+    estadoC=0
+    print(controlTelemetria)
+    if controlTelemetria :
+        #print("tenemos datos")
+        idProgre = controlTelemetria["id"]
+        fechaId = controlTelemetria["fecha"]
+        print(fechaId)
+        factorBusqueda ={"fecha":{"$gt":fechaId}}
+        print(factorBusqueda)
+        estadoC=1
+    trama=''
+    collectionMongo = databaseMongo.get_collection("ZGRU2008220")
+    cnx = mysql.connector.connect(
+        host= "localhost",
+        user= "ztrack2023",
+        passwd= "lpmp2018",
+        database="zgroupztrack"
+    )
+    curA = cnx.cursor(buffered=True)
+    curB = cnx.cursor(buffered=True)
+    dataContenedor = curA.execute("SELECT * FROM contenedores WHERE nombre_contenedor='ZGRU2008220'")
+    rows = curA.fetchall()
+    conMysql =[]
+    for row in rows :
+        conMysql.append(row)
+        print(row)
+
+    async for x in collectionMongo.find(factorBusqueda).sort("fecha",1):
+        cad =x['data']
+        print(x)
+        fecha_wonderful=x['fecha']
+        #SECTORIZAR LA TRAMA PARA UNIRLA 
+        f1 =cad.split('|')
+        p1=f1[0]
+        f2=p1.split(',')
+        print(cad)
+        if f2[0]=='1CR1':
+            trama=''
+            trama =trama+f1[0]
+            p2=f1[1]
+            datote =p2.split('*')
+            trama=trama+datote[0]
+            print('vamo construyendo 1')
+        if f2[0]=='1CR2':
+            if trama!='':
+                p2=f1[1]
+                datote =p2.split('*')
+                trama=trama+datote[0]
+                print('vamo construyendo 2')
+        if f2[0]=='1CR3':
+            if trama!='':
+                idProgre=idProgre+1
+                p2=f1[1]
+                datote =p2.split('*')
+                trama=trama+datote[0]
+                print(trama)
+                vali = trama.split(',')
+                #aqui debe de guardarse en la tabal control para que quede constancia de la ultima trama 
+                if  len(vali)==70:
+                    objetoV = {
+                            "id": idProgre,
+                            "set_point": convertir_a_float(vali[3]), 
+                            "temp_supply_1": convertir_a_float(vali[4]),
+                            "temp_supply_2": convertir_a_float(vali[5]),
+                            "return_air": convertir_a_float(vali[6]), 
+                            "evaporation_coil": convertir_a_float(vali[7]),
+                            "condensation_coil": convertir_a_float(vali[8]),
+                            "compress_coil_1": convertir_a_float(vali[9]),
+                            "compress_coil_2": convertir_a_float(vali[10]), 
+                            "ambient_air": convertir_a_float(vali[11]), 
+                            "cargo_1_temp": convertir_a_float(vali[12]),
+                            "cargo_2_temp": convertir_a_float(vali[13]), 
+                            "cargo_3_temp": convertir_a_float(vali[14]), 
+                            "cargo_4_temp": convertir_a_float(vali[15]), 
+                            "relative_humidity": convertir_a_float(vali[16]), 
+                            "avl": convertir_a_float(vali[17]), 
+                            "suction_pressure": convertir_a_float(vali[18]), 
+                            "discharge_pressure": convertir_a_float(vali[19]), 
+                            "line_voltage": convertir_a_float(vali[20]), 
+                            "line_frequency": convertir_a_float(vali[21]), 
+                            "consumption_ph_1": convertir_a_float(vali[22]), 
+                            "consumption_ph_2": convertir_a_float(vali[23]), 
+                            "consumption_ph_3": convertir_a_float(vali[24]), 
+                            "co2_reading": convertir_a_float(vali[25]), 
+                            "o2_reading": convertir_a_float(vali[26]), 
+                            "evaporator_speed": convertir_a_float(vali[27]), 
+                            "condenser_speed": convertir_a_float(vali[28]),
+                            "power_kwh": convertir_a_float(vali[29]),
+                            "power_trip_reading": convertir_a_float(vali[30]),
+                            "suction_temp": convertir_a_float(vali[31]),
+                            "discharge_temp": convertir_a_float(vali[32]),
+                            "supply_air_temp": convertir_a_float(vali[33]),
+                            "return_air_temp": convertir_a_float(vali[34]),
+                            "dl_battery_temp": convertir_a_float(vali[35]),
+                            "dl_battery_charge": convertir_a_float(vali[36]),
+                            "power_consumption": convertir_a_float(vali[37]),
+                            "power_consumption_avg": convertir_a_float(vali[38]),
+                            "alarm_present": convertir_a_float(vali[39]),
+                            "capacity_load": convertir_a_float(vali[40]),
+                            "power_state": convertir_a_float(vali[41]), 
+                            "controlling_mode": vali[42],
+                            "humidity_control": convertir_a_float(vali[43]),
+                            "humidity_set_point": convertir_a_float(vali[44]),
+                            "fresh_air_ex_mode": convertir_a_float(vali[45]),
+                            "fresh_air_ex_rate": convertir_a_float(vali[46]),
+                            "fresh_air_ex_delay": convertir_a_float(vali[47]),
+                            "set_point_o2": convertir_a_float(vali[48]),
+                            "set_point_co2": convertir_a_float(vali[49]),
+                            "defrost_term_temp": convertir_a_float(vali[50]),
+                            "defrost_interval": convertir_a_float(vali[51]),
+                            "water_cooled_conde": convertir_a_float(vali[52]),
+                            "usda_trip": convertir_a_float(vali[53]),
+                            "evaporator_exp_valve": convertir_a_float(vali[54]),
+                            "suction_mod_valve": convertir_a_float(vali[55]),
+                            "hot_gas_valve": convertir_a_float(vali[56]),
+                            "economizer_valve": convertir_a_float(vali[57]),
+                            "ethylene": convertir_a_float(vali[58]),
+                            "stateProcess": vali[59],
+                            "stateInyection": vali[60],
+                            "timerOfProcess": convertir_a_float(vali[61]),
+                            "battery_voltage": convertir_a_float(vali[62]),
+                            "power_trip_duration":convertir_a_float(vali[63]),
+                            "modelo": vali[64],
+                            "latitud": 35.7396,
+                            "longitud":  -119.238,
+                            "created_at": fecha_wonderful,
+                            "telemetria_id": tele_wonderful,
+                            "inyeccion_etileno": 0,
+                            "defrost_prueba": 0,
+                            "ripener_prueba": 0,
+                            "sp_ethyleno": convertir_a_float(vali[67]),
+                            "inyeccion_hora": convertir_a_float(vali[68]),
+                            "inyeccion_pwm": convertir_a_float(vali[69]),
+                            "extra_1": 0,
+                            "extra_2": 0,
+                            "extra_3": 0,
+                            "extra_4": 0,
+                            "extra_5": 0
+                        }
+                    databaseMongoH = client['ztrack_ja']  
+                    collectionMongoH = databaseMongoH.get_collection("madurador")
+                    collectionMongoH.insert_one(objetoV)
+                    objetoControl ={
+                        "id":idProgre,
+                        "telemetria_id":tele_wonderful,
+                        "fecha":fecha_wonderful
+                    }
+                    if estadoC==1 :
+                        #actualizar
+                        collectionControl.update_one({"telemetria_id":tele_wonderful,},{"$set": {"id":idProgre,"fecha":fecha_wonderful}})
+                    else :
+                        #grabar
+                        collectionControl.insert_one(objetoControl)
+                        estadoC=1
+                    curB = cnx.cursor()
+                    update_old_salary = (
+                    "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
+                    ", ambient_air= %s ,relative_humidity= %s WHERE estado = 1 AND telemetria_id = %s")
+                    curB.execute(update_old_salary, (fecha_wonderful, objetoV['set_point'],objetoV['temp_supply_1'], 
+                                                     objetoV['return_air'], objetoV['ambient_air'], objetoV['relative_humidity'], 
+                                                     objetoV['telemetria_id'],  ))
+                    cnx.commit()
+    cnx.close()
+
+    return idProgre
+
+
+
+
 async def homologar_wonderful_zgru2008220() -> dict:
     datazo = obtener_mes_y_anio_actual()
     baseD = "WONDERFUL_"+datazo
@@ -1167,6 +1539,190 @@ async def homologar_wonderful_zgru2008220() -> dict:
                     #collectionMongoH.insert_one(objetoV)
 
     return baseD
+
+
+
+async def homologar_wonderful_zgru2232647_2() -> dict:
+    #ZGRU1090804 -> 33
+    #ZGRU2009227 -> 259
+    #ZGRU2008220 -> 260
+    #ZGRU2232647 -> 258
+    datazo = obtener_mes_y_anio_actual()
+    baseD = "WONDERFUL_"+datazo
+    databaseMongo = client[baseD]
+    collectionControl =databaseMongo.get_collection("control")
+    tele_wonderful =258
+    nombre_dispositivo='ZGRU2232647'
+    controlTelemetria = await collectionControl.find_one({"telemetria_id":tele_wonderful})
+    #print(controlTelemetria)
+    idProgre = 13000000000
+    factorBusqueda ={}
+    estadoC=0
+    print(controlTelemetria)
+    if controlTelemetria :
+        #print("tenemos datos")
+        idProgre = controlTelemetria["id"]
+        fechaId = controlTelemetria["fecha"]
+        print(fechaId)
+        factorBusqueda ={"fecha":{"$gt":fechaId}}
+        print(factorBusqueda)
+        estadoC=1
+    trama=''
+    collectionMongo = databaseMongo.get_collection("ZGRU2232647")
+    cnx = mysql.connector.connect(
+        host= "localhost",
+        user= "ztrack2023",
+        passwd= "lpmp2018",
+        database="zgroupztrack"
+    )
+    curA = cnx.cursor(buffered=True)
+    curB = cnx.cursor(buffered=True)
+    dataContenedor = curA.execute("SELECT * FROM contenedores WHERE nombre_contenedor='ZGRU2232647'")
+    rows = curA.fetchall()
+    conMysql =[]
+    for row in rows :
+        conMysql.append(row)
+        print(row)
+
+    async for x in collectionMongo.find(factorBusqueda).sort("fecha",1):
+        cad =x['data']
+        print(x)
+        fecha_wonderful=x['fecha']
+        #SECTORIZAR LA TRAMA PARA UNIRLA 
+        f1 =cad.split('|')
+        p1=f1[0]
+        f2=p1.split(',')
+        print(cad)
+        if f2[0]=='1CR1':
+            trama=''
+            trama =trama+f1[0]
+            p2=f1[1]
+            datote =p2.split('*')
+            trama=trama+datote[0]
+            print('vamo construyendo 1')
+        if f2[0]=='1CR2':
+            if trama!='':
+                p2=f1[1]
+                datote =p2.split('*')
+                trama=trama+datote[0]
+                print('vamo construyendo 2')
+        if f2[0]=='1CR3':
+            if trama!='':
+                idProgre=idProgre+1
+                p2=f1[1]
+                datote =p2.split('*')
+                trama=trama+datote[0]
+                print(trama)
+                vali = trama.split(',')
+                #aqui debe de guardarse en la tabal control para que quede constancia de la ultima trama 
+                if  len(vali)==70:
+                    objetoV = {
+                            "id": idProgre,
+                            "set_point": convertir_a_float(vali[3]), 
+                            "temp_supply_1": convertir_a_float(vali[4]),
+                            "temp_supply_2": convertir_a_float(vali[5]),
+                            "return_air": convertir_a_float(vali[6]), 
+                            "evaporation_coil": convertir_a_float(vali[7]),
+                            "condensation_coil": convertir_a_float(vali[8]),
+                            "compress_coil_1": convertir_a_float(vali[9]),
+                            "compress_coil_2": convertir_a_float(vali[10]), 
+                            "ambient_air": convertir_a_float(vali[11]), 
+                            "cargo_1_temp": convertir_a_float(vali[12]),
+                            "cargo_2_temp": convertir_a_float(vali[13]), 
+                            "cargo_3_temp": convertir_a_float(vali[14]), 
+                            "cargo_4_temp": convertir_a_float(vali[15]), 
+                            "relative_humidity": convertir_a_float(vali[16]), 
+                            "avl": convertir_a_float(vali[17]), 
+                            "suction_pressure": convertir_a_float(vali[18]), 
+                            "discharge_pressure": convertir_a_float(vali[19]), 
+                            "line_voltage": convertir_a_float(vali[20]), 
+                            "line_frequency": convertir_a_float(vali[21]), 
+                            "consumption_ph_1": convertir_a_float(vali[22]), 
+                            "consumption_ph_2": convertir_a_float(vali[23]), 
+                            "consumption_ph_3": convertir_a_float(vali[24]), 
+                            "co2_reading": convertir_a_float(vali[25]), 
+                            "o2_reading": convertir_a_float(vali[26]), 
+                            "evaporator_speed": convertir_a_float(vali[27]), 
+                            "condenser_speed": convertir_a_float(vali[28]),
+                            "power_kwh": convertir_a_float(vali[29]),
+                            "power_trip_reading": convertir_a_float(vali[30]),
+                            "suction_temp": convertir_a_float(vali[31]),
+                            "discharge_temp": convertir_a_float(vali[32]),
+                            "supply_air_temp": convertir_a_float(vali[33]),
+                            "return_air_temp": convertir_a_float(vali[34]),
+                            "dl_battery_temp": convertir_a_float(vali[35]),
+                            "dl_battery_charge": convertir_a_float(vali[36]),
+                            "power_consumption": convertir_a_float(vali[37]),
+                            "power_consumption_avg": convertir_a_float(vali[38]),
+                            "alarm_present": convertir_a_float(vali[39]),
+                            "capacity_load": convertir_a_float(vali[40]),
+                            "power_state": convertir_a_float(vali[41]), 
+                            "controlling_mode": vali[42],
+                            "humidity_control": convertir_a_float(vali[43]),
+                            "humidity_set_point": convertir_a_float(vali[44]),
+                            "fresh_air_ex_mode": convertir_a_float(vali[45]),
+                            "fresh_air_ex_rate": convertir_a_float(vali[46]),
+                            "fresh_air_ex_delay": convertir_a_float(vali[47]),
+                            "set_point_o2": convertir_a_float(vali[48]),
+                            "set_point_co2": convertir_a_float(vali[49]),
+                            "defrost_term_temp": convertir_a_float(vali[50]),
+                            "defrost_interval": convertir_a_float(vali[51]),
+                            "water_cooled_conde": convertir_a_float(vali[52]),
+                            "usda_trip": convertir_a_float(vali[53]),
+                            "evaporator_exp_valve": convertir_a_float(vali[54]),
+                            "suction_mod_valve": convertir_a_float(vali[55]),
+                            "hot_gas_valve": convertir_a_float(vali[56]),
+                            "economizer_valve": convertir_a_float(vali[57]),
+                            "ethylene": convertir_a_float(vali[58]),
+                            "stateProcess": vali[59],
+                            "stateInyection": vali[60],
+                            "timerOfProcess": convertir_a_float(vali[61]),
+                            "battery_voltage": convertir_a_float(vali[62]),
+                            "power_trip_duration":convertir_a_float(vali[63]),
+                            "modelo": vali[64],
+                            "latitud": 35.7396,
+                            "longitud":  -119.238,
+                            "created_at": fecha_wonderful,
+                            "telemetria_id": tele_wonderful,
+                            "inyeccion_etileno": 0,
+                            "defrost_prueba": 0,
+                            "ripener_prueba": 0,
+                            "sp_ethyleno": convertir_a_float(vali[67]),
+                            "inyeccion_hora": convertir_a_float(vali[68]),
+                            "inyeccion_pwm": convertir_a_float(vali[69]),
+                            "extra_1": 0,
+                            "extra_2": 0,
+                            "extra_3": 0,
+                            "extra_4": 0,
+                            "extra_5": 0
+                        }
+                    databaseMongoH = client['ztrack_ja']  
+                    collectionMongoH = databaseMongoH.get_collection("madurador")
+                    collectionMongoH.insert_one(objetoV)
+                    objetoControl ={
+                        "id":idProgre,
+                        "telemetria_id":tele_wonderful,
+                        "fecha":fecha_wonderful
+                    }
+                    if estadoC==1 :
+                        #actualizar
+                        collectionControl.update_one({"telemetria_id":tele_wonderful,},{"$set": {"id":idProgre,"fecha":fecha_wonderful}})
+                    else :
+                        #grabar
+                        collectionControl.insert_one(objetoControl)
+                        estadoC=1
+                    curB = cnx.cursor()
+                    update_old_salary = (
+                    "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
+                    ", ambient_air= %s ,relative_humidity= %s WHERE estado = 1 AND telemetria_id = %s")
+                    curB.execute(update_old_salary, (fecha_wonderful, objetoV['set_point'],objetoV['temp_supply_1'], 
+                                                     objetoV['return_air'], objetoV['ambient_air'], objetoV['relative_humidity'], 
+                                                     objetoV['telemetria_id'],  ))
+                    cnx.commit()
+    cnx.close()
+
+    return idProgre
+
 
 
 async def homologar_wonderful_zgru2232647() -> dict:
