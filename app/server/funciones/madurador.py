@@ -815,7 +815,7 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
                     #"VALUES (%s, %s, %s, %s)")
 
                     # Select the employees getting a raise
-                    dataContenedor = curA.execute(query, (nombre_dispositivo))
+                    dataContenedor = curA.execute(query, (nombre_dispositivo,))
                     print(dataContenedor)
 
     return idProgre
