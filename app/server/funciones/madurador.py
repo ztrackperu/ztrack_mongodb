@@ -796,8 +796,8 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
                         estadoC=1
 
                     # Connect with the MySQL Server
-                    cnx = mysql.connector.connect(user='scott', database='employees')
-
+                    #cnx = mysql.connector.connect(user='scott', database='employees')
+                    cnx = db_connection
                     # Get two buffered cursors
                     curA = cnx.cursor(buffered=True)
                     #curB = cnx.cursor(buffered=True)
