@@ -679,9 +679,10 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
     #dataContenedor = curA.execute(query, (nombre_dispositivo,))
     dataContenedor = curA.execute("SELECT * FROM contenedores WHERE nombre_contenedor='ZGRU2009227'")
     rows = curA.fetchall()
-
+    conMysql =[]
     for row in rows :
-        print(row)
+        conMysql.append(row)
+        #print(row)
     curA.close()
 
     #for (nombre_contenedor, ultima_fecha, power_state) in dataContenedor:
@@ -827,14 +828,26 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
 
 
                     # UPDATE and INSERT statements for the old and new salary
-                    update_old_contenedor = (
-                    "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s , return_air= % , ambient_air= %s ,relative_humidity= %s"
-                    ",power_state = %s WHERE nombre_contenedor= %s")
+                    #update_old_contenedor = (
+                    #"UPDATE contenedores SET ultima_fecha = %s ,set_point =  %s,temp_supply_1= %s , return_air= % , ambient_air= %s ,relative_humidity= %s"
+                    #",power_state = %s WHERE nombre_contenedor= %s")
                     #insert_new_salary = (
                     #"INSERT INTO salaries (emp_no, from_date, to_date, salary) "
                     #"VALUES (%s, %s, %s, %s)")
 
                     # Select the employees getting a raise
+
+
+                    #actualizar data en mysql
+                    curB = cnx.cursor(buffered=True)
+                    update_old_salary = (
+                    "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
+                    ", ambient_air= %s ,relative_humidity= %s WHERE estado = 1 AND telemetria_id = %s")
+                    curB.execute(update_old_salary, (fecha_wonderful, objetoV['set_point'],objetoV['temp_supply_1'], 
+                                                     objetoV['return_air'], objetoV['ambient_air'], objetoV['relative_humidity'], 
+                                                     objetoV['telemetria_id'],  ))
+                    cnx.commit()
+                    cnx.close()
 
     return idProgre
 
