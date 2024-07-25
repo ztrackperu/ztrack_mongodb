@@ -690,7 +690,7 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
     for row in rows :
         conMysql.append(row)
         print(row)
-    curA.close()
+    #curA.close()
 
     #for (nombre_contenedor, ultima_fecha, power_state) in dataContenedor:
         #print("datito")
@@ -862,7 +862,7 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
                                                      objetoV['return_air'], objetoV['ambient_air'], objetoV['relative_humidity'], 
                                                      objetoV['telemetria_id'],  ))
                     cnx.commit()
-                    cnx.close()
+                    #cnx.close()
 
     return idProgre
 
