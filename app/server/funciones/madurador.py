@@ -844,17 +844,8 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
 
                     # Select the employees getting a raise
 
-
-                    #actualizar data en 
-                    cnx1 = mysql.connector.connect(
-                        host= "localhost",
-                        user= "ztrack2023",
-                        passwd= "lpmp2018",
-                        database="zgroupztrack"
-                    )
-                    #curA = cnx.cursor(buffered=True)
                     
-                    curB = cnx1.cursor()
+                    curB = cnx.cursor()
                     update_old_salary = (
                     "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
                     ", ambient_air= %s ,relative_humidity= %s WHERE estado = 1 AND telemetria_id = %s")
