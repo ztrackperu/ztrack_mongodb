@@ -674,10 +674,17 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
 
     # Query to get employees who joined in a period defined by two dates
     query = ("SELECT * FROM contenedores "
-                "WHERE nombre_contenedor= %s")
+                "WHERE nombre_contenedor= %s LIMIT 1")
     
     dataContenedor = curA.execute(query, (nombre_dispositivo,))
-    print(dataContenedor)
+
+    for (nombre_contenedor, ultima_fecha, power_state) in dataContenedor:
+        print("datito")
+        print(nombre_contenedor)
+        print(power_state)
+        print(ultima_fecha)
+        print("datito")
+    #print(dataContenedor)
 
 
     async for x in collectionMongo.find(factorBusqueda).sort("fecha",1):
