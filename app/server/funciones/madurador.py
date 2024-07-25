@@ -649,6 +649,7 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
     databaseMongo = client[baseD]
     collectionControl =databaseMongo.get_collection("control")
     tele_wonderful =259
+    nombre_dispositivo="ZGRU2009227"
     controlTelemetria = await collectionControl.find_one({"telemetria_id":tele_wonderful})
     #print(controlTelemetria)
     idProgre = 11000000000
@@ -793,6 +794,29 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
                         #grabar
                         collectionControl.insert_one(objetoControl)
                         estadoC=1
+
+                    # Connect with the MySQL Server
+                    cnx = mysql.connector.connect(user='scott', database='employees')
+
+                    # Get two buffered cursors
+                    curA = cnx.cursor(buffered=True)
+                    #curB = cnx.cursor(buffered=True)
+
+                    # Query to get employees who joined in a period defined by two dates
+                    query = ("SELECT * FROM contenedores WHERE nombre_contenedor= %s")
+
+                    # UPDATE and INSERT statements for the old and new salary
+                    update_old_contenedor = (
+                    "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s , return_air= % , ambient_air= %s ,relative_humidity= %s"
+                    ",power_state = %s WHERE nombre_contenedor= %s")
+                    #insert_new_salary = (
+                    #"INSERT INTO salaries (emp_no, from_date, to_date, salary) "
+                    #"VALUES (%s, %s, %s, %s)")
+
+                    # Select the employees getting a raise
+                    dataContenedor = curA.execute(query, ( nombre_dispositivo))
+                    print(dataContenedor)
+
     return idProgre
 
 async def homologar_wonderful_zgru2009227() -> dict:
