@@ -654,6 +654,7 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
     idProgre = 11000000000
     factorBusqueda ={}
     estadoC=0
+    print(controlTelemetria)
     if controlTelemetria :
         #print("tenemos datos")
         idProgre = controlTelemetria["id"]
