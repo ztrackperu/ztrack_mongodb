@@ -1718,7 +1718,7 @@ async def homologar_wonderful_zgru2232647_2() -> dict:
                      " , set_point_co2 = %s , co2_reading = %s , humidity_set_point = %s WHERE estado = 1 AND telemetria_id = %s  ")
                     curB.execute(update_old_salary, (fecha_wonderful, objetoV['set_point'],objetoV['temp_supply_1'], 
                                                      objetoV['return_air'], objetoV['ambient_air'], objetoV['relative_humidity'], 
-                                                     objetoV['avl'], objetoV['defrost_prueba'], objetoV['ripener_prueba'], 
+                                                     objetoV['avl'], objetoV['inyeccion_pwm'], objetoV['inyeccion_hora'], 
                                                      objetoV['ethylene'], objetoV['set_point_co2'], objetoV['co2_reading'], 
                                                      objetoV['humidity_set_point'], 
                                                      objetoV['telemetria_id'],  ))
