@@ -19,11 +19,9 @@ from server.funciones.madurador import (
     homologar_wonderful_zgru2009227_2,
     homologar_wonderful_zgru1090804_2,
     homologar_wonderful_zgru2008220_2,
-    homologar_wonderful_zgru2232647_2
+    homologar_wonderful_zgru2232647_2,
+    starcool_ZGRU1092515
     
-    
-
-
 )
 #Aqui importamos el modelo necesario para la clase 
 from server.models.madurador import (
@@ -113,6 +111,13 @@ async def homologar_zgru2232647():
     notificacions = await homologar_wonderful_zgru2232647_2()
     if notificacions:
         return ResponseModel(notificacions, "Datos homologados zgru2232647!")
+    return ResponseModel(notificacions, "Lista vacía devuelta")
+
+@router.get("/starcool_ZGRU1092515", response_description="Datos de tunel se homologan con ztrack")
+async def homologar_starcool_ZGRU1092515():
+    notificacions = await starcool_ZGRU1092515()
+    if notificacions:
+        return ResponseModel(notificacions, "Datos homologados zgru1092515!")
     return ResponseModel(notificacions, "Lista vacía devuelta")
 
 
