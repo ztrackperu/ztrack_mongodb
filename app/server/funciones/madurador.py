@@ -664,9 +664,13 @@ async def homologar_wonderful_zgru1090804_2() -> dict:
                     curB = cnx.cursor()
                     update_old_salary = (
                     "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
-                    ", ambient_air= %s ,relative_humidity= %s WHERE estado = 1 AND telemetria_id = %s")
+                    ", ambient_air= %s ,relative_humidity= %s ,avl = %s , defrost_prueba = %s , ripener_prueba = %s , ethylene = %s"
+                     " , set_point_co2 = %s , co2_reading = %s , humidity_set_point = %s WHERE estado = 1 AND telemetria_id = %s  ")
                     curB.execute(update_old_salary, (fecha_wonderful, objetoV['set_point'],objetoV['temp_supply_1'], 
                                                      objetoV['return_air'], objetoV['ambient_air'], objetoV['relative_humidity'], 
+                                                     objetoV['avl'], objetoV['inyeccion_pwm'], objetoV['inyeccion_hora'], 
+                                                     objetoV['ethylene'], objetoV['set_point_co2'], objetoV['co2_reading'], 
+                                                     objetoV['humidity_set_point'], 
                                                      objetoV['telemetria_id'],  ))
                     cnx.commit()
     cnx.close()
@@ -1034,9 +1038,13 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
                     curB = cnx.cursor()
                     update_old_salary = (
                     "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
-                    ", ambient_air= %s ,relative_humidity= %s WHERE estado = 1 AND telemetria_id = %s")
+                    ", ambient_air= %s ,relative_humidity= %s ,avl = %s , defrost_prueba = %s , ripener_prueba = %s , ethylene = %s"
+                     " , set_point_co2 = %s , co2_reading = %s , humidity_set_point = %s WHERE estado = 1 AND telemetria_id = %s  ")
                     curB.execute(update_old_salary, (fecha_wonderful, objetoV['set_point'],objetoV['temp_supply_1'], 
                                                      objetoV['return_air'], objetoV['ambient_air'], objetoV['relative_humidity'], 
+                                                     objetoV['avl'], objetoV['inyeccion_pwm'], objetoV['inyeccion_hora'], 
+                                                     objetoV['ethylene'], objetoV['set_point_co2'], objetoV['co2_reading'], 
+                                                     objetoV['humidity_set_point'], 
                                                      objetoV['telemetria_id'],  ))
                     cnx.commit()
     cnx.close()
@@ -1379,11 +1387,16 @@ async def homologar_wonderful_zgru2008220_2() -> dict:
                     curB = cnx.cursor()
                     update_old_salary = (
                     "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
-                    ", ambient_air= %s ,relative_humidity= %s WHERE estado = 1 AND telemetria_id = %s")
+                    ", ambient_air= %s ,relative_humidity= %s ,avl = %s , defrost_prueba = %s , ripener_prueba = %s , ethylene = %s"
+                     " , set_point_co2 = %s , co2_reading = %s , humidity_set_point = %s WHERE estado = 1 AND telemetria_id = %s  ")
                     curB.execute(update_old_salary, (fecha_wonderful, objetoV['set_point'],objetoV['temp_supply_1'], 
                                                      objetoV['return_air'], objetoV['ambient_air'], objetoV['relative_humidity'], 
+                                                     objetoV['avl'], objetoV['inyeccion_pwm'], objetoV['inyeccion_hora'], 
+                                                     objetoV['ethylene'], objetoV['set_point_co2'], objetoV['co2_reading'], 
+                                                     objetoV['humidity_set_point'], 
                                                      objetoV['telemetria_id'],  ))
                     cnx.commit()
+                    
     cnx.close()
 
     return idProgre
