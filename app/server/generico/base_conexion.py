@@ -14,7 +14,15 @@ class BaseConexion :
         anio_actual = fecha_actual.year
         mes_anio_str = f"{mes_actual}_{anio_actual}"
         return mes_anio_str
-    
-    
+    def convertir_a_float(dato):
+        if isinstance(dato, float):
+            return dato
+        try:
+            float_value = float(dato)
+            return float_value
+        except ValueError:
+            return None
+        
+
     
 
