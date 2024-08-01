@@ -16,8 +16,8 @@ db_connection = mysql.connector.connect(
 async def homologar_starcool01() -> dict:
     #obtener el id de la telemetria en consulta MYSQL
     #STARCOOL01 es asignado a ZGRU1092515 con telemetria_id 14859 Y id_contenedor 474 , idProgre =16000000000
-    #datazo = BaseConexion.obtener_mes_y_anio_actual()
-    datazo ="6_2024"
+    datazo = BaseConexion.obtener_mes_y_anio_actual()
+    #datazo ="6_2024"
     baseD = "REPOSITORIO_"+datazo
     databaseMongo = client[baseD]
     collectionControl =databaseMongo.get_collection("control")
