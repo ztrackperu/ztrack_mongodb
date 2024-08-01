@@ -16,7 +16,8 @@ db_connection = mysql.connector.connect(
 async def homologar_starcool01() -> dict:
     #obtener el id de la telemetria en consulta MYSQL
     #STARCOOL01 es asignado a ZGRU1092515 con telemetria_id 14859 Y id_contenedor 474 , idProgre =16000000000
-    datazo = BaseConexion.obtener_mes_y_anio_actual()
+    #datazo = BaseConexion.obtener_mes_y_anio_actual()
+    datazo ="6_2024"
     baseD = "REPOSITORIO_"+datazo
     databaseMongo = client[baseD]
     collectionControl =databaseMongo.get_collection("control")
@@ -59,6 +60,7 @@ async def homologar_starcool01() -> dict:
         f2 =cad.split(',')
         if f2[2]=='STARCOOL01':
             if len(f2)==70:
+                idProgre=idProgre+1
                 #procesar el dato
                 objetoV = {
                     "id": idProgre,
@@ -68,14 +70,14 @@ async def homologar_starcool01() -> dict:
                     "return_air": BaseConexion.convertir_a_float(f2[16]), 
                     "evaporation_coil": BaseConexion.convertir_a_float(f2[17]),
                     "condensation_coil": BaseConexion.convertir_a_float(f2[18]),
-                    "compress_coil_1": BaseConexion.convertir_a_float(f2[19]),
+                    "compress_coil_1": BaseConexion.convertir_a_float("NA"),
                     "compress_coil_2": BaseConexion.convertir_a_float(f2[20]), 
                     "ambient_air": BaseConexion.convertir_a_float(f2[21]), 
                     "cargo_1_temp": BaseConexion.convertir_a_float(f2[22]),
                     "cargo_2_temp": BaseConexion.convertir_a_float(f2[23]), 
                     "cargo_3_temp": BaseConexion.convertir_a_float(f2[24]), 
                     "cargo_4_temp": BaseConexion.convertir_a_float(f2[25]), 
-                    "relative_humidity": BaseConexion.convertir_a_float(f2[26]), 
+                    "relative_humidity": BaseConexion.convertir_a_float("NA"), 
                     "avl": BaseConexion.convertir_a_float(f2[17]), 
                     "suction_pressure": BaseConexion.convertir_a_float(f2[18]), 
                     "discharge_pressure": BaseConexion.convertir_a_float(f2[19]), 
