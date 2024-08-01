@@ -16,8 +16,8 @@ db_connection = mysql.connector.connect(
 async def homologar_starcool01() -> dict:
     #obtener el id de la telemetria en consulta MYSQL
     #STARCOOL01 es asignado a ZGRU1092515 con telemetria_id 14859 Y id_contenedor 474 , idProgre =16000000000
-    datazo = BaseConexion.obtener_mes_y_anio_actual()
-    #datazo ="6_2024"
+    #datazo = BaseConexion.obtener_mes_y_anio_actual()
+    datazo ="7_2024"
     baseD = "REPOSITORIO_"+datazo
     databaseMongo = client[baseD]
     collectionControl =databaseMongo.get_collection("control")
@@ -70,14 +70,14 @@ async def homologar_starcool01() -> dict:
                     "return_air": BaseConexion.convertir_a_float(f2[16]), 
                     "evaporation_coil": BaseConexion.convertir_a_float(f2[17]),
                     "condensation_coil": BaseConexion.convertir_a_float(f2[18]),
-                    "compress_coil_1": BaseConexion.convertir_a_float("NA"),
+                    "compress_coil_1": None,
                     "compress_coil_2": BaseConexion.convertir_a_float(f2[20]), 
                     "ambient_air": BaseConexion.convertir_a_float(f2[21]), 
                     "cargo_1_temp": BaseConexion.convertir_a_float(f2[22]),
                     "cargo_2_temp": BaseConexion.convertir_a_float(f2[23]), 
                     "cargo_3_temp": BaseConexion.convertir_a_float(f2[24]), 
                     "cargo_4_temp": BaseConexion.convertir_a_float(f2[25]), 
-                    "relative_humidity": BaseConexion.convertir_a_float("NA"), 
+                    "relative_humidity": None, 
                     "avl": BaseConexion.convertir_a_float(f2[17]), 
                     "suction_pressure": BaseConexion.convertir_a_float(f2[18]), 
                     "discharge_pressure": BaseConexion.convertir_a_float(f2[19]), 
@@ -102,7 +102,7 @@ async def homologar_starcool01() -> dict:
                     "power_consumption_avg": BaseConexion.convertir_a_float(f2[38]),
                     "alarm_present": BaseConexion.convertir_a_float(f2[39]),
                     "capacity_load": BaseConexion.convertir_a_float(f2[40]),
-                    "power_state": BaseConexion.convertir_a_float(f2[41]), 
+                    "power_state": 1, 
                     "controlling_mode": f2[42],
                     "humidity_control": BaseConexion.convertir_a_float(f2[43]),
                     "humidity_set_point": BaseConexion.convertir_a_float(f2[44]),
