@@ -2040,7 +2040,9 @@ async def homologar_datos_wonderful(notificacion_data: dict) -> dict :
                             "extra_5": 0
                         }
                     #buscamos la base de datos 
-                    nombre_bd_wonderful = "P_"+nombre_dispositivo +datazo
+                    #nombre_bd_wonderful = "P_"+nombre_dispositivo +datazo
+                    nombre_bd_wonderful = nombre_dispositivo +"_"+datazo
+
                     #databaseMongoH = client['ztrack_ja']  
                     databaseMongoH = client[nombre_bd_wonderful]  
                     collectionMongoH = databaseMongoH.get_collection("madurador")
