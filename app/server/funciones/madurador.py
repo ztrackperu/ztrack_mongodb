@@ -647,6 +647,14 @@ async def homologar_wonderful_zgru1090804_2() -> dict:
                     databaseMongoH = client['ztrack_ja']  
                     collectionMongoH = databaseMongoH.get_collection("madurador")
                     collectionMongoH.insert_one(objetoV)
+
+                    base_novo = nombre_dispositivo+"_"+datazo
+                    databaseMongo_NOVO = client[base_novo]
+                    collectionMongo_NOVO = databaseMongo_NOVO.get_collection("madurador")
+                    collectionMongo_NOVO.insert_one(objetoV)
+
+
+
                     objetoControl ={
                         "id":idProgre,
                         "telemetria_id":tele_wonderful,
@@ -1005,6 +1013,12 @@ async def homologar_wonderful_zgru2009227_2() -> dict:
                     databaseMongoH = client['ztrack_ja']  
                     collectionMongoH = databaseMongoH.get_collection("madurador")
                     collectionMongoH.insert_one(objetoV)
+
+                    base_novo = nombre_dispositivo+"_"+datazo
+                    databaseMongo_NOVO = client[base_novo]
+                    collectionMongo_NOVO = databaseMongo_NOVO.get_collection("madurador")
+                    collectionMongo_NOVO.insert_one(objetoV)
+
                     objetoControl ={
                         "id":idProgre,
                         "telemetria_id":tele_wonderful,
@@ -1370,6 +1384,13 @@ async def homologar_wonderful_zgru2008220_2() -> dict:
                     databaseMongoH = client['ztrack_ja']  
                     collectionMongoH = databaseMongoH.get_collection("madurador")
                     collectionMongoH.insert_one(objetoV)
+
+                    base_novo = nombre_dispositivo+"_"+datazo
+                    databaseMongo_NOVO = client[base_novo]
+                    collectionMongo_NOVO = databaseMongo_NOVO.get_collection("madurador")
+                    collectionMongo_NOVO.insert_one(objetoV)
+
+
                     objetoControl ={
                         "id":idProgre,
                         "telemetria_id":tele_wonderful,
@@ -1708,8 +1729,13 @@ async def homologar_wonderful_zgru2232647_2() -> dict:
                             "extra_5": 0
                         }
                     databaseMongoH = client['ztrack_ja']  
-                    collectionMongoH = databaseMongoH.get_collection("madurador")
+                    collectionMongoH = databaseMongoH.get_collection("madurador")  
                     collectionMongoH.insert_one(objetoV)
+                    
+                    base_novo = nombre_dispositivo+"_"+datazo
+                    databaseMongo_NOVO = client[base_novo]
+                    collectionMongo_NOVO = databaseMongo_NOVO.get_collection("madurador")
+                    collectionMongo_NOVO.insert_one(objetoV)
                     objetoControl ={
                         "id":idProgre,
                         "telemetria_id":tele_wonderful,
@@ -1905,7 +1931,7 @@ async def homologar_datos_wonderful(notificacion_data: dict) -> dict :
     datazo = notificacion_data['mes']
     baseD = "WONDERFUL_"+datazo
     databaseMongo = client[baseD]
-    collectionControl =databaseMongo.get_collection("control")
+    collectionControl =databaseMongo.get_collection("controlx")
     #tele_wonderful =258
     tele_wonderful =notificacion_data['telemetria_id']
     #nombre_dispositivo='ZGRU2232647'
