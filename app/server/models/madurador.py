@@ -64,3 +64,23 @@ def ErrorResponseModel(error, code, message):
 class DatosMadurador(BaseModel):
     id:int = Field(...)
     return_air: float = Field(...)
+
+
+#ProcesarWonderfulSchema
+
+class ProcesarWonderfulSchema(BaseModel):
+     #ZGRU2232647 -> 258
+    id_g : int
+    mes : str
+    divece : str
+    telemetria_id :int
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "id_g" : 13000000000,
+                "mes" : "7_2024",
+                "divece" : "ZGRU2232647",
+                "telemetria_id": 258
+            }
+        }

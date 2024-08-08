@@ -20,7 +20,8 @@ from server.funciones.madurador import (
     homologar_wonderful_zgru1090804_2,
     homologar_wonderful_zgru2008220_2,
     homologar_wonderful_zgru2232647_2,
-    starcool_ZGRU1092515
+    starcool_ZGRU1092515,
+    homologar_datos_wonderful
     
 )
 #Aqui importamos el modelo necesario para la clase 
@@ -30,6 +31,7 @@ from server.models.madurador import (
     SolicitudMaduradorSchema,
     DatosMadurador,
     TunelSchema,
+    ProcesarWonderfulSchema,
     WonderfulSchema,
 
 
@@ -120,4 +122,14 @@ async def homologar_starcool_ZGRU1092515():
         return ResponseModel(notificacions, "Datos homologados zgru1092515!")
     return ResponseModel(notificacions, "Lista vacía devuelta")
 
-
+@router.post("/ProcesarWonderful/", response_description="Datos necesarios para procesar datos de wonderful")
+#La funcion espera "ConceptoOTSchema" SolicitudMaduradorSchema
+async def procesar_wonderful_data(notificacion: ProcesarWonderfulSchema = Body(...)):
+    #convertir en json
+    notificacion = jsonable_encoder(notificacion)   
+    #print(notificacion)
+    #enviar a la funcion añadir  
+    #print ("desde r")
+    new_notificacion = await homologar_datos_wonderful(notificacion)
+    return ResponseModel(new_notificacion, "ok")
+   #return paginate(new_notificacion)
