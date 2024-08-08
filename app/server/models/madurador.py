@@ -72,7 +72,7 @@ class ProcesarWonderfulSchema(BaseModel):
      #ZGRU2232647 -> 258
     id_g : int
     mes : str
-    divece : str
+    device : str
     telemetria_id :int
 
     class Config:
@@ -80,7 +80,7 @@ class ProcesarWonderfulSchema(BaseModel):
             "example": {
                 "id_g" : 13000000000,
                 "mes" : "7_2024",
-                "divece" : "ZGRU2232647",
+                "device" : "ZGRU2232647",
                 "telemetria_id": 258
             }
         }
