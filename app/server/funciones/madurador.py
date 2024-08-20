@@ -300,7 +300,7 @@ async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
     pip = [{"$match": {"$and":diferencial}},  {"$project":dataConfig['config_data']},
                 {"$skip" : (notificacion_data['page']-1)*notificacion_data['size']},{"$limit" : notificacion_data['size']}]
     concepto_ots = []
-    database = client[bconsultas[i]]
+    database = client[bconsultas]
     madurador = database.get_collection("madurador")
     actual_time = fech[0] 
     actual_intervalo_final =fech[0] +timedelta(minutes=m_d[0])
