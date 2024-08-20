@@ -27,7 +27,7 @@ class SolicitudMaduradorSchema(BaseModel):
         }
 
 class SolicitudMaduradorSchemaF(BaseModel):
-    device:str = Field(...)
+    device:int = Field(...)
     ultima: str = Field(...)
     fechaI: Optional[str] | None ="0"
     fechaF: Optional[str] | None ="0"

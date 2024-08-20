@@ -296,7 +296,7 @@ async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
         listas[nombre_lista] = {"data":[],"config":[lab,graph[i]['hidden'],graph[i]['color'],graph[i]['tipo']]}
 
     bconsultas="ztrack_ja"
-    diferencial =[{"created_at": {"$gte": fech[0]}},{"created_at": {"$lte": fech[1]}}]
+    diferencial =[{"created_at": {"$gte": fech[0]}},{"created_at": {"$lte": fech[1]}},{"telemetria_id":notificacion_data['divece']}]
     pip = [{"$match": {"$and":diferencial}},  {"$project":dataConfig['config_data']},
                 {"$skip" : (notificacion_data['page']-1)*notificacion_data['size']},{"$limit" : notificacion_data['size']}]
     concepto_ots = []
