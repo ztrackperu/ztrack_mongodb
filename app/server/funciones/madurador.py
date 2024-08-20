@@ -305,6 +305,16 @@ async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
     actual_time = fech[0] 
     actual_intervalo_final =fech[0] +timedelta(minutes=m_d[0])
     dato_return_air=None
+
+    async for concepto_ot in madurador.aggregate(pip):
+        for i in range(len(graph)):
+            dato =graph
+            if dato[i]['label']=='created_at':
+                listas[dato[i]['label']]["data"].append(devolverfecha(notificacion_data['utc'],concepto_ot[dato[i]['label']]))
+            else:
+                listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
+    listasT = {"graph":listas,"table":"concepto_ots","cadena":cadena,"temperature":dataConfig['c_f'],"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
+    return listasT
     async for concepto_ot in madurador.aggregate(pip):
         if(concepto_ot['created_at']<actual_intervalo_final):
             dato_return_air = None if dato_return_air==0  else dato_return_air
