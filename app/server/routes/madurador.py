@@ -34,6 +34,7 @@ from server.models.madurador import (
     TunelSchema,
     ProcesarWonderfulSchema,
     WonderfulSchema,
+    SolicitudMaduradorSchemaF,
 
 
 )
@@ -55,7 +56,7 @@ async def add_notificacion_data(notificacion: SolicitudMaduradorSchema = Body(..
 
 @router.post("/DatosGraficaTablaF/", response_description="Datos de los notificacion agregados a la base de datos.")
 #La funcion espera "ConceptoOTSchema"
-async def add_notificacion_data(notificacion: SolicitudMaduradorSchema = Body(...)):
+async def add_notificacion_data(notificacion: SolicitudMaduradorSchemaF = Body(...)):
     #convertir en json
     notificacion = jsonable_encoder(notificacion)   
     #print(notificacion)
