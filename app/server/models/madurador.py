@@ -26,30 +26,30 @@ class SolicitudMaduradorSchema(BaseModel):
             }
         }
 
-    class SolicitudMaduradorSchemaF(BaseModel):
-        device:str = Field(...)
-        ultima: str = Field(...)
-        fechaI: Optional[str] | None ="0"
-        fechaF: Optional[str] | None ="0"
-        page: Optional[int] | None =1
-        size: Optional[int] | None =500
-        empresa: Optional[int] | None =22
-        utc: Optional[int] | None =300
-        
-        class Config:
-            json_schema_extra = {
-                "example": {
-                    "device": "ZGRU9015808",
-                    "ultima": "2024-05-18T10:11:04",
-                    "fechaI": "2024-04-18T11:11:04",
-                    "fechaF": "2024-04-18T13:11:04", 
-                    "page":1,
-                    "size":50000,
-                    "empresa":22,
-                    "utc":300
+class SolicitudMaduradorSchemaF(BaseModel):
+    device:str = Field(...)
+    ultima: str = Field(...)
+    fechaI: Optional[str] | None ="0"
+    fechaF: Optional[str] | None ="0"
+    page: Optional[int] | None =1
+    size: Optional[int] | None =500
+    empresa: Optional[int] | None =22
+    utc: Optional[int] | None =300
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "device": "ZGRU9015808",
+                "ultima": "2024-05-18T10:11:04",
+                "fechaI": "2024-04-18T11:11:04",
+                "fechaF": "2024-04-18T13:11:04", 
+                "page":1,
+                "size":50000,
+                "empresa":22,
+                "utc":300
 
-                }
             }
+        }
 
 
 class TunelSchema(BaseModel):
