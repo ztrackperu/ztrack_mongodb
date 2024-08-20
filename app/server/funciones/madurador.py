@@ -274,6 +274,68 @@ async def data_madurador(notificacion_data: dict) -> dict:
     listasT = {"graph":listas,"table":concepto_ots,"cadena":cadena,"temperature":dataConfig['c_f'],"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
     return listasT
 
+
+
+async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
+    #print(notificacion_data['utc'])
+    if(notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0"):
+        fech = procesar_fecha(notificacion_data['utc'],notificacion_data['ultima'])
+        #bconsultas =oMeses(notificacion_data['device'],notificacion_data['ultima'],notificacion_data['ultima'])
+    else : 
+        fech = procesar_fecha(notificacion_data['utc'],notificacion_data['fechaI'],notificacion_data['fechaF'])
+        #bconsultas =oMeses(notificacion_data['device'],notificacion_data['fechaI'],notificacion_data['fechaF'])
+    dataConfig =await config(notificacion_data['empresa'])
+    graph = dataConfig['config_graph']
+    listas = {}
+    cadena =[]
+    m_d = calcular_minuto(fech[0],fech[1])
+    for i in range(len(graph)):
+        nombre_lista = f"{graph[i]['label']}"
+        cadena.append(graph[i]['label'])
+        lab = procesar_texto(graph[i]['label'])
+        listas[nombre_lista] = {"data":[],"config":[lab,graph[i]['hidden'],graph[i]['color'],graph[i]['tipo']]}
+
+    bconsultas="ztrack_ja"
+    diferencial =[{"created_at": {"$gte": fech[0]}},{"created_at": {"$lte": fech[1]}}]
+    pip = [{"$match": {"$and":diferencial}},  {"$project":dataConfig['config_data']},
+                {"$skip" : (notificacion_data['page']-1)*notificacion_data['size']},{"$limit" : notificacion_data['size']}]
+    concepto_ots = []
+    database = client[bconsultas[i]]
+    madurador = database.get_collection("madurador")
+    actual_time = fech[0] 
+    actual_intervalo_final =fech[0] +timedelta(minutes=m_d[0])
+    dato_return_air=None
+    async for concepto_ot in madurador.aggregate(pip):
+        if(concepto_ot['created_at']<actual_intervalo_final):
+            dato_return_air = None if dato_return_air==0  else dato_return_air
+            if(dato_return_air is None or abs((concepto_ot['return_air']-dato_return_air)/dato_return_air))* 100 > m_d[1] :
+                #concepto_ots.append(concepto_ot)
+                for i in range(len(graph)):
+                    dato =graph
+                    if dato[i]['label']=='created_at':
+                        listas[dato[i]['label']]["data"].append(devolverfecha(notificacion_data['utc'],concepto_ot[dato[i]['label']]))
+                    else:
+                        listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
+            dato_return_air = concepto_ot['return_air']
+        else:
+            #concepto_ots.append(concepto_ot)
+            for i in range(len(graph)):
+                dato =graph
+                if dato[i]['label']=='created_at':
+                    listas[dato[i]['label']]["data"].append(devolverfecha(notificacion_data['utc'],concepto_ot[dato[i]['label']]))
+                else:
+                    listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
+            actual_time = concepto_ot['created_at']
+            actual_intervalo_final = actual_time + timedelta(minutes=m_d[0])
+            last_return_air = concepto_ot['return_air']
+    
+
+    listasT = {"graph":listas,"table":"concepto_ots","cadena":cadena,"temperature":dataConfig['c_f'],"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
+    return listasT
+
+
+
+
 async def obtener_madurador() -> dict:
     bd = "ZGRU9015808_5_2024"
     database = client[bd]
@@ -1985,6 +2047,7 @@ async def homologar_datos_wonderful(notificacion_data: dict) -> dict :
                 vali = trama.split(',')
                 #aqui debe de guardarse en la tabal control para que quede constancia de la ultima trama 
                 if  len(vali)==70:
+
                     objetoV = {
                             "id": idProgre,
                             "set_point": convertir_a_float(vali[3]), 
@@ -2052,7 +2115,7 @@ async def homologar_datos_wonderful(notificacion_data: dict) -> dict :
                             "latitud": 35.7396,
                             "longitud":  -119.238,
                             "created_at": fecha_wonderful,
-                            "telemetria_id": tele_wonderful,
+                            "telemetria_id": tele_dispositivo,
                             "inyeccion_etileno": 0,
                             "defrost_prueba": 0,
                             "ripener_prueba": 0,
