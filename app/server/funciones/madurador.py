@@ -155,7 +155,7 @@ def analisis_dato(dato,tipo,c_f):
     if dato != None :
         if(tipo==1):
             full = dato if -45 <= dato < 130 else None
-            full = full if c_f==0 else (int(((dato*9/5)+32)*100)/100)
+            full = full if c_f==0 else (int(((dato*9/5)+32)*10)/10)
         elif(tipo==2):
             full = dato if 0 <= dato< 100 else None
         elif(tipo==3):
