@@ -92,6 +92,28 @@ def devolverfecha(utc,fecha):
     return fechaX
 
 
+
+def procesar_fecha_fila(utc,fechaI,fechaF="0"):
+    terrible = 0 ; 
+    #print(fechaI)
+    #print(fechaF)
+    if(utc!=300):
+        #terrible =300-utc
+        terrible =utc-300
+    #print(terrible)
+    #print(utc)
+    if(fechaF=="0"):
+        fechaIx=  datetime.fromisoformat(fechaI)-timedelta(hours=12)+timedelta(minutes=terrible)
+        fechaFx = datetime.fromisoformat(fechaI)+timedelta(minutes=terrible)
+        fechaFx1 = datetime.fromisoformat(fechaI)+timedelta(minutes=terrible)
+    else:
+        fechaIx=  datetime.fromisoformat(fechaI)+timedelta(minutes=terrible)
+        fechaFx = datetime.fromisoformat(fechaF)+timedelta(minutes=terrible)
+        fechaFx1 = datetime.fromisoformat(fechaF)+timedelta(minutes=terrible)
+    data = [fechaIx,fechaFx,fechaFx1]
+    #print(data)
+    return data
+
 def procesar_fecha(utc,fechaI,fechaF="0"):
     terrible = 0 ; 
     #print(fechaI)
@@ -279,10 +301,10 @@ async def data_madurador(notificacion_data: dict) -> dict:
 async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
     #print(notificacion_data['utc'])
     if(notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0"):
-        fech = procesar_fecha(notificacion_data['utc'],notificacion_data['ultima'])
+        fech = procesar_fecha_fila(notificacion_data['utc'],notificacion_data['ultima'])
         #bconsultas =oMeses(notificacion_data['device'],notificacion_data['ultima'],notificacion_data['ultima'])
     else : 
-        fech = procesar_fecha(notificacion_data['utc'],notificacion_data['fechaI'],notificacion_data['fechaF'])
+        fech = procesar_fecha_fila(notificacion_data['utc'],notificacion_data['fechaI'],notificacion_data['fechaF'])
         #bconsultas =oMeses(notificacion_data['device'],notificacion_data['fechaI'],notificacion_data['fechaF'])
     dataConfig =await config(notificacion_data['empresa'])
     graph = dataConfig['config_graph']
