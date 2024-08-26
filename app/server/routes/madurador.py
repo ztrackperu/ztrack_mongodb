@@ -91,7 +91,9 @@ async def add_wonderful_data(notificacion: WonderfulSchema = Body(...)):
     #convertir en json
     notificacion = jsonable_encoder(notificacion)   
     new_notificacion = await data_wonderful(notificacion)
-    return ResponseModel(new_notificacion, "ok")
+    #return ResponseModel(new_notificacion, "ok")
+    return new_notificacion
+
 
 @router.get("/homologar", response_description="Datos de tunel se homologan con ztrack")
 async def homologar_data_tunel():

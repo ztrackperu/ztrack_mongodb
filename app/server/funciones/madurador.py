@@ -216,11 +216,26 @@ async def data_wonderful(notificacion_data: dict) -> dict:
     fet =datetime.now()
     notificacion_data['fecha'] = fet
     print(notificacion_data)
+    Trama = notificacion_data['data']
+    print(Trama)
+    trama_d = Trama.split(",")
+    print(trama_d[0])
     notificacion = await tunel.insert_one(notificacion_data)
     new_notificacion = await tunel.find_one({"_id": notificacion.inserted_id},{"_id":0})
     #return notificacion_helper(new_notificacion)
-    print(palm)
-    return new_notificacion
+    #print(palm)
+    #aqui realizamos la consulta a la base de datos para especiifcar si hay comandos pendientes 
+    comandos_pendientes ="No existe comandos pendientes"
+    comandos = database.get_collection("comandos")
+    if trama_d[0] =="1CR3":
+        print(" estamos dentro del analisis")
+        print(deviceW1)
+        comando_existe = await comandos.find_one({"estado":1,"equipo":deviceW1},{"_id":0})
+        if comando_existe :
+            comandos_pendientes = comando_existe['comando']
+            #actualizar para enviar solo una vez 
+            comandos.update_one({"estado":1,"equipo":deviceW1},{"$set": {"estado":0,"fecha_ejecucion":fet}})
+    return comandos_pendientes
 
 
 async def data_madurador(notificacion_data: dict) -> dict:
