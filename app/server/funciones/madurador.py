@@ -61,6 +61,36 @@ def calcular_minuto(fecha_inicio, fecha_fin):
         auto =[2,5]
     return auto
 
+
+def proporcional_transform(valor, min_entrada, max_entrada, min_salida, max_salida):
+    """
+    Convierte un valor de un rango de entrada a un rango de salida proporcionalmente.
+    """
+    return min_salida + (max_salida - min_salida) * ((valor - min_entrada) / (max_entrada - min_entrada))
+
+def procesar_array_etileno(datos):
+    resultado = []
+    
+    for valor in datos:
+        if valor > 300:
+            resultado.append(None)  # Reemplaza valores mayores a 300 por None
+        elif 125 < valor <= 300:
+            # Reemplaza valores entre 125 y 300 por números en el rango de 125 a 150 proporcionalmente
+            nuevo_valor = proporcional_transform(valor, 125, 300, 125, 150)
+            resultado.append(round(nuevo_valor, 1))
+        elif 115 < valor <= 125:
+            # Mantiene valores entre 115 y 125 igual
+            resultado.append(valor)
+        elif 50 < valor <= 115:
+            # Reemplaza valores entre 50 y 115 por números en el rango de 105 a 115 proporcionalmente
+            nuevo_valor = proporcional_transform(valor, 50, 115, 105, 115)
+            resultado.append(round(nuevo_valor, 1))
+        else:
+            # Mantiene valores menores o iguales a 50 igual
+            resultado.append(valor)
+    
+    return resultado
+
 def temp(dato,op):
     res = dato if op==0 else (int(((dato*9/5)+32)*100)/100)
     return res
@@ -350,6 +380,9 @@ async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
                 listas[dato[i]['label']]["data"].append(devolverfecha(notificacion_data['utc'],concepto_ot[dato[i]['label']]))
             else:
                 listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
+    analizar =listas['ethylene']['data']
+    transformada =procesar_array_etileno(analizar)
+    listas['ethylene']['data']=transformada
     listasT = {"graph":listas,"table":"concepto_ots","cadena":cadena,"temperature":dataConfig['c_f'],"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
     return listasT
     async for concepto_ot in madurador.aggregate(pip):
