@@ -72,22 +72,26 @@ def procesar_array_etileno(datos):
     resultado = []
     
     for valor in datos:
-        if valor > 1000:
-            resultado.append(0)  # Reemplaza valores mayores a 300 por None
-        elif 125 < valor <= 300:
-            # Reemplaza valores entre 125 y 300 por números en el rango de 125 a 150 proporcionalmente
-            nuevo_valor = proporcional_transform(valor, 125, 1000, 125, 180)
-            resultado.append(round(nuevo_valor, 1))
-        elif 115 < valor <= 125:
-            # Mantiene valores entre 115 y 125 igual
-            resultado.append(valor)
-        elif 50 < valor <= 115:
-            # Reemplaza valores entre 50 y 115 por números en el rango de 105 a 115 proporcionalmente
-            nuevo_valor = proporcional_transform(valor, 50, 115, 105, 115)
-            resultado.append(round(nuevo_valor, 1))
-        else:
-            # Mantiene valores menores o iguales a 50 igual
-            resultado.append(valor)
+        if valor :
+            if valor > 300:
+                resultado.append(None)  # Reemplaza valores mayores a 300 por None
+            elif 125 < valor <= 300:
+                # Reemplaza valores entre 125 y 300 por números en el rango de 125 a 150 proporcionalmente
+                nuevo_valor = proporcional_transform(valor, 125, 1000, 125, 180)
+                resultado.append(round(nuevo_valor, 1))
+            elif 115 < valor <= 125:
+                # Mantiene valores entre 115 y 125 igual
+                resultado.append(valor)
+            elif 50 < valor <= 115:
+                # Reemplaza valores entre 50 y 115 por números en el rango de 105 a 115 proporcionalmente
+                nuevo_valor = proporcional_transform(valor, 50, 115, 105, 115)
+                resultado.append(round(nuevo_valor, 1))
+            else:
+                # Mantiene valores menores o iguales a 50 igual
+                resultado.append(valor)
+        else :
+            resultado.append(None)  # Reemplaza valores mayores a 300 por None
+
     
     return resultado
 
