@@ -86,11 +86,11 @@ def procesar_array_etileno(datos):
     
     for valor in datos:
         if valor :
-            if valor > 300:
+            if valor > 500:
                 resultado.append(None)  # Reemplaza valores mayores a 300 por None
-            elif 125 < valor <= 300:
+            elif 125 < valor <= 500:
                 # Reemplaza valores entre 125 y 300 por números en el rango de 125 a 150 proporcionalmente
-                nuevo_valor = proporcional_transform(valor, 125, 1000, 125, 180)
+                nuevo_valor = proporcional_transform(valor, 125, 500, 125, 180)
                 resultado.append(round(nuevo_valor, 1))
             elif 115 < valor <= 125:
                 # Mantiene valores entre 115 y 125 igual
