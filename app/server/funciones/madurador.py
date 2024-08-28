@@ -60,7 +60,20 @@ def calcular_minuto(fecha_inicio, fecha_fin):
     else:
         auto =[2,5]
     return auto
-
+def procesar_array_temp(datos):
+    # Define el rango permitido
+    min_valor = -40
+    max_valor = 240
+    
+    resultado = []
+    
+    for valor in datos:
+        if valor < min_valor or valor > max_valor:
+            resultado.append(None)  # Reemplaza valores fuera del rango por None
+        else:
+            resultado.append(valor)  # Mantiene los valores dentro del rango igual
+    
+    return resultado
 
 def proporcional_transform(valor, min_entrada, max_entrada, min_salida, max_salida):
     """
@@ -387,6 +400,14 @@ async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
     analizar =listas['ethylene']['data']
     transformada =procesar_array_etileno(analizar)
     listas['ethylene']['data']=transformada
+
+    analizar1 =listas['return_air']['data']
+    transformada1 =procesar_array_temp(analizar1)
+    listas['ethylene']['data']=transformada1
+
+    analizar2 =listas['cargo_1_temp']['data']
+    transformada2 =procesar_array_temp(analizar2)
+    listas['ethylene']['data']=transformada2
     listasT = {"graph":listas,"table":"concepto_ots","cadena":cadena,"temperature":dataConfig['c_f'],"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
     return listasT
     async for concepto_ot in madurador.aggregate(pip):
