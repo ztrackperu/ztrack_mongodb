@@ -408,6 +408,19 @@ async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
     analizar2 =listas['cargo_1_temp']['data']
     transformada2 =procesar_array_temp(analizar2)
     listas['cargo_1_temp']['data']=transformada2
+
+    analizar3 =listas['cargo_4_temp']['data']
+    transformada3 =procesar_array_temp(analizar3)
+    listas['cargo_4_temp']['data']=transformada3
+
+    analizar4 =listas['cargo_3_temp']['data']
+    transformada4 =procesar_array_temp(analizar4)
+    listas['cargo_3_temp']['data']=transformada4
+
+    analizar5 =listas['cargo_2_temp']['data']
+    transformada5 =procesar_array_temp(analizar5)
+    listas['cargo_2_temp']['data']=transformada5
+    
     listasT = {"graph":listas,"table":"concepto_ots","cadena":cadena,"temperature":dataConfig['c_f'],"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
     return listasT
     async for concepto_ot in madurador.aggregate(pip):
