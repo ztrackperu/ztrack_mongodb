@@ -68,10 +68,11 @@ def procesar_array_temp(datos):
     resultado = []
     
     for valor in datos:
-        if valor < min_valor or valor > max_valor:
-            resultado.append(None)  # Reemplaza valores fuera del rango por None
-        else:
-            resultado.append(valor)  # Mantiene los valores dentro del rango igual
+        if datos :
+            if valor < min_valor or valor > max_valor:
+                resultado.append(None)  # Reemplaza valores fuera del rango por None
+            else:
+                resultado.append(valor)  # Mantiene los valores dentro del rango igual
     
     return resultado
 
