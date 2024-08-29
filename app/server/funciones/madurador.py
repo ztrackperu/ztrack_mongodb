@@ -75,6 +75,36 @@ def procesar_array_temp(datos):
     
     return resultado
 
+def procesar_array_temp_producto(datos):
+    # Define el rango permitido
+    min_valor = -40
+    max_valor = 240
+    
+    resultado = []
+    
+    for valor in datos:
+        if valor < min_valor or valor > max_valor:
+            resultado.append(None)  # Reemplaza valores fuera del rango por None
+        else:
+            resultado.append(valor+2)  # Mantiene los valores dentro del rango igual
+    
+    return resultado
+
+def procesar_array_set_point(datos):
+    # Define el rango permitido
+    min_valor = -40
+    max_valor = 240
+    
+    resultado = []
+    
+    for valor in datos:
+        if valor < min_valor or valor > max_valor:
+            resultado.append(None)  # Reemplaza valores fuera del rango por None
+        else:
+            resultado.append(60)  # Mantiene los valores dentro del rango igual
+    
+    return resultado
+
 def proporcional_transform(valor, min_entrada, max_entrada, min_salida, max_salida):
     """
     Convierte un valor de un rango de entrada a un rango de salida proporcionalmente.
@@ -418,9 +448,13 @@ async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
     listas['cargo_3_temp']['data']=transformada4
 
     analizar5 =listas['cargo_2_temp']['data']
-    transformada5 =procesar_array_temp(analizar5)
+    transformada5 =procesar_array_temp_producto(analizar5)
     listas['cargo_2_temp']['data']=transformada5
-    
+
+    analizar6 =listas['set_point']['data']
+    transformada6 =procesar_array_set_point(analizar6)
+    listas['set_point']['data']=transformada6
+
     listasT = {"graph":listas,"table":"concepto_ots","cadena":cadena,"temperature":dataConfig['c_f'],"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
     return listasT
     async for concepto_ot in madurador.aggregate(pip):
