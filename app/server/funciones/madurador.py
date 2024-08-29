@@ -68,12 +68,14 @@ def procesar_array_temp(datos):
     resultado = []
     
     for valor in datos:
-        if datos :
+       # Solo procesar si el valor no es None
+        if valor is not None:
             if valor < min_valor or valor > max_valor:
                 resultado.append(None)  # Reemplaza valores fuera del rango por None
             else:
                 resultado.append(valor)  # Mantiene los valores dentro del rango igual
-    
+        else:
+            resultado.append(None)  # Mantiene None si ya está presente en el array original
     return resultado
 
 def procesar_array_temp_producto(datos):
