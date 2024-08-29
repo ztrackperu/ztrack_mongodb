@@ -86,7 +86,8 @@ def procesar_array_temp_producto(datos):
         if valor < min_valor or valor > max_valor:
             resultado.append(None)  # Reemplaza valores fuera del rango por None
         else:
-            resultado.append(valor+2)  # Mantiene los valores dentro del rango igual
+            valor = valor+3
+            resultado.append(valor)  # Mantiene los valores dentro del rango igual
     
     return resultado
 
@@ -440,7 +441,7 @@ async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
     listas['cargo_1_temp']['data']=transformada2
 
     analizar3 =listas['cargo_4_temp']['data']
-    transformada3 =procesar_array_temp(analizar3)
+    transformada3 =procesar_array_temp_producto(analizar3)
     listas['cargo_4_temp']['data']=transformada3
 
     analizar4 =listas['cargo_3_temp']['data']
@@ -448,12 +449,24 @@ async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
     listas['cargo_3_temp']['data']=transformada4
 
     analizar5 =listas['cargo_2_temp']['data']
-    transformada5 =procesar_array_temp_producto(analizar5)
+    transformada5 =procesar_array_temp(analizar5)
     listas['cargo_2_temp']['data']=transformada5
 
     analizar6 =listas['set_point']['data']
     transformada6 =procesar_array_set_point(analizar6)
     listas['set_point']['data']=transformada6
+
+    analizar7 =listas['ambient_air']['data']
+    transformada7 =procesar_array_temp(analizar7)
+    listas['ambient_air']['data']=transformada7
+
+    analizar8 =listas['temp_supply_1']['data']
+    transformada8 =procesar_array_temp(analizar8)
+    listas['temp_supply_1']['data']=transformada8
+
+    analizar9 =listas['evaporation_coil']['data']
+    transformada9 =procesar_array_temp(analizar9)
+    listas['evaporation_coil']['data']=transformada9
 
     listasT = {"graph":listas,"table":"concepto_ots","cadena":cadena,"temperature":dataConfig['c_f'],"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
     return listasT
