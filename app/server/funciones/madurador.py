@@ -444,7 +444,9 @@ async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
     listas['cargo_1_temp']['data']=transformada2
 
     analizar3 =listas['cargo_4_temp']['data']
-    transformada3 =procesar_array_temp_producto(analizar3)
+    #transformada3 =procesar_array_temp_producto(analizar3)
+    transformada3 =procesar_array_temp(analizar3)
+
     listas['cargo_4_temp']['data']=transformada3
 
     analizar4 =listas['cargo_3_temp']['data']
@@ -456,7 +458,9 @@ async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
     listas['cargo_2_temp']['data']=transformada5
 
     analizar6 =listas['set_point']['data']
-    transformada6 =procesar_array_set_point(analizar6)
+    #transformada6 =procesar_array_set_point(analizar6)
+    transformada6 =procesar_array_temp(analizar6)
+
     listas['set_point']['data']=transformada6
 
     analizar7 =listas['ambient_air']['data']
