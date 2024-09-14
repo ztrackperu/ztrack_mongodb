@@ -394,6 +394,44 @@ async def data_madurador(notificacion_data: dict) -> dict:
 
 
 
+
+#data_madurador_tabla
+
+async def data_madurador_tabla(notificacion_data: dict) -> dict:
+    #print(notificacion_data['utc'])
+    if(notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0"):
+        fech = procesar_fecha_fila(notificacion_data['utc'],notificacion_data['ultima'])
+        #bconsultas =oMeses(notificacion_data['device'],notificacion_data['ultima'],notificacion_data['ultima'])
+    else : 
+        fech = procesar_fecha_fila(notificacion_data['utc'],notificacion_data['fechaI'],notificacion_data['fechaF'])
+        #bconsultas =oMeses(notificacion_data['device'],notificacion_data['fechaI'],notificacion_data['fechaF'])
+    dataConfig =await config(notificacion_data['empresa'])
+    graph = dataConfig['config_graph']
+    listas = {}
+    cadena =[]
+    tabla =[]
+    m_d = calcular_minuto(fech[0],fech[1])
+    for i in range(len(graph)):
+        nombre_lista = f"{graph[i]['label']}"
+        cadena.append(graph[i]['label'])
+        lab = procesar_texto(graph[i]['label'])
+        listas[nombre_lista] = {"data":[],"config":[lab,graph[i]['hidden'],graph[i]['color'],graph[i]['tipo']]}
+
+    bconsultas="ztrack_ja"
+    diferencial =[{"created_at": {"$gte": fech[0]}},{"created_at": {"$lte": fech[1]}},{"telemetria_id":notificacion_data['device']}]
+    pip = [{"$match": {"$and":diferencial}},  {"$project":dataConfig['config_data']},
+                {"$skip" : (notificacion_data['page']-1)*notificacion_data['size']},{"$limit" : notificacion_data['size']}]
+    database = client[bconsultas]
+    madurador = database.get_collection("madurador")
+    actual_time = fech[0] 
+    actual_intervalo_final =fech[0] +timedelta(minutes=m_d[0])
+    dato_return_air=None
+
+    async for concepto_ot in madurador.aggregate(pip):
+        tabla.append(concepto_ot)
+    listasT = {"graph":listas,"table":tabla,"cadena":cadena,"temperature":dataConfig['c_f'],"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
+    return listasT
+
 async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
     #print(notificacion_data['utc'])
     if(notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0"):

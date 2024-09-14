@@ -22,7 +22,8 @@ from server.funciones.madurador import (
     homologar_wonderful_zgru2232647_2,
     starcool_ZGRU1092515,
     data_madurador_filadelfia,
-    homologar_datos_wonderful
+    homologar_datos_wonderful,
+    data_madurador_tabla
     
 )
 #Aqui importamos el modelo necesario para la clase 
@@ -63,6 +64,18 @@ async def add_notificacion_data(notificacion: SolicitudMaduradorSchemaF = Body(.
     #enviar a la funcion añadir  
     #print ("desde r")
     new_notificacion = await data_madurador_filadelfia(notificacion)
+    return ResponseModel(new_notificacion, "ok")
+   #return paginate(new_notificacion)
+
+@router.post("/DatosTablaF/", response_description="Datos de los notificacion agregados a la base de datos.")
+#La funcion espera "ConceptoOTSchema"
+async def add_notificacion_data_t(notificacion: SolicitudMaduradorSchemaF = Body(...)):
+    #convertir en json
+    notificacion = jsonable_encoder(notificacion)   
+    #print(notificacion)
+    #enviar a la funcion añadir  
+    #print ("desde r")
+    new_notificacion = await data_madurador_tabla(notificacion)
     return ResponseModel(new_notificacion, "ok")
    #return paginate(new_notificacion)
 
