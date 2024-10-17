@@ -170,6 +170,21 @@ async def homologar_starcool01() -> dict:
                                                     objetoV['ethylene'], objetoV['set_point_co2'], objetoV['co2_reading'], 
                                                     objetoV['humidity_set_point'], objetoV['sp_ethyleno'],objetoV['compress_coil_1'], 
                                                     objetoV['telemetria_id'],  ))
+                #aqui entra lo inventado a TELEMETRIA STARCOOL ZGRU1034969
+                curInv = cnx.cursor()
+                suppley_inv =objetoV['temp_supply_1']-0.2
+                return_inv =objetoV['return_air']-0.2
+
+                update_old_salary_inv = (
+                "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
+                ", ambient_air= %s ,relative_humidity= %s ,avl = %s , defrost_prueba = %s , ripener_prueba = %s , ethylene = %s"
+                    " , set_point_co2 = %s , co2_reading = %s , humidity_set_point = %s , sp_ethyleno = %s , compress_coil_1 = %s WHERE estado = 1 AND nombre_contenedor = 'ZGRU1034969 '  ")
+                curInv.execute(update_old_salary_inv, (fechaA, objetoV['set_point'],suppley_inv, 
+                                                    return_inv, objetoV['ambient_air'], objetoV['relative_humidity'], 
+                                                    objetoV['avl'], objetoV['inyeccion_pwm'], objetoV['inyeccion_hora'], 
+                                                    objetoV['ethylene'], objetoV['set_point_co2'], objetoV['co2_reading'], 
+                                                    objetoV['humidity_set_point'], objetoV['sp_ethyleno'],objetoV['compress_coil_1'], 
+                                                      ))
                 cnx.commit()
     cnx.close()            
                     
