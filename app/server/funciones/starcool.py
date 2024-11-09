@@ -55,7 +55,7 @@ async def homologar_starcool_general() -> dict:
             print(str(datos_contenedor_acumulados[0][0]) + " , descripcion : "+ str(datos_contenedor_acumulados[0][4])+ " ,telemetria :"+ str(datos_contenedor_acumulados[0][9])) 
 
             controlTelemetria = await collectionControl.find_one({"telemetria_id":datos_contenedor_acumulados[0][9]})
-            idProgre = 20000000000+1000000000(index_1)
+            idProgre = 20000000000+1000000000*(int(index_1))
             factorBusqueda ={}
             estadoC=0
             #print(controlTelemetria)
