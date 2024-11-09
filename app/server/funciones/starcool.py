@@ -40,7 +40,9 @@ async def homologar_starcool_general() -> dict:
             print(row)
         if len(datos_contenedor_acumulados)>0:
             #significa que existe datos de la busqueda
-            print(datos_contenedor_acumulados[0]) 
+            #print(datos_contenedor_acumulados[0]) 
+            print(datos_contenedor_acumulados[0][0] + " , descripcion : "+ datos_contenedor_acumulados[0][4]+ " ,telemetria :"+ datos_contenedor_acumulados[0][9]) 
+
         else :
             print("sin resultado")
 
