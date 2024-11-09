@@ -65,7 +65,7 @@ async def homologar_starcool_general() -> dict:
                 factorBusqueda ={"fecha":{"$gt":fechaId}}
                 estadoC=1
             else : 
-                datazo_anterior = BaseConexion.obtener_mes_ano_anterior()
+                datazo_anterior = obtener_mes_ano_anterior()
                 baseD_anterior = "REPOSITORIO_"+datazo_anterior
                 databaseMongo_anterior = client[baseD_anterior]
                 collectionControl_anterior =databaseMongo_anterior.get_collection("control")
