@@ -37,7 +37,7 @@ async def homologar_starcool_general() -> dict:
         datos_contenedor_acumulados =[]
         for row in datos_contenedor :
             datos_contenedor_acumulados.append(row)
-            print(row)
+            #print(row)
         if len(datos_contenedor_acumulados)>0:
             #significa que existe datos de la busqueda
             #print(datos_contenedor_acumulados[0]) 
