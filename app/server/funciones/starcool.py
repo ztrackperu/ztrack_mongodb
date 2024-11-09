@@ -4,6 +4,7 @@ from server.database import client
 from bson import regex
 from datetime import datetime,timedelta
 from server.generico.base_conexion import BaseConexion
+from dateutil.relativedelta import relativedelta
 
 db_connection = mysql.connector.connect(
     host= "localhost",
@@ -12,6 +13,15 @@ db_connection = mysql.connector.connect(
     database="zgroupztrack"
 )
 
+
+def obtener_mes_ano_anterior():
+    # Obtener la fecha actual
+    fecha_actual = datetime.now()
+    # Restar un mes
+    fecha_anterior = fecha_actual - relativedelta(months=1)
+    # Formatear mes y año anterior en el formato deseado
+    repositorio = f"REPOSITORIO_{fecha_anterior.strftime('%m')}_{fecha_anterior.strftime('%Y')}"
+    return repositorio
 
 async def homologar_starcool_general() -> dict:
     datazo = BaseConexion.obtener_mes_y_anio_actual()
@@ -28,7 +38,8 @@ async def homologar_starcool_general() -> dict:
     #contenedores starcool
     contenedores = ["ZGRU6844452","ZGRU6077903","ZGRU2010207","ZGRU1940045","ZGRU0029504"]
     #recorrer lista 
-    for contenedor in contenedores:
+    #for contenedor in contenedores:
+    for index_1, contenedor in enumerate(contenedores):
         #print(contenedor)
         #buscar telemetrias de los equipos por base de datos en tabla contenedores
         consulta_contenedor = ("SELECT * FROM contenedores WHERE nombre_contenedor=%s")
@@ -42,6 +53,41 @@ async def homologar_starcool_general() -> dict:
             #significa que existe datos de la busqueda
             #print(datos_contenedor_acumulados[0]) 
             print(str(datos_contenedor_acumulados[0][0]) + " , descripcion : "+ str(datos_contenedor_acumulados[0][4])+ " ,telemetria :"+ str(datos_contenedor_acumulados[0][9])) 
+
+            controlTelemetria = await collectionControl.find_one({"telemetria_id":datos_contenedor_acumulados[0][9]})
+            idProgre = 20000000000+1000000000(index_1)
+            factorBusqueda ={}
+            estadoC=0
+            #print(controlTelemetria)
+            if controlTelemetria :
+                idProgre = controlTelemetria["id"]
+                fechaId = controlTelemetria["fecha"]
+                factorBusqueda ={"fecha":{"$gt":fechaId}}
+                estadoC=1
+            else : 
+                datazo_anterior = BaseConexion.obtener_mes_ano_anterior()
+                baseD_anterior = "REPOSITORIO_"+datazo_anterior
+                databaseMongo_anterior = client[baseD_anterior]
+                collectionControl_anterior =databaseMongo_anterior.get_collection("control")
+                controlTelemetria_anterior = await collectionControl_anterior.find_one({"telemetria_id":datos_contenedor_acumulados[0][9]})
+                if controlTelemetria_anterior :
+                    idProgre = controlTelemetria_anterior["id"]
+                    fechaId = controlTelemetria_anterior["fecha"]
+                    factorBusqueda ={"fecha":{"$gt":fechaId}}
+                    estadoC=1
+            print(estadoC)
+
+                
+
+
+
+            
+
+
+
+
+            collectionMongo = databaseMongo.get_collection("tunel")
+
 
         else :
             print("sin resultado")
