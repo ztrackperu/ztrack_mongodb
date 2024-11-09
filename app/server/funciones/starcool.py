@@ -32,7 +32,7 @@ async def homologar_starcool_general() -> dict:
         #print(contenedor)
         #buscar telemetrias de los equipos por base de datos en tabla contenedores
         consulta_contenedor = ("SELECT * FROM contenedores WHERE nombre_contenedor=%s")
-        query_contenedor = curConte.execute(consulta_contenedor,(contenedor))
+        query_contenedor = curConte.execute(consulta_contenedor,(contenedor,))
         datos_contenedor = curConte.fetchall()
         datos_contenedor_acumulados =[]
         for row in datos_contenedor :
