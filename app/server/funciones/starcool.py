@@ -13,6 +13,49 @@ db_connection = mysql.connector.connect(
 )
 
 
+async def homologar_starcool_general() -> dict:
+    datazo = BaseConexion.obtener_mes_y_anio_actual()
+    baseD = "REPOSITORIO_"+datazo
+    databaseMongo = client[baseD]
+    collectionControl =databaseMongo.get_collection("control")
+    cnx = mysql.connector.connect(
+        host= "localhost",
+        user= "ztrack2023",
+        passwd= "lpmp2018",
+        database="zgroupztrack"
+    )
+    curConte = cnx.cursor(buffered=True)
+    #contenedores starcool
+    contenedores = ["ZGRU6844452","ZGRU6077903","ZGRU2010207","ZGRU1940045","ZGRU0029504"]
+    #recorrer lista 
+    for contenedor in contenedores:
+        #print(contenedor)
+        #buscar telemetrias de los equipos por base de datos en tabla contenedores
+        consulta_contenedor = ("SELECT * FROM contenedores WHERE nombre_contenedor=%s")
+        query_contenedor = curConte.execute(consulta_contenedor,(contenedor))
+        datos_contenedor = curConte.fetchall()
+        datos_contenedor_acumulados =[]
+        for row in datos_contenedor :
+            datos_contenedor_acumulados.append(row)
+            print(row)
+        if len(datos_contenedor_acumulados)>0:
+            #significa que existe datos de la busqueda
+            print(datos_contenedor_acumulados[0]) 
+        else :
+            print("sin resultado")
+
+
+
+
+
+        
+                    
+
+
+
+
+
+
 async def homologar_starcool01() -> dict:
     #obtener el id de la telemetria en consulta MYSQL
     #STARCOOL01 es asignado a ZGRU1092515 con telemetria_id 14859 Y id_contenedor 474 , idProgre =16000000000
@@ -58,6 +101,11 @@ async def homologar_starcool01() -> dict:
         fechaA=x['fecha']
         #SECTORIZAR LA TRAMA PARA UNIRLA 
         f2 =cad.split(',')
+        #aqui va la cadena la homolacion de datos de STARCOOL
+        #
+
+
+
         if f2[2]=='STARCOOL01':
             if len(f2)==70:
                 idProgre=idProgre+1
@@ -170,21 +218,6 @@ async def homologar_starcool01() -> dict:
                                                     objetoV['ethylene'], objetoV['set_point_co2'], objetoV['co2_reading'], 
                                                     objetoV['humidity_set_point'], objetoV['sp_ethyleno'],objetoV['compress_coil_1'], 
                                                     objetoV['telemetria_id'],  ))
-                #aqui entra lo inventado a TELEMETRIA STARCOOL ZGRU1034969
-                curInv = cnx.cursor()
-                suppley_inv =objetoV['temp_supply_1']-0.2
-                return_inv =objetoV['return_air']-0.2
-
-                update_old_salary_inv = (
-                "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
-                ", ambient_air= %s ,relative_humidity= %s ,avl = %s , defrost_prueba = %s , ripener_prueba = %s , ethylene = %s"
-                    " , set_point_co2 = %s , co2_reading = %s , humidity_set_point = %s , sp_ethyleno = %s , compress_coil_1 = %s WHERE estado = 1 AND nombre_contenedor = 'ZGRU1034969 '  ")
-                curInv.execute(update_old_salary_inv, (fechaA, objetoV['set_point'],suppley_inv, 
-                                                    return_inv, objetoV['ambient_air'], objetoV['relative_humidity'], 
-                                                    objetoV['avl'], objetoV['inyeccion_pwm'], objetoV['inyeccion_hora'], 
-                                                    objetoV['ethylene'], objetoV['set_point_co2'], objetoV['co2_reading'], 
-                                                    objetoV['humidity_set_point'], objetoV['sp_ethyleno'],objetoV['compress_coil_1'], 
-                                                      ))
                 cnx.commit()
     cnx.close()            
                     
