@@ -85,6 +85,7 @@ async def homologar_starcool_general() -> dict:
                 f2 =cad.split(',')
                 #aqui empieza la homologazion
                 if f2[2]=='STARCOOL01':
+                    print("oli")
                 
 
 
