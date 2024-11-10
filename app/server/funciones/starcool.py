@@ -148,7 +148,8 @@ async def homologar_starcool_general() -> dict:
                     #pasar por el algoritmo de procesamiento de informacion y homologar 
                     #1TC2,Madurador,ZGRU6844452,22,22,147,249,195,249,115,249,195,250,11,197,67,249,119,224,3,224,3,224,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,0.00,0,0,0,0,0,0.00,0.00,0.00,0.00,0.00,0.00,0,0,0.00,0.00,0.00,0.00,0.00,0,0,0,0.00,0.00,THERMOKING,0.000,0.000,0,0,0
                     if len(f2)>69 :
-                        datos_crudos = [f2[3],f2[4],f2[5],f2[6],f2[7],f2[8],f2[9],f2[10]]
+                        #cmd=[22,22,147,251,3,250,139,250,255,250,251,197,43,250,119,224,3,224,3,224]
+                        datos_crudos = [f2[3],f2[4],f2[5],f2[6],f2[7],f2[8],f2[9],f2[10],f2[11],f2[12],f2[13],f2[14],f2[15]]
                         datos_homologados =transformar(datos_crudos)
                         #[sp,supply,ret,evap]
                         if len(datos_homologados)==4:
