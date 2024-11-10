@@ -236,7 +236,9 @@ async def homologar_starcool_general() -> dict:
                                 "extra_5": 0
                             }
                             databaseMongoH = client['ztrack_ja']  
-                            collectionMongoH = databaseMongoH.get_collection("madurador_starcool")
+                            #collectionMongoH = databaseMongoH.get_collection("madurador_starcool")
+                            collectionMongoH = databaseMongoH.get_collection("madurador")
+
                             collectionMongoH.insert_one(objetoV)
                             objetoControl ={
                                 "id":idProgre,
