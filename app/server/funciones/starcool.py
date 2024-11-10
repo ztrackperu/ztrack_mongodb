@@ -52,19 +52,19 @@ def Calcula_Termino1(num1,num2):
 #VALOR DE SETPOINT
 
 def retorna_bloque_decodificado(cmd_3,cmd_4,cmd_5,cmd_6,cmd_7,cmd_8,cmd_9,cmd_10):
-    sp = Calcula_Termino1(cmd_3,cmd_4)
+    sp = Calcula_Termino1(int(cmd_3),int(cmd_4))
     #print("Valor SP: ")
     #print(sp)
     #VALOR DE SUMINISTRO
-    supply = Calcula_Termino1(cmd_5,cmd_6)
+    supply = Calcula_Termino1(int(cmd_5),int(cmd_6))
     #print("Valor SUM: ")
     #print(sp)
     #VALOR DE RETORNO
-    ret = Calcula_Termino1(cmd_7,cmd_8)
+    ret = Calcula_Termino1(int(cmd_7),int(cmd_8))
     #print("Valor RET: ")
     #print(ret)
     #VALOR DE EVAP
-    evap = Calcula_Termino1(cmd_9,cmd_10)
+    evap = Calcula_Termino1(int(cmd_9),int(cmd_10))
     #print("Valor EVAP: ")
     #print(evap)
     return [sp,supply,ret,evap]
