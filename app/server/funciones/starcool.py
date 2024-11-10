@@ -78,14 +78,14 @@ async def homologar_starcool_general() -> dict:
             print(estadoC)
             print(idProgre)
             collectionMongo = databaseMongo.get_collection("tunel")
-            async for x in collectionMongo.find(factorBusqueda).sort("fecha",1):
-                cad =x['data']
-                fechaA=x['fecha']
+            #async for x in collectionMongo.find(factorBusqueda).sort("fecha",1):
+                #cad =x['data']
+                #fechaA=x['fecha']
                 #SECTORIZAR LA TRAMA PARA UNIRLA 
-                f2 =cad.split(',')
+                #f2 =cad.split(',')
                 #aqui empieza la homologazion
-                if f2[2]=='STARCOOL01':
-                    print("oli")
+                #if f2[2]=='STARCOOL01':
+                    #print("oli")
                 
 
 
