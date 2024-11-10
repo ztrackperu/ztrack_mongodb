@@ -46,10 +46,10 @@ def Calcula_Termino1(valve):
 
 def pasar_dato(com1 ,com2):
     val = 0xFF
-    val = val & com1
+    val = val & int(com1)
     val = val << 8
     val = val & 0xFFFF
-    val = val | com2
+    val = val | int(com2)
     sp = Calcula_Termino1(val)
     return sp
 
