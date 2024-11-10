@@ -51,9 +51,9 @@ async def homologar_starcool_general() -> dict:
             #print(row)
         if len(datos_contenedor_acumulados)>0:
             #significa que existe datos de la busqueda
-            #print(datos_contenedor_acumulados[0]) 
+            print(datos_contenedor_acumulados[0]) 
             print(str(datos_contenedor_acumulados[0][0]) + " , descripcion : "+ str(datos_contenedor_acumulados[0][4])+ " ,telemetria :"+ str(datos_contenedor_acumulados[0][9])) 
-
+            print("aqui va el codigo : " + str(datos_contenedor_acumulados[0][1]))
             controlTelemetria = await collectionControl.find_one({"telemetria_id":datos_contenedor_acumulados[0][9]})
             idProgre = 20000000000+1000000000*(int(index_1))
             factorBusqueda ={}
@@ -77,7 +77,14 @@ async def homologar_starcool_general() -> dict:
                     estadoC=1
             print(estadoC)
             print(idProgre)
-
+            collectionMongo = databaseMongo.get_collection("tunel")
+            async for x in collectionMongo.find(factorBusqueda).sort("fecha",1):
+                cad =x['data']
+                fechaA=x['fecha']
+                #SECTORIZAR LA TRAMA PARA UNIRLA 
+                f2 =cad.split(',')
+                #aqui empieza la homologazion
+                if f2[2]=='STARCOOL01':
                 
 
 
@@ -87,7 +94,6 @@ async def homologar_starcool_general() -> dict:
 
 
 
-            collectionMongo = databaseMongo.get_collection("tunel")
 
 
         else :
