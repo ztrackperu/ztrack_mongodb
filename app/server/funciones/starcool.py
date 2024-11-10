@@ -23,16 +23,9 @@ def obtener_mes_ano_anterior():
     repositorio = f"REPOSITORIO_{fecha_anterior.strftime('%m')}_{fecha_anterior.strftime('%Y')}"
     return repositorio
 
-#ARRAY DONDE SE DEBE CARGAR LOS DATOS:
-cmd=[22,22,147,249,195,250,219,251,7,251,3,197,147,250,219,224,3,224,3,224]
 
-def Calcula_Termino1(num1,num2):
-    valve = 0xFF
-    valve = valve & num1
-    valve = valve << 8
-    valve = valve & 0xFFFF
-    valve = valve | num2
-    #FUNCION CALCULA SP    
+def Calcula_Termino1(valve):
+#FUNCION CALCULA SP    
     aux = valve
     signo = 0
     aux = aux & 0xF000
@@ -51,23 +44,42 @@ def Calcula_Termino1(num1,num2):
 
 #VALOR DE SETPOINT
 
-def retorna_bloque_decodificado(cmd_3,cmd_4,cmd_5,cmd_6,cmd_7,cmd_8,cmd_9,cmd_10):
-    sp = Calcula_Termino1(int(cmd_3),int(cmd_4))
-    #print("Valor SP: ")
+def pasar_dato(com1 ,com2):
+    val = 0xFF
+    val = val & com1
+    val = val << 8
+    val = val & 0xFFFF
+    val = val | com2
+    sp = Calcula_Termino1(val)
+    return sp
+
+def transformar(arr):
+    res = []
+    enum = "Valor SP: "
+    sp = pasar_dato(arr[3] ,arr[4])
     #print(sp)
-    #VALOR DE SUMINISTRO
-    supply = Calcula_Termino1(int(cmd_5),int(cmd_6))
-    #print("Valor SUM: ")
+    #res.append(enum)
+    res.append(sp)
+
+    enum = "Valor SUply: "
+    sp = pasar_dato(arr[5] ,arr[6])
     #print(sp)
-    #VALOR DE RETORNO
-    ret = Calcula_Termino1(int(cmd_7),int(cmd_8))
-    #print("Valor RET: ")
-    #print(ret)
-    #VALOR DE EVAP
-    evap = Calcula_Termino1(int(cmd_9),int(cmd_10))
-    #print("Valor EVAP: ")
-    #print(evap)
-    return [sp,supply,ret,evap]
+    #res.append(enum)
+    res.append(sp)
+
+    enum = "Valor retur: "
+    sp = pasar_dato(arr[7] ,arr[8])
+    #print(sp)
+    #res.append(enum)
+    res.append(sp)
+
+    enum = "Valor evap: "
+    sp = pasar_dato(arr[9] ,arr[10])
+    #print(sp)
+    #res.append(enum)
+    res.append(sp)
+
+    return res
 
 
 
@@ -136,9 +148,12 @@ async def homologar_starcool_general() -> dict:
                     #pasar por el algoritmo de procesamiento de informacion y homologar 
                     #1TC2,Madurador,ZGRU6844452,22,22,147,249,195,249,115,249,195,250,11,197,67,249,119,224,3,224,3,224,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,0.00,0,0,0,0,0,0.00,0.00,0.00,0.00,0.00,0.00,0,0,0.00,0.00,0.00,0.00,0.00,0,0,0,0.00,0.00,THERMOKING,0.000,0.000,0,0,0
                     if len(f2)>69 :
-                        datos_homologados = retorna_bloque_decodificado(f2[3],f2[4],f2[5],f2[6],f2[7],f2[8],f2[9],f2[10])
+                        datos_crudos = [f2[3],f2[4],f2[5],f2[6],f2[7],f2[8],f2[9],f2[10]]
+                        datos_homologados =transformar(datos_crudos)
                         #[sp,supply,ret,evap]
                         if len(datos_homologados)==4:
+                            idProgre=idProgre+1
+
                             objetoV = {
                                 "id": idProgre,
                                 "set_point": datos_homologados[0], 
