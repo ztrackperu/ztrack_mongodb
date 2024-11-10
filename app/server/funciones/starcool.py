@@ -76,6 +76,7 @@ async def homologar_starcool_general() -> dict:
                     factorBusqueda ={"fecha":{"$gt":fechaId}}
                     estadoC=1
             print(estadoC)
+            print(idProgre)
 
                 
 
