@@ -539,11 +539,8 @@ async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
             actual_intervalo_final = actual_time + timedelta(minutes=m_d[0])
             last_return_air = concepto_ot['return_air']
     
-
     listasT = {"graph":listas,"table":"concepto_ots","cadena":cadena,"temperature":dataConfig['c_f'],"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
     return listasT
-
-
 
 
 async def obtener_madurador() -> dict:
