@@ -96,7 +96,7 @@ async def homologar_starcool_general() -> dict:
     )
     curConte = cnx.cursor(buffered=True)
     #contenedores starcool
-    contenedores = ["ZGRU6844452","ZGRU6077903","ZGRU2010207","ZGRU1940045","ZGRU0029504","ZGRU6860448","ZGRU1092515","ZGRU1034969"]
+    contenedores = ["ZGRU6844452","ZGRU6077903","ZGRU2010207","ZGRU1940045","ZGRU0029504","ZGRU6860448","ZGRU1092515","ZGRU1034969","ZGRU2008200"]
     #recorrer lista 
     #for contenedor in contenedores:
     for index_1, contenedor in enumerate(contenedores):
