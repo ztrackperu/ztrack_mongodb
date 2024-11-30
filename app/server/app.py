@@ -29,7 +29,7 @@ app.add_middleware(
 app.include_router(MaduradorRouter, tags=["maduradores"], prefix="/maduradores")
 app.include_router(HortifruitRouter, tags=["Tunel"], prefix="/tunel")
 app.include_router(StarcoolRouter, tags=["StarCool"], prefix="/starcool")
-app.include_router(SimularRouter, tags=["StarCool"], prefix="/simular")
+app.include_router(SimularRouter, tags=["Simular"], prefix="/simular")
 
 @app.get("/", tags=["Root"])
 async def read_root():
