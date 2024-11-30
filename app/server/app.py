@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from server.routes.madurador import router as MaduradorRouter
 from server.routes.tunel import router as HortifruitRouter
 from server.routes.starcool import router as StarcoolRouter
+from server.routes.simular import router as SimularRouter
 
 app = FastAPI(
     title="Integracion ZTRACK MONGODB",
@@ -28,7 +29,7 @@ app.add_middleware(
 app.include_router(MaduradorRouter, tags=["maduradores"], prefix="/maduradores")
 app.include_router(HortifruitRouter, tags=["Tunel"], prefix="/tunel")
 app.include_router(StarcoolRouter, tags=["StarCool"], prefix="/starcool")
-
+app.include_router(SimularRouter, tags=["StarCool"], prefix="/simular")
 
 @app.get("/", tags=["Root"])
 async def read_root():
