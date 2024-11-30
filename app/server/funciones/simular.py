@@ -6,6 +6,7 @@ from bson import regex
 from datetime import datetime,timedelta
 from server.generico.base_conexion import BaseConexion
 from dateutil.relativedelta import relativedelta
+import os
 
 db_connection = mysql.connector.connect(
     host= "localhost",
@@ -84,7 +85,8 @@ def transformar(arr):
 
 
 async def homologar_simular_ransa() ->dict :
-    csv_file = 'ZGRU4729220.csv'
+    csv_file = os.path.join(os.path.dirname(__file__), 'data', 'ZGRU4729220.csv')
+    #csv_file = 'ZGRU4729220.csv' 
     json_file = 'resultado.json'
     with open(csv_file, mode='r', newline='') as file:
         reader = csv.reader(file)
