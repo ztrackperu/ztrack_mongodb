@@ -102,16 +102,103 @@ async def homologar_simular_ransa() ->dict :
             if separado[0] : 
                 if separado[1]:
                     row[3] = str(separado[0])+"T"+str(separado[1])
-            entry = {
-                'id': row[0],           # 'ZGRU2018234'
-                'fecha': row[3],        # '-25.00'
-                'supply': row[4],       # '-29.00'
-                'return': row[5],       # '-24.60'
-                'evap': row[6]          # '-27.00'
+            #entry = {
+                #'id': row[0],           # 'ZGRU2018234'
+                #'fecha': row[3],        # '-25.00'
+                #'supply': row[4],       # '-29.00'
+                #'return': row[5],       # '-24.60'
+                #'evap': row[6]          # '-27.00'
+            #}
+            tele_of = 100
+
+            objetoV = {
+                "id": row[0],
+                "set_point": -22.0, 
+                "temp_supply_1": row[4],
+                "temp_supply_2": 0.00,
+                "return_air": row[5], 
+                "evaporation_coil": row[6],
+                "condensation_coil": 0.00,
+                "compress_coil_1": None,
+                "compress_coil_2": 0.00, 
+                "ambient_air": 0.00, 
+                "cargo_1_temp": 0.00,
+                "cargo_2_temp": 0.00, 
+                "cargo_3_temp": 0.00, 
+                "cargo_4_temp": 0.00, 
+                "relative_humidity": None, 
+                "avl": 0.00, 
+                "suction_pressure": 0.00, 
+                "discharge_pressure": 0.00, 
+                "line_voltage": 0.00, 
+                "line_frequency": 0.00, 
+                "consumption_ph_1": 0.00, 
+                "consumption_ph_2": 0.00, 
+                "consumption_ph_3": 0.00, 
+                "co2_reading": 0.00, 
+                "o2_reading": 0.00, 
+                "evaporator_speed": 0.00, 
+                "condenser_speed": 0.00,
+                "power_kwh": 0.00,
+                "power_trip_reading": 0.00,
+                "suction_temp": 0.00,
+                "discharge_temp": 0.00,
+                "supply_air_temp": 0.00,
+                "return_air_temp": 0.00,
+                "dl_battery_temp": 0.00,
+                "dl_battery_charge": 0.00,
+                "power_consumption": 0.00,
+                "power_consumption_avg": 0.00,
+                "alarm_present": 0.00,
+                "capacity_load": 0.00,
+                "power_state": 1, 
+                "controlling_mode": 1,
+                "humidity_control": 0.00,
+                "humidity_set_point": 0.00,
+                "fresh_air_ex_mode": 0.00,
+                "fresh_air_ex_rate": 0.00,
+                "fresh_air_ex_delay": 0.00,
+                "set_point_o2": 0.00,
+                "set_point_co2": 0.00,
+                "defrost_term_temp": 0.00,
+                "defrost_interval": 0.00,
+                "water_cooled_conde": 0.00,
+                "usda_trip": 0.00,
+                "evaporator_exp_valve": 0.00,
+                "suction_mod_valve": 0.00,
+                "hot_gas_valve": 0.00,
+                "economizer_valve": 0.00,
+                "ethylene": 0.00,
+                "stateProcess": 0.00,
+                "stateInyection": 0.00,
+                "timerOfProcess": 0.00,
+                "battery_voltage": 0.00,
+                "power_trip_duration":0.00,
+                "modelo": 0.00,
+                "latitud": 0.00,
+                "longitud":  0.00,
+                "created_at": row[3],
+                "telemetria_id": tele_of,
+                "inyeccion_etileno": 0,
+                "defrost_prueba": 0,
+                "ripener_prueba": 0,
+                "sp_ethyleno": 0.00,
+                "inyeccion_hora": 0.00,
+                "inyeccion_pwm": 0.00,
+                "extra_1": 0,
+                "extra_2": 0,
+                "extra_3": 0,
+                "extra_4": 0,
+                "extra_5": 0
             }
+            databaseMongoH = client['ztrack_test_ja']  
+            #collectionMongoH = databaseMongoH.get_collection("madurador_starcool")
+            collectionMongoH = databaseMongoH.get_collection("madurador")
+
+            collectionMongoH.insert_one(objetoV)
             # Añadir el diccionario a la lista de datos
-            data.append(entry)
-            print(entry)
+            #data.append(entry)
+            print(objetoV)
 
     # Guardar los datos en un archivo JSON
     #with open(json_file, 'w') as json_out:
