@@ -97,6 +97,11 @@ async def homologar_simular_ransa() ->dict :
         #{'nombre': '35455434', 'set': '2024-11-20', 'supply': '17:45', 'return': '2024-11-20 17:45', 'evap': '-20.9', 'coil': '-21.1'}
         for row in reader:
             # Crear el diccionario con los valores de la fila
+            tomar = row[3]
+            separado = tomar.split(" ")
+            if separado[0] : 
+                if separado[1]:
+                    row[3] = str(separado[0])+"T"+str(separado[1])
             entry = {
                 'id': row[0],           # 'ZGRU2018234'
                 'fecha': row[3],        # '-25.00'
