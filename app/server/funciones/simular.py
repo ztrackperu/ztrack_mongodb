@@ -93,15 +93,16 @@ async def homologar_simular_ransa() ->dict :
         # Lista para almacenar los diccionarios
         data = []
         # Recorrer cada línea del CSV
+        #35453885,2024-11-04,14:30,2024-11-04 14:30,-28.7,-23,-22.5,2024-11-04,14:30,2024-11-04 14:30
+        #{'nombre': '35455434', 'set': '2024-11-20', 'supply': '17:45', 'return': '2024-11-20 17:45', 'evap': '-20.9', 'coil': '-21.1'}
         for row in reader:
             # Crear el diccionario con los valores de la fila
             entry = {
-                'nombre': row[0],       # 'ZGRU2018234'
-                'set': row[1],          # '-25.00'
-                'supply': row[2],       # '-29.00'
-                'return': row[3],       # '-24.60'
-                'evap': row[4],         # '-27.00'
-                'coil': row[5]          # '23.30'
+                'id': row[0],           # 'ZGRU2018234'
+                'fecha': row[3],        # '-25.00'
+                'supply': row[4],       # '-29.00'
+                'return': row[5],       # '-24.60'
+                'evap': row[6]          # '-27.00'
             }
             # Añadir el diccionario a la lista de datos
             data.append(entry)
