@@ -105,11 +105,12 @@ async def homologar_simular_ransa() ->dict :
             }
             # Añadir el diccionario a la lista de datos
             data.append(entry)
+            print(entry)
 
     # Guardar los datos en un archivo JSON
-    with open(json_file, 'w') as json_out:
-        json.dump(data, json_out, indent=4)
-    print(f"Archivo JSON generado en {json_file}")
+    #with open(json_file, 'w') as json_out:
+        #json.dump(data, json_out, indent=4)
+    #print(f"Archivo JSON generado en {json_file}")
 
 
 
