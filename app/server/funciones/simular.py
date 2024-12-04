@@ -109,8 +109,11 @@ async def homologar_simular_ransa() ->dict :
                 #'return': row[5],       # '-24.60'
                 #'evap': row[6]          # '-27.00'
             #}
-            tele_of = 100
 
+            tele_of = 14964
+
+            row[3] = datetime.fromisoformat(row[3])+timedelta(minutes=0)
+            
             objetoV = {
                 "id": row[0],
                 "set_point": -22.0, 
