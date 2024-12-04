@@ -85,13 +85,13 @@ def transformar(arr):
 
 
 async def homologar_simular_ransa() ->dict :
-    csv_file = os.path.join(os.path.dirname(__file__), 'data', 'ZGRU0009935.csv')
+    csv_file = os.path.join(os.path.dirname(__file__), 'data', 'ZGRU2007245.csv')
     #csv_file = 'ZGRU4729220.csv' 
     json_file = 'resultado.json'
     with open(csv_file, mode='r', newline='') as file:
         reader = csv.reader(file)
 
-        tele_of = 14963
+        tele_of = 15016
         # Lista para almacenar los diccionarios
         data = []
         # Recorrer cada línea del CSV
