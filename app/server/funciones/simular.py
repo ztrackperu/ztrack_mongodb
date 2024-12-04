@@ -102,6 +102,11 @@ async def homologar_simular_ransa() ->dict :
             if separado[0] : 
                 if separado[1]:
                     row[3] = str(separado[0])+"T"+str(separado[1])
+                    print("---------------")
+                    print (row[3])
+                    print("---------------")
+                    row[3] = datetime.fromisoformat(row[3])+timedelta(minutes=0)
+
             #entry = {
                 #'id': row[0],           # 'ZGRU2018234'
                 #'fecha': row[3],        # '-25.00'
@@ -112,8 +117,8 @@ async def homologar_simular_ransa() ->dict :
 
             tele_of = 14964
 
-            row[3] = datetime.fromisoformat(row[3])+timedelta(minutes=0)
-            
+            #row[3] = datetime.fromisoformat(row[3])+timedelta(minutes=0)
+
             objetoV = {
                 "id": row[0],
                 "set_point": -22.0, 
