@@ -107,9 +107,13 @@ async def homologar_simular_ransa() ->dict :
                     dat_hora = separado[1].split(":")
                     if dat_hora[0]:
                         if len(dat_hora[0]) ==1 :
-                            row[3] = str(separado[0])+"T0"+str(separado[1])+":00"
+                            #row[3] = str(separado[0])+"T0"+str(separado[1])+":00"
+                            row[3] = str(separado[0])+"T0"+str(separado[1])
+
                         else:
-                            row[3] = str(separado[0])+"T"+str(separado[1])+":00"
+                            #row[3] = str(separado[0])+"T"+str(separado[1])+":00"
+                            row[3] = str(separado[0])+"T"+str(separado[1])
+
                         print("---------------")
                         print (row[3])
                         print("---------------")
