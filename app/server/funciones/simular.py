@@ -90,6 +90,8 @@ async def homologar_simular_ransa() ->dict :
     json_file = 'resultado.json'
     with open(csv_file, mode='r', newline='') as file:
         reader = csv.reader(file)
+
+        tele_of = 14964
         # Lista para almacenar los diccionarios
         data = []
         # Recorrer cada línea del CSV
@@ -120,8 +122,6 @@ async def homologar_simular_ransa() ->dict :
                 #'return': row[5],       # '-24.60'
                 #'evap': row[6]          # '-27.00'
             #}
-
-            tele_of = 14964
 
             #row[3] = datetime.fromisoformat(row[3])+timedelta(minutes=0)
 
@@ -205,7 +205,7 @@ async def homologar_simular_ransa() ->dict :
                 "extra_4": 0,
                 "extra_5": 0
             }
-            databaseMongoH = client['ztrack_test_ja']  
+            databaseMongoH = client['ztrack_ja']  
             #collectionMongoH = databaseMongoH.get_collection("madurador_starcool")
             collectionMongoH = databaseMongoH.get_collection("madurador")
 
