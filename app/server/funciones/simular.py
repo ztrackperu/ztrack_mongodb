@@ -101,7 +101,7 @@ async def homologar_simular_ransa() ->dict :
             separado = tomar.split(" ")
             if separado[0] : 
                 if separado[1]:
-                    row[3] = str(separado[0])+"T"+str(separado[1])
+                    row[3] = str(separado[0])+"T"+str(separado[1])+":00"
                     print("---------------")
                     print (row[3])
                     print("---------------")
