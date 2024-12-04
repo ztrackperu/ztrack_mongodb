@@ -101,11 +101,17 @@ async def homologar_simular_ransa() ->dict :
             separado = tomar.split(" ")
             if separado[0] : 
                 if separado[1]:
-                    row[3] = str(separado[0])+"T"+str(separado[1])+":00"
-                    print("---------------")
-                    print (row[3])
-                    print("---------------")
-                    row[3] = datetime.fromisoformat(row[3])+timedelta(minutes=0)
+                    #tratar dato 1:01
+                    dat_hora = separado[1].split(":")
+                    if dat_hora[0]:
+                        if len(dat_hora[0]) ==1 :
+                            row[3] = str(separado[0])+"T0"+str(separado[1])+":00"
+                        else:
+                            row[3] = str(separado[0])+"T"+str(separado[1])+":00"
+                        print("---------------")
+                        print (row[3])
+                        print("---------------")
+                        row[3] = datetime.fromisoformat(row[3])+timedelta(minutes=0)
 
             #entry = {
                 #'id': row[0],           # 'ZGRU2018234'
