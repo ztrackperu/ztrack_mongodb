@@ -139,7 +139,7 @@ async def homologar_api_starcool_general() -> dict:
     curConte = cnx.cursor(buffered=True)
     async for x in collectionImei.find():
         imeis.append(x['imei'])
-        consulta_contenedor = ("SELECT * FROM telemetrias WHERE imei=%s")
+        consulta_contenedor = ("SELECT * FROM telemetrias WHERE imei=%s and estado=1")
         #query_contenedor = curConte.execute(consulta_contenedor,(str(x['imei']),))
         identi = "S"+str(x['imei'])
         curConte.execute(consulta_contenedor,(identi,))
@@ -149,12 +149,27 @@ async def homologar_api_starcool_general() -> dict:
         print("-------------------")
 
         if curConte : 
-            #print("hay algo")
+            print("hay algo")
             for y in curConte:
-                print("-------------------")
-                print(y)
-                print("-------------------")
-                print(y[0])
+                #print("-------------------")
+                #print(y)
+                #print("-------------------")
+                #print(y[0])
+                id_obtenido = y[0]
+
+        else : 
+            consulta_ultimo_id_tele = ("SELECT id FROM telemetrias  order by id desc  limit 1  ")
+            curConte.execute(consulta_ultimo_id_tele)
+            print("no hay ")
+            for z in curConte:
+                #print("-------------------")
+                #print(y)
+                #print("-------------------")
+                #print(y[0])
+                id_obtenido = z[0]+1
+        print(id_obtenido)
+
+
 
 
         #consulta_contenedor = ("SELECT * FROM telemetrias WHERE estado=1")
