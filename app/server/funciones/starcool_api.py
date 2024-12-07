@@ -142,58 +142,25 @@ async def homologar_api_starcool_general() -> dict:
         consulta_contenedor = ("SELECT * FROM telemetrias WHERE imei=%s and estado=1")
         #query_contenedor = curConte.execute(consulta_contenedor,(str(x['imei']),))
         identi = "S"+str(x['imei'])
-        okdato = curConte.execute(consulta_contenedor,(identi,))
-
+        curConte.execute(consulta_contenedor,(identi,))
+        data_telemtria = []
+        data_ultima = []
         print("-------------------")
         print(x['imei'])
         print("-------------------")
-
-        if okdato : 
-            print("hay algo")
-            for y in okdato:
-                #print("-------------------")
-                #print(y)
-                #print("-------------------")
-                #print(y[0])
-                id_obtenido = y[0]
-
+        for y in curConte:
+            data_telemtria.append(y)
+        if len(data_telemtria)>0 :
+            id_obtenido = data_telemtria[0][0]
         else : 
             consulta_ultimo_id_tele = ("SELECT id FROM telemetrias  order by id desc  limit 1  ")
-            okdato2 = curConte.execute(consulta_ultimo_id_tele)
-            print("no hay ")
-            for z in okdato2:
-                #print("-------------------")
-                #print(y)
-                #print("-------------------")
-                #print(y[0])
-                id_obtenido = z[0]+1
+            curConte.execute(consulta_ultimo_id_tele)
+            for z in curConte:
+                data_ultima.append(z)
+            id_obtenido = data_ultima[0][0] +1
         print(id_obtenido)
-        #curConte.close()
-        #cnx.close()
 
-
-
-
-        #consulta_contenedor = ("SELECT * FROM telemetrias WHERE estado=1")
-        #query_contenedor = curConte.execute(consulta_contenedor)
-        #curConte.execute(consulta_contenedor)
-
-        
-        #if curConte :
-            #print("oye sali aqui")
-            #for x in curConte:
-                #print(str(x['imei']))
-                #print(str(x['id']))
-                #print(str(x['created_at']))
-                #print(x)
-                #print(x[0])
-
-        #curConte.close()
-        #cnx.close()
-        
-
-        #print(curConte)
-        #preguntar si existe en consulta mysql
+            
 
     return imeis
 
