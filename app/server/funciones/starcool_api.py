@@ -190,19 +190,107 @@ async def homologar_api_starcool_general() -> dict:
         base_imei =obtener_mes_ano_anterior_imei(str(x['imei']))
         collection_especifica =databaseMongo.get_collection(base_imei)
         prueba_collection =databaseMongo.get_collection("prueba_colect")
-
+        ij = 1
         async for notificacion in collection_especifica.find({"estado":1},{"_id":0}).sort({"fecha":1}):
             print("********")
             captura_datos = notificacion['d01']
             if len(captura_datos)>100  :
-                print("bueno")
-                nuevo_texto = resultados_starcool(captura_datos[6:])
-                print(nuevo_texto)
+                #print("bueno")
+                row = resultados_starcool(captura_datos[6:])
+                print(row)
+                #['Set Point', 'Supply 1 temp', 'Return temp', 'Evaporator temp', 'Ambient temp', 'Supply 2 temp']
+                objetoV = {
+                    "id": ij,
+                    "set_point": row[0], 
+                    "temp_supply_1": row[1],
+                    "temp_supply_2": row[5],
+                    "return_air": row[2], 
+                    "evaporation_coil": row[3],
+                    "condensation_coil": 0.00,
+                    "compress_coil_1": None,
+                    "compress_coil_2": 0.00, 
+                    "ambient_air": row[4], 
+                    "cargo_1_temp": 0.00,
+                    "cargo_2_temp": 0.00, 
+                    "cargo_3_temp": 0.00, 
+                    "cargo_4_temp": 0.00, 
+                    "relative_humidity": None, 
+                    "avl": 0.00, 
+                    "suction_pressure": 0.00, 
+                    "discharge_pressure": 0.00, 
+                    "line_voltage": 0.00, 
+                    "line_frequency": 0.00, 
+                    "consumption_ph_1": 0.00, 
+                    "consumption_ph_2": 0.00, 
+                    "consumption_ph_3": 0.00, 
+                    "co2_reading": 0.00, 
+                    "o2_reading": 0.00, 
+                    "evaporator_speed": 0.00, 
+                    "condenser_speed": 0.00,
+                    "power_kwh": 0.00,
+                    "power_trip_reading": 0.00,
+                    "suction_temp": 0.00,
+                    "discharge_temp": 0.00,
+                    "supply_air_temp": 0.00,
+                    "return_air_temp": 0.00,
+                    "dl_battery_temp": 0.00,
+                    "dl_battery_charge": 0.00,
+                    "power_consumption": 0.00,
+                    "power_consumption_avg": 0.00,
+                    "alarm_present": 0.00,
+                    "capacity_load": 0.00,
+                    "power_state": 1, 
+                    "controlling_mode": 1,
+                    "humidity_control": 0.00,
+                    "humidity_set_point": 0.00,
+                    "fresh_air_ex_mode": 0.00,
+                    "fresh_air_ex_rate": 0.00,
+                    "fresh_air_ex_delay": 0.00,
+                    "set_point_o2": 0.00,
+                    "set_point_co2": 0.00,
+                    "defrost_term_temp": 0.00,
+                    "defrost_interval": 0.00,
+                    "water_cooled_conde": 0.00,
+                    "usda_trip": 0.00,
+                    "evaporator_exp_valve": 0.00,
+                    "suction_mod_valve": 0.00,
+                    "hot_gas_valve": 0.00,
+                    "economizer_valve": 0.00,
+                    "ethylene": 0.00,
+                    "stateProcess": 0.00,
+                    "stateInyection": 0.00,
+                    "timerOfProcess": 0.00,
+                    "battery_voltage": 0.00,
+                    "power_trip_duration":0.00,
+                    "modelo": 0.00,
+                    "latitud": 0.00,
+                    "longitud":  0.00,
+                    "created_at": notificacion['fecha'],
+                    "telemetria_id": id_obtenido,
+                    "inyeccion_etileno": 0,
+                    "defrost_prueba": 0,
+                    "ripener_prueba": 0,
+                    "sp_ethyleno": 0.00,
+                    "inyeccion_hora": 0.00,
+                    "inyeccion_pwm": 0.00,
+                    "extra_1": 0,
+                    "extra_2": 0,
+                    "extra_3": 0,
+                    "extra_4": 0,
+                    "extra_5": 0
+                }
+                ij+=1
+                print(objetoV)
+
+
+
+
+
             else :
                 print("malito")
             #print(notificacion['d01'])
 
-            print("********")    
+            #print("********")    
 
     return imeis
 
