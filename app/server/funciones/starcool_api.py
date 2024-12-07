@@ -146,12 +146,14 @@ async def homologar_api_starcool_general() -> dict:
         query_contenedor = curConte.execute(consulta_contenedor,(1,))
 
         if query_contenedor :
+            print("oye sali aqui")
             for (imei, id, created_at) in query_contenedor:
-                print("{}, {} was hired on {:%d %b %Y}".format(
-                imei, id, created_at))
+                print(imei)
+                print(id)
+                print(created_at)
 
-            curConte.close()
-            cnx.close()
+        #curConte.close()
+        #cnx.close()
         
         print("-------------------")
         print(x['imei'])
