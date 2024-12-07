@@ -168,6 +168,8 @@ async def homologar_api_starcool_general() -> dict:
                 #print(y[0])
                 id_obtenido = z[0]+1
         print(id_obtenido)
+        curConte.close()
+        cnx.close()
 
 
 
