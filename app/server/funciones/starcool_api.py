@@ -184,7 +184,7 @@ async def homologar_api_starcool_general() -> dict:
             insert_new_contenedor = ("INSERT INTO contenedores (nombre_contenedor, tipo, telemetria_id) "
                 "VALUES (%s, %s, %s)")
             curConteB.execute(insert_new_contenedor,(identi, "Madurador", id_obtenido))
-        cnx.commit()
+        
 
         #leer la tabla correspondiente y de froma masiva importar 
         base_imei =obtener_mes_ano_anterior_imei(str(x['imei']))
@@ -280,9 +280,25 @@ async def homologar_api_starcool_general() -> dict:
                     "extra_5": 0
                 }
                 ij+=1
+                databaseMongoH = client['ztrack_ja']  
+                #collectionMongoH = databaseMongoH.get_collection("madurador_starcool")
+                collectionMongoH = databaseMongoH.get_collection("madurador")
+
+                collectionMongoH.insert_one(objetoV)
                 print(objetoV)
+                curB = cnx.cursor()
+                update_old_salary = (
+                "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
+                ", ambient_air= %s ,relative_humidity= %s ,avl = %s , defrost_prueba = %s , ripener_prueba = %s , ethylene = %s"
+                    " , set_point_co2 = %s , co2_reading = %s , humidity_set_point = %s , sp_ethyleno = %s , compress_coil_1 = %s WHERE estado = 1 AND telemetria_id = %s  ")
+                curB.execute(update_old_salary, (objetoV['created_at'], objetoV['set_point'],objetoV['temp_supply_1'], 
+                                                    objetoV['return_air'], objetoV['ambient_air'], objetoV['relative_humidity'], 
+                                                    objetoV['avl'], objetoV['inyeccion_pwm'], objetoV['inyeccion_hora'], 
+                                                    objetoV['ethylene'], objetoV['set_point_co2'], objetoV['co2_reading'], 
+                                                    objetoV['humidity_set_point'], objetoV['sp_ethyleno'],objetoV['compress_coil_1'], 
+                                                    objetoV['telemetria_id'],  ))
 
-
+                cnx.commit()
 
 
 
