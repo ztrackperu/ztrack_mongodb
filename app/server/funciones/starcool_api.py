@@ -139,30 +139,34 @@ async def homologar_api_starcool_general() -> dict:
     curConte = cnx.cursor(buffered=True)
     async for x in collectionImei.find():
         imeis.append(x['imei'])
-        #consulta_contenedor = ("SELECT * FROM telemetrias WHERE imei=%s")
-        #query_contenedor = curConte.execute(consulta_contenedor,(x['imei'],))
+        consulta_contenedor = ("SELECT * FROM telemetrias WHERE imei=%s")
+        query_contenedor = curConte.execute(consulta_contenedor,(str(x['imei']),))
 
-        consulta_contenedor = ("SELECT * FROM telemetrias WHERE estado=1")
+        if query_contenedor : 
+            for x in query_contenedor:
+                print(x)
+
+        #consulta_contenedor = ("SELECT * FROM telemetrias WHERE estado=1")
         #query_contenedor = curConte.execute(consulta_contenedor)
-        curConte.execute(consulta_contenedor)
+        #curConte.execute(consulta_contenedor)
 
         
-        if curConte :
-            print("oye sali aqui")
-            for x in curConte:
+        #if curConte :
+            #print("oye sali aqui")
+            #for x in curConte:
                 #print(str(x['imei']))
                 #print(str(x['id']))
                 #print(str(x['created_at']))
-                print(x)
-                print(x[0])
+                #print(x)
+                #print(x[0])
 
         #curConte.close()
         #cnx.close()
         
         print("-------------------")
-        print(x['imei'])
+        #print(x['imei'])
         print("-------------------")
-        print(curConte)
+        #print(curConte)
         #preguntar si existe en consulta mysql
 
     return imeis
