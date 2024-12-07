@@ -172,7 +172,7 @@ async def homologar_api_starcool_general() -> dict:
             data_telemtria.append(y1)
         if len(data_contenedor)==0 :
             #cremoas contenedor con descripcion 
-            insert_new_contenedor = ("INSERT INTO contenedor (nombre_contenedor, tipo, telemetria_id) "
+            insert_new_contenedor = ("INSERT INTO contenedores (nombre_contenedor, tipo, telemetria_id) "
                 "VALUES (%s, %s, %s)")
             curConteB.execute(insert_new_contenedor,(identi, "Madurador", id_obtenido))
 
