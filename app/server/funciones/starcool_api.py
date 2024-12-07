@@ -140,11 +140,14 @@ async def homologar_api_starcool_general() -> dict:
     async for x in collectionImei.find():
         imeis.append(x['imei'])
         consulta_contenedor = ("SELECT * FROM telemetrias WHERE imei=%s")
-        query_contenedor = curConte.execute(consulta_contenedor,(str(x['imei']),))
+        #query_contenedor = curConte.execute(consulta_contenedor,(str(x['imei']),))
+        curConte.execute(consulta_contenedor,(str(x['imei']),))
 
-        if query_contenedor : 
-            for x in query_contenedor:
-                print(x)
+
+        if curConte : 
+            print("hay algo")
+            for y in curConte:
+                print(y)
 
         #consulta_contenedor = ("SELECT * FROM telemetrias WHERE estado=1")
         #query_contenedor = curConte.execute(consulta_contenedor)
@@ -164,7 +167,7 @@ async def homologar_api_starcool_general() -> dict:
         #cnx.close()
         
         print("-------------------")
-        #print(x['imei'])
+        print(x['imei'])
         print("-------------------")
         #print(curConte)
         #preguntar si existe en consulta mysql
