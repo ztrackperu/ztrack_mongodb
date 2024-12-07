@@ -193,7 +193,15 @@ async def homologar_api_starcool_general() -> dict:
 
         async for notificacion in collection_especifica.find({"estado":1},{"_id":0}).sort({"fecha":1}):
             print("********")
-            print(notificacion)
+            captura_datos = notificacion['d01']
+            if len(captura_datos)>100  :
+                print("bueno")
+                nuevo_texto = resultados_starcool(captura_datos[6:])
+                print(nuevo_texto)
+            else :
+                print("malito")
+            #print(notificacion['d01'])
+
             print("********")    
 
     return imeis
