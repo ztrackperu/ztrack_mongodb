@@ -150,9 +150,11 @@ async def homologar_api_starcool_general() -> dict:
         if curConte :
             print("oye sali aqui")
             for x in curConte:
-                print(str(x['imei']))
-                print(str(x['id']))
-                print(str(x['created_at']))
+                #print(str(x['imei']))
+                #print(str(x['id']))
+                #print(str(x['created_at']))
+                print(x)
+                print(x[0])
 
         #curConte.close()
         #cnx.close()
