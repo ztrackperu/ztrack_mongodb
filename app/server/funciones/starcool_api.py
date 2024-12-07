@@ -137,6 +137,7 @@ async def homologar_api_starcool_general() -> dict:
         database="zgroupztrack"
     )
     curConte = cnx.cursor(buffered=True)
+    curConteB = cnx.cursor(buffered=True)
     async for x in collectionImei.find():
         imeis.append(x['imei'])
         consulta_contenedor = ("SELECT * FROM telemetrias WHERE imei=%s and estado=1")
@@ -161,9 +162,9 @@ async def homologar_api_starcool_general() -> dict:
             #creo el dispostivo en cuestion 
             insert_new_telemetria = ("INSERT INTO telemetrias (id, numero_telefono, imei) "
                 "VALUES (%s, %s, %s, %s)")
-            curConte.execute(insert_new_telemetria,
-               (id_obtenido, identi, identi))
+            curConteB.execute(insert_new_telemetria,(id_obtenido, identi, identi))
         print(id_obtenido)
+        cnx.commit()
 
             
 
