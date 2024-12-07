@@ -6,6 +6,9 @@ from server.routes.madurador import router as MaduradorRouter
 from server.routes.tunel import router as HortifruitRouter
 from server.routes.starcool import router as StarcoolRouter
 from server.routes.simular import router as SimularRouter
+from server.routes.starcool_api import router as StarcoolApiRouter
+
+
 
 app = FastAPI(
     title="Integracion ZTRACK MONGODB",
@@ -30,6 +33,8 @@ app.include_router(MaduradorRouter, tags=["maduradores"], prefix="/maduradores")
 app.include_router(HortifruitRouter, tags=["Tunel"], prefix="/tunel")
 app.include_router(StarcoolRouter, tags=["StarCool"], prefix="/starcool")
 app.include_router(SimularRouter, tags=["Simular"], prefix="/simular")
+app.include_router(StarcoolApiRouter, tags=["StarCoolApi"], prefix="/starcoolapi")
+
 
 @app.get("/", tags=["Root"])
 async def read_root():
