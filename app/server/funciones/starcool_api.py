@@ -139,8 +139,11 @@ async def homologar_api_starcool_general() -> dict:
     curConte = cnx.cursor(buffered=True)
     async for x in collectionImei.find():
         imeis.append(x['imei'])
-        consulta_contenedor = ("SELECT * FROM telemetrias WHERE imei=%s")
-        query_contenedor = curConte.execute(consulta_contenedor,(x['imei'],))
+        #consulta_contenedor = ("SELECT * FROM telemetrias WHERE imei=%s")
+        #query_contenedor = curConte.execute(consulta_contenedor,(x['imei'],))
+        consulta_contenedor = ("SELECT * FROM telemetrias ")
+        query_contenedor = curConte.execute(consulta_contenedor,())
+
         print("-------------------")
         print(x['imei'])
         print("-------------------")
