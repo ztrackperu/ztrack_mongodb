@@ -115,7 +115,9 @@ def obtener_mes_ano_anterior():
     # Obtener la fecha actual
     fecha_actual = datetime.now()
     # Restar un mes
-    fecha_anterior = fecha_actual - relativedelta(months=1)
+    #fecha_anterior = fecha_actual - relativedelta(months=1)
+    fecha_anterior = fecha_actual 
+
     # Formatear mes y año anterior en el formato deseado
     repositorio = f"S_dispositivos_{fecha_anterior.strftime('%m')}_{fecha_anterior.strftime('%Y')}"
     return repositorio
@@ -124,7 +126,8 @@ def obtener_mes_ano_anterior_imei(imei):
     # Obtener la fecha actual
     fecha_actual = datetime.now()
     # Restar un mes
-    fecha_anterior = fecha_actual - relativedelta(months=1)
+    #fecha_anterior = fecha_actual - relativedelta(months=1)
+    fecha_anterior = fecha_actual 
     # Formatear mes y año anterior en el formato deseado
     repositorio = f"S_{imei}_{fecha_anterior.strftime('%m')}_{fecha_anterior.strftime('%Y')}"
     return repositorio
@@ -190,7 +193,7 @@ async def homologar_api_starcool_general() -> dict:
         base_imei =obtener_mes_ano_anterior_imei(str(x['imei']))
         collection_especifica =databaseMongo.get_collection(base_imei)
         prueba_collection =databaseMongo.get_collection("prueba_colect")
-        ij = 1
+        ij = 100000
         async for notificacion in collection_especifica.find({"estado":1},{"_id":0}).sort({"fecha":1}):
             print("********")
             captura_datos = notificacion['d01']
