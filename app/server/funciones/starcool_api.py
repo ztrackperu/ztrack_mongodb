@@ -130,8 +130,23 @@ async def homologar_api_starcool_general() -> dict:
     databaseMongo = client[baseD]
     collectionImei =databaseMongo.get_collection(base_anterior)
     imeis = []
+    cnx = mysql.connector.connect(
+        host= "localhost",
+        user= "ztrack2023",
+        passwd= "lpmp2018",
+        database="zgroupztrack"
+    )
+    curConte = cnx.cursor(buffered=True)
     async for x in collectionImei.find():
         imeis.append(x['imei'])
+        consulta_contenedor = ("SELECT * FROM telemetrias WHERE imei=%s")
+        query_contenedor = curConte.execute(consulta_contenedor,(x['imei'],))
+        print("-------------------")
+        print(x['imei'])
+        print("-------------------")
+        print(query_contenedor)
+        #preguntar si existe en consulta mysql
+
     return imeis
 
 
