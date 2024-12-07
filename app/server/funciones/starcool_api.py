@@ -169,7 +169,7 @@ async def homologar_api_starcool_general() -> dict:
                 id_obtenido = z[0]+1
         print(id_obtenido)
         curConte.close()
-        cnx.close()
+        #cnx.close()
 
 
 
