@@ -140,10 +140,10 @@ async def homologar_api_starcool_general() -> dict:
     curConteB = cnx.cursor(buffered=True)
     async for x in collectionImei.find():
         imeis.append(x['imei'])
-        consulta_contenedor = ("SELECT * FROM telemetrias WHERE imei=%s and estado=1")
+        consulta_telemetria = ("SELECT * FROM telemetrias WHERE imei=%s and estado=1")
         #query_contenedor = curConte.execute(consulta_contenedor,(str(x['imei']),))
         identi = "S"+str(x['imei'])
-        curConte.execute(consulta_contenedor,(identi,))
+        curConte.execute(consulta_telemetria,(identi,))
         data_telemtria = []
         data_ultima = []
         print("-------------------")
@@ -164,7 +164,22 @@ async def homologar_api_starcool_general() -> dict:
                 "VALUES (%s, %s, %s)")
             curConteB.execute(insert_new_telemetria,(id_obtenido, identi, identi))
         print(id_obtenido)
+        #consulto a la tabla contenedores por telemetria_id
+        consulta_contenedor = ("SELECT * FROM contenedores WHERE telemetria_id=%s and estado=1")
+        curConte.execute(consulta_contenedor,(id_obtenido,))
+        data_contenedor = []
+        for y1 in curConte:
+            data_telemtria.append(y1)
+        if len(data_contenedor)==0 :
+            #cremoas contenedor con descripcion 
+            insert_new_contenedor = ("INSERT INTO contenedor (nombre_contenedor, tipo, telemetria_id) "
+                "VALUES (%s, %s, %s)")
+            curConteB.execute(insert_new_contenedor,(identi, "Madurador", id_obtenido))
+
         cnx.commit()
+
+
+
 
             
 
