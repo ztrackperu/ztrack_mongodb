@@ -117,17 +117,22 @@ def obtener_mes_ano_anterior():
     # Restar un mes
     fecha_anterior = fecha_actual - relativedelta(months=1)
     # Formatear mes y año anterior en el formato deseado
-    repositorio = f"REPOSITORIO_{fecha_anterior.strftime('%m')}_{fecha_anterior.strftime('%Y')}"
+    repositorio = f"S_dispositivos_{fecha_anterior.strftime('%m')}_{fecha_anterior.strftime('%Y')}"
     return repositorio
 
 
 async def homologar_api_starcool_general() -> dict:
     datazo = BaseConexion.obtener_mes_y_anio_actual()
-    datazo_ante = obtener_mes_ano_anterior()
+    base_anterior = obtener_mes_ano_anterior()
     print(datazo)
-    print(datazo_ante)
-
-    return datazo
+    print(base_anterior)
+    baseD = "ZTRACK_API"
+    databaseMongo = client[baseD]
+    collectionImei =databaseMongo.get_collection(base_anterior)
+    imeis = []
+    async for x in collectionImei.find():
+        imeis.append(x['imei'])
+    return imeis
 
 
 async def homologar_starcool_general() -> dict:
