@@ -123,7 +123,10 @@ def obtener_mes_ano_anterior():
 
 async def homologar_api_starcool_general() -> dict:
     datazo = BaseConexion.obtener_mes_y_anio_actual()
+    datazo_ante = obtener_mes_ano_anterior()
     print(datazo)
+    print(datazo_ante)
+
     return datazo
 
 
