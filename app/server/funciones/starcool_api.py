@@ -161,7 +161,7 @@ async def homologar_api_starcool_general() -> dict:
             id_obtenido = data_ultima[0][0] +1
             #creo el dispostivo en cuestion 
             insert_new_telemetria = ("INSERT INTO telemetrias (id, numero_telefono, imei) "
-                "VALUES (%s, %s, %s, %s)")
+                "VALUES (%s, %s, %s)")
             curConteB.execute(insert_new_telemetria,(id_obtenido, identi, identi))
         print(id_obtenido)
         cnx.commit()
