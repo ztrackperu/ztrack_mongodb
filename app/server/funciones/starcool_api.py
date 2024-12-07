@@ -142,8 +142,8 @@ async def homologar_api_starcool_general() -> dict:
         #consulta_contenedor = ("SELECT * FROM telemetrias WHERE imei=%s")
         #query_contenedor = curConte.execute(consulta_contenedor,(x['imei'],))
 
-        consulta_contenedor = ("SELECT * FROM telemetrias WHERE estado=%s")
-        query_contenedor = curConte.execute(consulta_contenedor,(1,))
+        consulta_contenedor = ("SELECT * FROM telemetrias WHERE estado=1")
+        query_contenedor = curConte.execute(consulta_contenedor)
 
         if query_contenedor :
             print("oye sali aqui")
