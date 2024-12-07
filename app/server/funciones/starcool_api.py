@@ -120,6 +120,15 @@ def obtener_mes_ano_anterior():
     repositorio = f"S_dispositivos_{fecha_anterior.strftime('%m')}_{fecha_anterior.strftime('%Y')}"
     return repositorio
 
+def obtener_mes_ano_anterior_imei(imei):
+    # Obtener la fecha actual
+    fecha_actual = datetime.now()
+    # Restar un mes
+    fecha_anterior = fecha_actual - relativedelta(months=1)
+    # Formatear mes y año anterior en el formato deseado
+    repositorio = f"S_{imei}_{fecha_anterior.strftime('%m')}_{fecha_anterior.strftime('%Y')}"
+    return repositorio
+
 
 async def homologar_api_starcool_general() -> dict:
     datazo = BaseConexion.obtener_mes_y_anio_actual()
@@ -169,19 +178,23 @@ async def homologar_api_starcool_general() -> dict:
         curConte.execute(consulta_contenedor,(id_obtenido,))
         data_contenedor = []
         for y1 in curConte:
-            data_telemtria.append(y1)
+            data_contenedor.append(y1)
         if len(data_contenedor)==0 :
             #cremoas contenedor con descripcion 
             insert_new_contenedor = ("INSERT INTO contenedores (nombre_contenedor, tipo, telemetria_id) "
                 "VALUES (%s, %s, %s)")
             curConteB.execute(insert_new_contenedor,(identi, "Madurador", id_obtenido))
-
         cnx.commit()
 
+        #leer la tabla correspondiente y de froma masiva importar 
+        base_imei =obtener_mes_ano_anterior_imei(str(x['imei']))
+        collection_especifica =databaseMongo.get_collection(base_imei)
+        prueba_collection =databaseMongo.get_collection("prueba_colect")
 
-
-
-            
+        async for notificacion in collection_especifica.find({"estado":1},{"_id":0}).sort({"fecha":1}):
+            print("********")
+            print(notificacion)
+            print("********")    
 
     return imeis
 
