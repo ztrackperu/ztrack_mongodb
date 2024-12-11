@@ -193,8 +193,8 @@ async def homologar_api_starcool_general() -> dict:
         base_imei =obtener_mes_ano_anterior_imei(str(x['imei']))
         collection_especifica =databaseMongo.get_collection(base_imei)
         prueba_collection =databaseMongo.get_collection("prueba_colect")
-        ij = 230000
-        fecha_t ="2024-12-11T10:10:54"
+        ij = 235000
+        fecha_t ="2024-12-11T11:58:54"
         fecha_ok = datetime.fromisoformat(fecha_t)+timedelta(minutes=0)
         factorBusqueda ={"fecha":{"$gt":fecha_ok}}
         async for notificacion in collection_especifica.find(factorBusqueda,{"_id":0}).sort({"fecha":1}):
