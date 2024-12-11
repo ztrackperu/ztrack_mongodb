@@ -193,8 +193,17 @@ async def homologar_api_starcool_general() -> dict:
         base_imei =obtener_mes_ano_anterior_imei(str(x['imei']))
         collection_especifica =databaseMongo.get_collection(base_imei)
         prueba_collection =databaseMongo.get_collection("prueba_colect")
+        #consultar a coleccion "control_starcool"
+        collectionStarControl =databaseMongo.get_collection("control_starcool")
+        controlStarCool = []
+        async for xy in collectionStarControl.find():
+            controlStarCool.append(xy)
+        if controlStarCool[0] :
+            print(controlStarCool[0])
+        else : 
+            print("sin datos encontrados")
         ij = 241000
-        fecha_t ="2024-12-11T15:35:54"
+        fecha_t ="2024-12-11T23:35:54"
         fecha_ok = datetime.fromisoformat(fecha_t)+timedelta(minutes=0)
         factorBusqueda ={"fecha":{"$gt":fecha_ok}}
         async for notificacion in collection_especifica.find(factorBusqueda,{"_id":0}).sort({"fecha":1}):
@@ -291,7 +300,7 @@ async def homologar_api_starcool_general() -> dict:
                 collectionMongoH = databaseMongoH.get_collection("madurador")
 
                 collectionMongoH.insert_one(objetoV)
-                print(objetoV)
+                #print(objetoV)
                 curB = cnx.cursor()
                 update_old_salary = (
                 "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
