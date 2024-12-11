@@ -198,7 +198,7 @@ async def homologar_api_starcool_general() -> dict:
         controlStarCool = []
         async for xy in collectionStarControl.find():
             controlStarCool.append(xy)
-        if controlStarCool[0] :
+        if controlStarCool :
             print(controlStarCool[0])
         else : 
             print("sin datos encontrados")
