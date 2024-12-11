@@ -150,6 +150,30 @@ async def homologar_api_starcool_general() -> dict:
     )
     curConte = cnx.cursor(buffered=True)
     curConteB = cnx.cursor(buffered=True)
+
+    #consultar a coleccion "control_starcool"
+    collectionStarControl =databaseMongo.get_collection("control_starcool")
+    controlStarCool = []
+    async for xy in collectionStarControl.find():
+        controlStarCool.append(xy)
+    if controlStarCool :
+        print("*******")
+        print(controlStarCool[0]['ij'])
+        print("*******")
+        print(controlStarCool[0])
+    else : 
+        print("sin datos encontrados")
+        #insertar datos 
+        objetoS = {
+            "ij" :25000,
+            "fecha_t" :"2024-12-11T23:35:54"
+        }
+        collectionStarControl.insert_one(objetoS)
+        print("guarddado en starcool control")
+
+
+
+
     async for x in collectionImei.find():
         imeis.append(x['imei'])
         consulta_telemetria = ("SELECT * FROM telemetrias WHERE imei=%s and estado=1")
@@ -193,22 +217,7 @@ async def homologar_api_starcool_general() -> dict:
         base_imei =obtener_mes_ano_anterior_imei(str(x['imei']))
         collection_especifica =databaseMongo.get_collection(base_imei)
         prueba_collection =databaseMongo.get_collection("prueba_colect")
-        #consultar a coleccion "control_starcool"
-        collectionStarControl =databaseMongo.get_collection("control_starcool")
-        controlStarCool = []
-        async for xy in collectionStarControl.find():
-            controlStarCool.append(xy)
-        if controlStarCool :
-            print(controlStarCool[0])
-        else : 
-            print("sin datos encontrados")
-            #insertar datos 
-            objetoS = {
-                "ij" :25000,
-                "fecha_t" :"2024-12-11T23:35:54"
-            }
-            collectionStarControl.insert_one(objetoS)
-            print("guarddado en starcool control")
+
 
             
         ij = 241000
