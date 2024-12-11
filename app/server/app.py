@@ -7,6 +7,7 @@ from server.routes.tunel import router as HortifruitRouter
 from server.routes.starcool import router as StarcoolRouter
 from server.routes.simular import router as SimularRouter
 from server.routes.starcool_api import router as StarcoolApiRouter
+from server.routes.nestle import router as NestleRouter
 
 
 
@@ -34,6 +35,7 @@ app.include_router(HortifruitRouter, tags=["Tunel"], prefix="/tunel")
 app.include_router(StarcoolRouter, tags=["StarCool"], prefix="/starcool")
 app.include_router(SimularRouter, tags=["Simular"], prefix="/simular")
 app.include_router(StarcoolApiRouter, tags=["StarCoolApi"], prefix="/starcoolapi")
+app.include_router(NestleRouter, tags=["Nestle"], prefix="/nestle")
 
 
 @app.get("/", tags=["Root"])
