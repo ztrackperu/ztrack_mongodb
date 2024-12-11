@@ -207,7 +207,7 @@ async def homologar_api_starcool_general() -> dict:
                 "ij" :25000,
                 "fecha_t" :"2024-12-11T23:35:54"
             }
-            controlStarCool.insert_one(objetoS)
+            collectionStarControl.insert_one(objetoS)
             print("guarddado en starcool control")
 
             
