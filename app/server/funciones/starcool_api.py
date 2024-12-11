@@ -204,8 +204,8 @@ async def homologar_api_starcool_general() -> dict:
             print("sin datos encontrados")
             #insertar datos 
             objetoS = {
-                ij :25000,
-                fecha_t :"2024-12-11T23:35:54"
+                "ij" :25000,
+                "fecha_t" :"2024-12-11T23:35:54"
             }
             controlStarCool.insert_one(objetoS)
             print("guarddado en starcool control")
