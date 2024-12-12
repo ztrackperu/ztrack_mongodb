@@ -133,6 +133,10 @@ def obtener_mes_ano_anterior_imei(imei):
     return repositorio
 
 
+async def pedir_grafica(notificacion_data: dict) -> dict:
+    print(notificacion_data)
+
+
 async def proceso_control_nestle()-> dict : 
     cnx = mysql.connector.connect(
         host= "localhost",
@@ -152,7 +156,7 @@ async def proceso_control_nestle()-> dict :
         print("******")
         print(z[4])
         print("******")
-        print(z[8])
+        print(z[9])
 
     
     #id_obtenido = data_ultima[0][0] +1

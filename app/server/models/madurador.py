@@ -1,6 +1,25 @@
 from typing import Optional,List
 from pydantic import BaseModel, Field
 
+
+class SolicitudDataNestleSchema(BaseModel):
+    device:str = Field(...)
+    telemetria_id: int = Field(...)
+    fechaI: Optional[str] | None ="0"
+    fechaF: Optional[str] | None ="0"
+
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "device": "ZGRU6740381",
+                "telemetria_id": 389,
+                "fechaI": "2024-12-10T11:11:04",
+                "fechaF": "2024-12-11T13:11:04" 
+            }
+        }
+
+
 class SolicitudMaduradorSchema(BaseModel):
     device:str = Field(...)
     ultima: str = Field(...)
