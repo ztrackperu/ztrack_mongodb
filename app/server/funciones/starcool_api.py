@@ -344,7 +344,7 @@ async def homologar_api_starcool_general() -> dict:
         fecha_actual_ok = datetime.now()
         fecha_formateada = fecha_actual_ok.strftime("%Y-%m-%dT%H:%M:%S")
         #actualizar datos 
-        actualizar_control = await collectionStarControl.update_one({"control": 1},{"$set":{"ij": ij,"fecha_t":fecha_formateada}})
+        actualizar_control = await collectionStarControl.update_one({"control": 1},{"$set":{"ij": ij+100,"fecha_t":fecha_formateada}})
 
 
     return imeis
