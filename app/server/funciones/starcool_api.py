@@ -160,13 +160,14 @@ async def homologar_api_starcool_general() -> dict:
         print("*******")
         print(controlStarCool[0]['ij'])
         print("*******")
-        print(controlStarCool[0])
+        print(controlStarCool[0]['fecha_t'])
     else : 
         print("sin datos encontrados")
         #insertar datos 
         objetoS = {
-            "ij" :25000,
-            "fecha_t" :"2024-12-11T23:35:54"
+            "ij" :250000,
+            "fecha_t" :"2024-12-11T17:35:54",
+            "control" :1
         }
         collectionStarControl.insert_one(objetoS)
         print("guarddado en starcool control")
@@ -217,11 +218,11 @@ async def homologar_api_starcool_general() -> dict:
         base_imei =obtener_mes_ano_anterior_imei(str(x['imei']))
         collection_especifica =databaseMongo.get_collection(base_imei)
         prueba_collection =databaseMongo.get_collection("prueba_colect")
-
-
-            
-        ij = 241000
-        fecha_t ="2024-12-11T23:35:54"
+          
+        #ij = 241000
+        ij =controlStarCool[0]['ij']
+        #fecha_t ="2024-12-11T23:35:54"
+        fecha_t = controlStarCool[0]['fecha_t']
         fecha_ok = datetime.fromisoformat(fecha_t)+timedelta(minutes=0)
         factorBusqueda ={"fecha":{"$gt":fecha_ok}}
         async for notificacion in collection_especifica.find(factorBusqueda,{"_id":0}).sort({"fecha":1}):
@@ -333,13 +334,18 @@ async def homologar_api_starcool_general() -> dict:
 
                 cnx.commit()
 
-
-
             else :
                 print("malito")
             #print(notificacion['d01'])
 
             #print("********")    
+
+        #fecha ok 
+        fecha_actual_ok = datetime.now()
+        fecha_formateada = fecha_actual_ok.strftime("%Y-%m-%dT%H:%M:%S")
+        #actualizar datos 
+        actualizar_control = await collectionStarControl.update_one({"control": 1},{"$set":{"ij": ij,"fecha_t":fecha_formateada}})
+
 
     return imeis
 
