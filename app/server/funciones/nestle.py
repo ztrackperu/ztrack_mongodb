@@ -147,7 +147,13 @@ async def proceso_control_nestle()-> dict :
     curDispositivos.execute(consulta_dispositivos)
     for z in curDispositivos:
         data_dispositivo.append(z)
-        print(z)
+        print("******")
+        print(z[1])
+        print("******")
+        print(z[4])
+        print("******")
+        print(z[8])
+
     
     #id_obtenido = data_ultima[0][0] +1
     return data_dispositivo
