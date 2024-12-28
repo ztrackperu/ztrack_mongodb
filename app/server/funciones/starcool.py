@@ -111,7 +111,7 @@ async def data_usda(notificacion_data: dict) -> dict:
 
     diferencial =[{"fecha": {"$gte": fech[0]}},{"fecha": {"$lte": fech[1]}},{"sensor":notificacion_data['sensor']}]
     pip = [{"$match": {"$and":diferencial}},  
-               {"sort":{{"id_g":-1}}}]
+               {"$sort":{{"id_g":-1}}}]
     
     datos_n =[]
     fechas_n=[]
