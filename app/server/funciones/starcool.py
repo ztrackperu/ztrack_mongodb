@@ -108,7 +108,7 @@ async def camposol_datos() :
                 dispositivo = "D1"
                 for i, cargo_key in enumerate(cargo_keys, 1):
                     n1 = i
-                    sensor = n1 + 4 * ({g1} - 1)
+                    sensor = n1 + 4 * (g1 - 1)
                     valor = x[cargo_key]
                     json_entry = {
                         "dispositivo":dispositivo,
