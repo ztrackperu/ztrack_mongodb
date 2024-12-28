@@ -99,8 +99,29 @@ async def camposol_datos() :
         print("sin datos previos  de la telemtria")
 
         async for x in collectionGeneral.find(factorBusqueda).sort("fecha",1):
+            g1 = int(x['inyeccion_hora'])  # g1 es el valor entero de inyeccion_hora
+            created_at = x['created_at']  # tiempo de created_at
+            cargo_keys = ['cargo_1_temp', 'cargo_2_temp', 'cargo_3_temp', 'cargo_4_temp']
+
+            collection_camposol =databaseMongo.get_collection("camposol")
+            if telemetria==15096 :
+                dispositivo = "D1"
+                for i, cargo_key in enumerate(cargo_keys, 1):
+                    n1 = i
+                    sensor = n1 + 4 * ({g1} - 1)
+                    valor = x[cargo_key]
+                    json_entry = {
+                        "dispositivo":dispositivo,
+                        "sensor": sensor,
+                        "valor": valor,
+                        "tiempo": created_at.isoformat()  # Convertir datetime a string ISO
+                    }
+                    print(json_entry)
+
+
+
             print("----")
-            print(x)
+            #print(x)
     return "todo ok "
             
 
