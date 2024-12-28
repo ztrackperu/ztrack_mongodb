@@ -88,7 +88,7 @@ async def camposol_datos() :
     databaseMongo = client[baseD]
     collectionGeneral =databaseMongo.get_collection("madurador")
     collection_control =databaseMongo.get_collection("control_camposol")
-    collection_datos_camposol =databaseMongo.get_collection("control_camposol")
+    collection_datos_camposol =databaseMongo.get_collection("datos_camposol")
 
 
 
