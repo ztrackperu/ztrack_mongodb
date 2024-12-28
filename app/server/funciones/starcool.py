@@ -118,10 +118,12 @@ async def camposol_datos() :
                     n1 = i
                     sensor = n1 + 4 * (g1 - 1)
                     valor = x[cargo_key]
+                    dato_usda ="U"+str(sensor)
                     json_entry = {
                         "id_g":idProgre,
                         "dispositivo":dispositivo,
-                        "sensor": sensor,
+                        "usda": sensor,
+                        "sensor":dato_usda,
                         "valor": valor,
                         #"tiempo": created_at.isoformat()  # Convertir datetime a string ISO
                         "tiempo": created_at  
@@ -135,7 +137,7 @@ async def camposol_datos() :
                     n1 = i
                     sensor = n1+20 + 4 * (g1 - 1)
                     valor = x[cargo_key]
-                    dato_usda ="U"+sensor
+                    dato_usda ="U"+str(sensor)
                     json_entry = {
                         "id_g":idProgre,
                         "dispositivo":dispositivo,
