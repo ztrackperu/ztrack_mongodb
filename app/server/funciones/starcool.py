@@ -117,6 +117,20 @@ async def camposol_datos() :
                         "tiempo": created_at.isoformat()  # Convertir datetime a string ISO
                     }
                     print(json_entry)
+            if telemetria==15100 :
+                dispositivo = "D2"
+                for i, cargo_key in enumerate(cargo_keys, 1):
+                    n1 = i
+                    sensor = n1+20 + 4 * (g1 - 1)
+                    valor = x[cargo_key]
+                    json_entry = {
+                        "dispositivo":dispositivo,
+                        "sensor": sensor,
+                        "valor": valor,
+                        "tiempo": created_at.isoformat()  # Convertir datetime a string ISO
+                    }
+                    print(json_entry)
+            
 
 
 
