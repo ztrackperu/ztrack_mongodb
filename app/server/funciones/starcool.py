@@ -81,7 +81,28 @@ def transformar(arr):
 
     return res
 
+async def camposol_datos() : 
+    telemetrias = [15096,15100]
+    baseD = "ztrack_ja"
+    databaseMongo = client[baseD]
+    collectionGeneral =databaseMongo.get_collection("madurador")
+    collection_control =databaseMongo.get_collection("madurador")
 
+    for telemetria in telemetrias:
+
+        controlTelemetria = await collection_control.find_one({"telemetria_id":telemetria})
+        factorBusqueda ={"telemetria_id":telemetria}
+        if controlTelemetria :
+            idProgre = controlTelemetria["id"]
+            fechaId = controlTelemetria["fecha"]
+            factorBusqueda ={"fecha":{"$gt":fechaId},"telemetria_id":telemetria}
+        print("sin datos previos  de la telemtria")
+
+        async for x in collectionGeneral.find(factorBusqueda).sort("fecha",1):
+            print("----")
+            print(x)
+    return "todo ok "
+            
 
 async def homologar_starcool_general() -> dict:
     datazo = BaseConexion.obtener_mes_y_anio_actual()

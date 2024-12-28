@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from server.funciones.starcool import (
     homologar_starcool01,
     homologar_starcool_general,
+    camposol_datos ,
     
 )
 #Aqui importamos el modelo necesario para la clase 
@@ -26,6 +27,13 @@ async def homologar_starcool_ZGRU1092515():
 @router.get("/starcool_general", response_description="Datos de tunel se homologan con ztrack")
 async def homologar_starcool_ZGRU1092515():
     notificacions = await homologar_starcool_general()
+    if notificacions:
+        return ResponseModel(notificacions, "Datos homologados starcool!")
+    return ResponseModel(notificacions, "Lista vacía devuelta")
+
+@router.get("/camposol", response_description="Datos de tunel se homologan con ztrack")
+async def camposol():
+    notificacions = await camposol_datos()
     if notificacions:
         return ResponseModel(notificacions, "Datos homologados starcool!")
     return ResponseModel(notificacions, "Lista vacía devuelta")
