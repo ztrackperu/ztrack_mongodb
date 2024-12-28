@@ -83,22 +83,30 @@ def transformar(arr):
 
 async def camposol_datos() : 
     telemetrias = [15096,15100]
+    inx= [0,1]
     baseD = "ztrack_ja"
     databaseMongo = client[baseD]
     collectionGeneral =databaseMongo.get_collection("madurador")
     collection_control =databaseMongo.get_collection("control_camposol")
+    collection_datos_camposol =databaseMongo.get_collection("control_camposol")
+
+
 
     for telemetria in telemetrias:
 
         controlTelemetria = await collection_control.find_one({"telemetria_id":telemetria})
         factorBusqueda ={"telemetria_id":telemetria}
+        idProgre = 1
+        estadoC=0
         if controlTelemetria :
             idProgre = controlTelemetria["id"]
             fechaId = controlTelemetria["fecha"]
             factorBusqueda ={"fecha":{"$gt":fechaId},"telemetria_id":telemetria}
+            estadoC=1
         print("sin datos previos  de la telemtria")
 
         async for x in collectionGeneral.find(factorBusqueda).sort("fecha",1):
+            idProgre=idProgre+1
             g1 = int(x['inyeccion_hora'])  # g1 es el valor entero de inyeccion_hora
             created_at = x['created_at']  # tiempo de created_at
             cargo_keys = ['cargo_1_temp', 'cargo_2_temp', 'cargo_3_temp', 'cargo_4_temp']
@@ -111,26 +119,46 @@ async def camposol_datos() :
                     sensor = n1 + 4 * (g1 - 1)
                     valor = x[cargo_key]
                     json_entry = {
+                        "id_g":idProgre,
                         "dispositivo":dispositivo,
                         "sensor": sensor,
                         "valor": valor,
-                        "tiempo": created_at.isoformat()  # Convertir datetime a string ISO
+                        #"tiempo": created_at.isoformat()  # Convertir datetime a string ISO
+                        "tiempo": created_at  
+
                     }
-                    print(json_entry)
+                    collection_datos_camposol.insert_one(json_entry)
+                    #print(json_entry)
             if telemetria==15100 :
                 dispositivo = "D2"
                 for i, cargo_key in enumerate(cargo_keys, 1):
                     n1 = i
                     sensor = n1+20 + 4 * (g1 - 1)
                     valor = x[cargo_key]
+                    dato_usda ="U"+sensor
                     json_entry = {
+                        "id_g":idProgre,
                         "dispositivo":dispositivo,
-                        "sensor": sensor,
+                        "usda": sensor,
+                        "sensor":dato_usda,
                         "valor": valor,
-                        "tiempo": created_at.isoformat()  # Convertir datetime a string ISO
+                        #"tiempo": created_at.isoformat()  # Convertir datetime a string ISO
+                        "tiempo": created_at  
                     }
                     #print(json_entry)
-            
+                    collection_datos_camposol.insert_one(json_entry)
+            objetoControl ={
+                "id":idProgre,
+                "telemetria_id":x['telemetria_id'],
+                "fecha":x['created_at']
+            }
+            if estadoC==1 :
+                #actualizar
+                collection_control.update_one({"telemetria_id":x['telemetria_id'],},{"$set": {"id":idProgre,"fecha":x['created_at']}})
+            else :
+                #grabar
+                collection_control.insert_one(objetoControl)
+                estadoC=1
 
 
 
