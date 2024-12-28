@@ -128,3 +128,20 @@ class ProcesarWonderfulSchema(BaseModel):
                 "telemetria_id": 258
             }
         }
+
+
+class SolicitudCamposolSchema(BaseModel):
+    sensor: str = Field(...)
+    fechaI: Optional[str] | None ="0"
+    fechaF: Optional[str] | None ="0"
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "sensor": "U1",
+                "fechaI": "2024-04-18T11:11:04",
+                "fechaF": "2024-04-18T13:11:04"
+
+
+            }
+        }

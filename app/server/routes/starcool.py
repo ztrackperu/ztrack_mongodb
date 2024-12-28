@@ -7,12 +7,14 @@ from server.funciones.starcool import (
     homologar_starcool01,
     homologar_starcool_general,
     camposol_datos ,
+    data_usda,
     
 )
 #Aqui importamos el modelo necesario para la clase 
 from server.models.madurador import (
     ErrorResponseModel,
     ResponseModel,
+    SolicitudCamposolSchema,
 )
 #aqui se definen las rutas de la API REST
 router = APIRouter()
@@ -39,4 +41,14 @@ async def camposol():
     return ResponseModel(notificacions, "Lista vacía devuelta")
 
 
-
+@router.post("/camposol_grafica/", response_description="Datos de los notificacion agregados a la base de datos.")
+#La funcion espera "ConceptoOTSchema"
+async def add_notificacion_data_t(notificacion: SolicitudCamposolSchema = Body(...)):
+    #convertir en json
+    notificacion = jsonable_encoder(notificacion)   
+    #print(notificacion)
+    #enviar a la funcion añadir  
+    #print ("desde r")
+    new_notificacion = await data_usda(notificacion)
+    return ResponseModel(new_notificacion, "ok")
+   #return paginate(new_notificacion)

@@ -81,6 +81,51 @@ def transformar(arr):
 
     return res
 
+
+async def usda(bloque):
+    return " ola"
+
+
+def procesar_fecha(fechaI="0",fechaF="0"):
+    fecha_hoy =datetime.datetime.now()
+    if(fechaF=="0"):
+        fechaIx=  fecha_hoy-timedelta(hours=12)
+        fechaFx = fecha_hoy
+    else:
+        fechaIx=  datetime.fromisoformat(fechaI)
+        fechaFx = datetime.fromisoformat(fechaF)
+    data = [fechaIx,fechaFx]
+    #print(data)
+    return data
+
+async def data_usda(notificacion_data: dict) -> dict:
+    #print(notificacion_data['utc'])
+    database = client["ztrack_ja"]
+    madurador = database.get_collection("datos_camposol")
+    if(notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0"):
+        fech = procesar_fecha()
+        #bconsultas =oMeses(notificacion_data['device'],notificacion_data['ultima'],notificacion_data['ultima'])
+    else : 
+        fech = procesar_fecha(notificacion_data['fechaI'],notificacion_data['fechaF'])
+        #bconsultas =oMeses(notificacion_data['device'],notificacion_data['fechaI'],notificacion_data['fechaF'])
+
+    diferencial =[{"fecha": {"$gte": fech[0]}},{"fecha": {"$lte": fech[1]}},{"sensor":notificacion_data['sensor']}]
+    pip = [{"$match": {"$and":diferencial}},  
+               {"sort":{{"id_g":-1}}}]
+    
+    datos_n =[]
+    fechas_n=[]
+    async for concepto_ot in madurador.aggregate(pip):
+        datos_n.append(concepto_ot['valor'])
+        fechas_n.append(concepto_ot['tiempo'])
+    final = {
+        "sensor" :notificacion_data['sensor'],
+        "datos":datos_n,
+        "fecha":fechas_n
+    }
+    return final
+
+
 async def camposol_datos() : 
     telemetrias = [15096,15100]
     inx= [0,1]
