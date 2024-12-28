@@ -129,12 +129,12 @@ async def camposol_datos() :
                         "valor": valor,
                         "tiempo": created_at.isoformat()  # Convertir datetime a string ISO
                     }
-                    print(json_entry)
+                    #print(json_entry)
             
 
 
 
-            print("----")
+            #print("----")
             #print(x)
     return "todo ok "
             
