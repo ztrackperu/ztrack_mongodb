@@ -100,8 +100,9 @@ def procesar_fecha(fechaI="0",fechaF="0"):
 
 async def data_usda(notificacion_data: dict) -> dict:
     #print(notificacion_data['utc'])
-    database = client["ztrack_ja"]
-    madurador = database.get_collection("datos_camposol")
+    baseD = "ztrack_ja"
+    databaseMongo = client[baseD]
+    madurador = databaseMongo.get_collection("datos_camposol")
     print("---")
     print(notificacion_data['sensor'])
     print("---")
