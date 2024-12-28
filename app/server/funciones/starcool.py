@@ -87,7 +87,7 @@ async def usda(bloque):
 
 
 def procesar_fecha(fechaI="0",fechaF="0"):
-    fecha_hoy =datetime.datetime.now()
+    fecha_hoy =datetime.now()
     if(fechaF=="0"):
         fechaIx=  fecha_hoy-timedelta(hours=12)
         fechaFx = fecha_hoy
