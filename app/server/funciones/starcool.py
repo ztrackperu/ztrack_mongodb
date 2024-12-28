@@ -116,7 +116,9 @@ async def data_usda(notificacion_data: dict) -> dict:
         fech = procesar_fecha(notificacion_data['fechaI'],notificacion_data['fechaF'])
         #bconsultas =oMeses(notificacion_data['device'],notificacion_data['fechaI'],notificacion_data['fechaF'])
 
-    diferencial =[{"tiempo": {"$gte": fech[0]}},{"fecha": {"$lte": fech[1]}},{"sensor":notificacion_data['sensor']}]
+    #diferencial =[{"tiempo": {"$gte": fech[0]}},{"fecha": {"$lte": fech[1]}},{"sensor":notificacion_data['sensor']}]
+    diferencial =[{"sensor":notificacion_data['sensor']}]
+
     pip = [{"$match": {"$and":diferencial}},  
               {"$sort": {"id_g": -1}}]
     
