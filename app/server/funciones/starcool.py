@@ -102,6 +102,12 @@ async def data_usda(notificacion_data: dict) -> dict:
     #print(notificacion_data['utc'])
     database = client["ztrack_ja"]
     madurador = database.get_collection("datos_camposol")
+    print("---")
+    print(notificacion_data['sensor'])
+    print("---")
+    print(notificacion_data['fechaI'])
+    print("---")
+    print(notificacion_data['fechaF'])
     if(notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0"):
         fech = procesar_fecha()
         #bconsultas =oMeses(notificacion_data['device'],notificacion_data['ultima'],notificacion_data['ultima'])
@@ -109,7 +115,7 @@ async def data_usda(notificacion_data: dict) -> dict:
         fech = procesar_fecha(notificacion_data['fechaI'],notificacion_data['fechaF'])
         #bconsultas =oMeses(notificacion_data['device'],notificacion_data['fechaI'],notificacion_data['fechaF'])
 
-    diferencial =[{"fecha": {"$gte": fech[0]}},{"fecha": {"$lte": fech[1]}},{"sensor":notificacion_data['sensor']}]
+    diferencial =[{"tiempo": {"$gte": fech[0]}},{"fecha": {"$lte": fech[1]}},{"sensor":notificacion_data['sensor']}]
     pip = [{"$match": {"$and":diferencial}},  
               {"$sort": {"id_g": -1}}]
     
