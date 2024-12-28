@@ -86,7 +86,7 @@ async def camposol_datos() :
     baseD = "ztrack_ja"
     databaseMongo = client[baseD]
     collectionGeneral =databaseMongo.get_collection("madurador")
-    collection_control =databaseMongo.get_collection("madurador")
+    collection_control =databaseMongo.get_collection("control_camposol")
 
     for telemetria in telemetrias:
 
