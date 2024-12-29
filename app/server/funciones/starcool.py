@@ -159,7 +159,7 @@ async def camposol_datos() :
 
             idProgre = controlTelemetria["id"]
             fechaId = controlTelemetria["fecha"]
-            factorBusqueda ={"fecha":{"$gt":fechaId},"telemetria_id":telemetria}
+            factorBusqueda ={"created_at":{"$gt":fechaId},"telemetria_id":telemetria}
             estadoC=1
         print("sin datos previos  de la telemtria")
         print(factorBusqueda)
