@@ -162,8 +162,9 @@ async def camposol_datos() :
             factorBusqueda ={"fecha":{"$gt":fechaId},"telemetria_id":telemetria}
             estadoC=1
         print("sin datos previos  de la telemtria")
-
+        print(factorBusqueda)
         async for x in collectionGeneral.find(factorBusqueda).sort("created_at",1):
+            print(x)
             idProgre=idProgre+1
             g1 = int(x['inyeccion_hora'])  # g1 es el valor entero de inyeccion_hora
             created_at = x['created_at']  # tiempo de created_at
