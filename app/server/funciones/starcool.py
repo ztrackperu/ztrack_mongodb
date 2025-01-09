@@ -135,6 +135,45 @@ async def data_usda(notificacion_data: dict) -> dict:
     return final
 
 
+async def data_usda_validar(notificacion_data: dict) -> dict:
+    #print(notificacion_data['utc'])
+    baseD = "ztrack_ja"
+    databaseMongo = client[baseD]
+    madurador = databaseMongo.get_collection("datos_camposol")
+    print("---")
+    print(notificacion_data['sensor'])
+    print("---")
+    print(notificacion_data['fechaI'])
+    print("---")
+    print(notificacion_data['fechaF'])
+    if(notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0"):
+        fech = procesar_fecha()
+        #bconsultas =oMeses(notificacion_data['device'],notificacion_data['ultima'],notificacion_data['ultima'])
+    else : 
+        fech = procesar_fecha(notificacion_data['fechaI'],notificacion_data['fechaF'])
+        #bconsultas =oMeses(notificacion_data['device'],notificacion_data['fechaI'],notificacion_data['fechaF'])
+
+    #diferencial =[{"tiempo": {"$gte": fech[0]}},{"fecha": {"$lte": fech[1]}},{"sensor":notificacion_data['sensor']}]
+    diferencial =[{"sensor":notificacion_data['sensor']}]
+
+    pip = [{"$match": {"$and":diferencial}},  
+              {"$sort": {"id_g": -1}}]
+    
+    datos_n =[]
+    fechas_n=[]
+    async for concepto_ot in madurador.aggregate(pip):
+        datos_n.append(concepto_ot['valor'])
+        fechas_n.append(concepto_ot['tiempo'])
+    final = {
+        "sensor" :notificacion_data['sensor'],
+        "datos":datos_n,
+        "fecha":fechas_n
+    }
+    return final
+
+
+
+
 async def camposol_datos() : 
     telemetrias = [15096,15100]
     inx= [0,1]
@@ -413,18 +452,6 @@ async def homologar_starcool_general() -> dict:
         else :
             print("sin resultado")
     cnx.close()
-
-
-
-
-
-
-        
-                    
-
-
-
-
 
 
 async def homologar_starcool01() -> dict:

@@ -8,6 +8,7 @@ from server.funciones.starcool import (
     homologar_starcool_general,
     camposol_datos ,
     data_usda,
+    data_usda_validar,
     
 )
 #Aqui importamos el modelo necesario para la clase 
@@ -50,5 +51,14 @@ async def add_notificacion_data_t(notificacion: SolicitudCamposolSchema = Body(.
     #enviar a la funcion añadir  
     #print ("desde r")
     new_notificacion = await data_usda(notificacion)
+    return ResponseModel(new_notificacion, "ok")
+   #return paginate(new_notificacion)
+
+
+@router.post("/camposol_grafica_validar/", response_description="Datos de los notificacion agregados a la base de datos.")
+async def add_notificacion_data_t(notificacion: SolicitudCamposolSchema = Body(...)):
+    #convertir en json
+    notificacion = jsonable_encoder(notificacion)   
+    new_notificacion = await data_usda_validar(notificacion)
     return ResponseModel(new_notificacion, "ok")
    #return paginate(new_notificacion)
