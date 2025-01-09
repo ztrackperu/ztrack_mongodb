@@ -152,6 +152,10 @@ async def data_usda_validar(notificacion_data: dict) -> dict:
     else : 
         fech = procesar_fecha(notificacion_data['fechaI'],notificacion_data['fechaF'])
         #bconsultas =oMeses(notificacion_data['device'],notificacion_data['fechaI'],notificacion_data['fechaF'])
+    
+    print("--------validacion------------------")
+    print(fech)
+    print("--------fin validacion------------------")
 
     #diferencial =[{"tiempo": {"$gte": fech[0]}},{"fecha": {"$lte": fech[1]}},{"sensor":notificacion_data['sensor']}]
     diferencial =[{"sensor":notificacion_data['sensor']}]
