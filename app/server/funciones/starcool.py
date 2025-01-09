@@ -160,7 +160,6 @@ async def data_usda_validar(notificacion_data: dict) -> dict:
     #diferencial =[{"sensor":notificacion_data['sensor']}]
     diferencial =[{"sensor":notificacion_data['sensor'] ,"tiempo": {"$gte": fech[0],"$lte": fech[1]}}]
 
-
     pip = [{"$match": {"$and":diferencial}},  
               {"$sort": {"id_g": -1}}]
     
@@ -173,6 +172,33 @@ async def data_usda_validar(notificacion_data: dict) -> dict:
         "sensor" :notificacion_data['sensor'],
         "datos":datos_n,
         "fecha":fechas_n
+    }
+    return final
+
+
+async def data_tabla_validar(notificacion_data: dict) -> dict:
+    #print(notificacion_data['utc'])
+    baseD = "ztrack_ja"
+    databaseMongo = client[baseD]
+    madurador = databaseMongo.get_collection("datos_camposol")
+    if(notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0"):
+        fech = procesar_fecha()
+    else : 
+        fech = procesar_fecha(notificacion_data['fechaI'],notificacion_data['fechaF'])
+    
+    #diferencial =[{"sensor":notificacion_data['sensor']}]
+    diferencial =[{"sensor":notificacion_data['sensor'] ,"tiempo": {"$gte": fech[0],"$lte": fech[1]}}]
+
+    pip = [{"$match": {"$and":diferencial}},  
+              {"$sort": {"id_g": -1}},{"$project":{"_id": 0,"id_g":1,"dispositivo":1,"usda":1,"tiempo":1,"valor":1}}]
+    
+    tabla =[]
+    fechas_n=[]
+    async for concepto_ot in madurador.aggregate(pip):
+        tabla.append(concepto_ot['tiempo'])
+    final = {
+        "sensor" :notificacion_data['sensor'],
+        "datos":tabla
     }
     return final
 

@@ -9,6 +9,7 @@ from server.funciones.starcool import (
     camposol_datos ,
     data_usda,
     data_usda_validar,
+    data_tabla_validar,
     
 )
 #Aqui importamos el modelo necesario para la clase 
@@ -56,9 +57,17 @@ async def add_notificacion_data_t(notificacion: SolicitudCamposolSchema = Body(.
 
 
 @router.post("/camposol_grafica_validar/", response_description="Datos de los notificacion agregados a la base de datos.")
-async def add_notificacion_data_t(notificacion: SolicitudCamposolSchema = Body(...)):
+async def add_notificacion_data_t_1(notificacion: SolicitudCamposolSchema = Body(...)):
     #convertir en json
     notificacion = jsonable_encoder(notificacion)   
     new_notificacion = await data_usda_validar(notificacion)
+    return ResponseModel(new_notificacion, "ok")
+   #return paginate(new_notificacion)
+
+@router.post("/camposol_tabla_validar/", response_description="Datos de los notificacion agregados a la base de datos.")
+async def add_notificacion_tabla_t(notificacion: SolicitudCamposolSchema = Body(...)):
+    #convertir en json
+    notificacion = jsonable_encoder(notificacion)   
+    new_notificacion = await data_tabla_validar(notificacion)
     return ResponseModel(new_notificacion, "ok")
    #return paginate(new_notificacion)
