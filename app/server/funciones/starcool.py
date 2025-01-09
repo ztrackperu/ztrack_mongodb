@@ -157,8 +157,9 @@ async def data_usda_validar(notificacion_data: dict) -> dict:
     print(fech)
     print("--------fin validacion------------------")
 
-    #diferencial =[{"tiempo": {"$gte": fech[0]}},{"fecha": {"$lte": fech[1]}},{"sensor":notificacion_data['sensor']}]
-    diferencial =[{"sensor":notificacion_data['sensor']}]
+    #diferencial =[{"sensor":notificacion_data['sensor']}]
+    diferencial =[{"sensor":notificacion_data['sensor'] ,"tiempo": {"$gte": fech[0],"$lte": fech[1]}}]
+
 
     pip = [{"$match": {"$and":diferencial}},  
               {"$sort": {"id_g": -1}}]
