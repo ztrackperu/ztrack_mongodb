@@ -195,7 +195,7 @@ async def data_tabla_validar(notificacion_data: dict) -> dict:
     tabla =[]
     fechas_n=[]
     async for concepto_ot in madurador.aggregate(pip):
-        tabla.append(concepto_ot['tiempo'])
+        tabla.append(concepto_ot)
     final = {
         "sensor" :notificacion_data['sensor'],
         "datos":tabla
