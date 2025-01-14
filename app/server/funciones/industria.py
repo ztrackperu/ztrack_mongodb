@@ -1,7 +1,7 @@
 import json
 import mysql.connector
 from server.database import client
-from bson import regexs
+from bson import regex
 from datetime import datetime,timedelta
 from server.generico.base_conexion import BaseConexion
 #from dateutil.relativedelta import relativedelta
