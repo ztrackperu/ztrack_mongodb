@@ -262,6 +262,92 @@ async def config(empresa :int):
     return notificacions[0]
 
 
+async def data_pollito(notificacion_data: dict) -> dict:
+    #print(notificacion_data['utc'])
+    if(notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0"):
+        fech = procesar_fecha_fila(notificacion_data['utc'],notificacion_data['ultima'])
+        #bconsultas =oMeses(notificacion_data['device'],notificacion_data['ultima'],notificacion_data['ultima'])
+    else : 
+        fech = procesar_fecha_fila(notificacion_data['utc'],notificacion_data['fechaI'],notificacion_data['fechaF'])
+        #bconsultas =oMeses(notificacion_data['device'],notificacion_data['fechaI'],notificacion_data['fechaF'])
+    dataConfig =await config(notificacion_data['empresa'])
+    graph = dataConfig['config_graph']
+    listas = {}
+    cadena =[]
+    m_d = calcular_minuto(fech[0],fech[1])
+    for i in range(len(graph)):
+        nombre_lista = f"{graph[i]['label']}"
+        cadena.append(graph[i]['label'])
+        lab = procesar_texto(graph[i]['label'])
+        listas[nombre_lista] = {"data":[],"config":[lab,graph[i]['hidden'],graph[i]['color'],graph[i]['tipo']]}
+
+    bconsultas="ztrack_ja"
+    diferencial =[{"created_at": {"$gte": fech[0]}},{"created_at": {"$lte": fech[1]}},{"telemetria_id":notificacion_data['device']}]
+    pip = [{"$match": {"$and":diferencial}},  {"$project":dataConfig['config_data']},
+                {"$skip" : (notificacion_data['page']-1)*notificacion_data['size']},{"$limit" : notificacion_data['size']}]
+    concepto_ots = []
+    database = client[bconsultas]
+    madurador = database.get_collection("madurador")
+    actual_time = fech[0] 
+    actual_intervalo_final =fech[0] +timedelta(minutes=m_d[0])
+    dato_return_air=None
+
+    async for concepto_ot in madurador.aggregate(pip):
+        for i in range(len(graph)):
+            dato =graph
+            if dato[i]['label']=='created_at':
+                listas[dato[i]['label']]["data"].append(devolverfecha(notificacion_data['utc'],concepto_ot[dato[i]['label']]))
+            else:
+                listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],0))
+    analizar =listas['ethylene']['data']
+    transformada =procesar_array_etileno(analizar)
+    listas['ethylene']['data']=transformada
+
+    analizar1 =listas['return_air']['data']
+    transformada1 =procesar_array_temp(analizar1)
+    listas['return_air']['data']=transformada1
+
+    analizar2 =listas['cargo_1_temp']['data']
+    transformada2 =procesar_array_temp(analizar2)
+    listas['cargo_1_temp']['data']=transformada2
+
+    analizar3 =listas['cargo_4_temp']['data']
+    #transformada3 =procesar_array_temp_producto(analizar3)
+    transformada3 =procesar_array_temp(analizar3)
+
+    listas['cargo_4_temp']['data']=transformada3
+
+    analizar4 =listas['cargo_3_temp']['data']
+    transformada4 =procesar_array_temp(analizar4)
+    listas['cargo_3_temp']['data']=transformada4
+
+    analizar5 =listas['cargo_2_temp']['data']
+    transformada5 =procesar_array_temp(analizar5)
+    listas['cargo_2_temp']['data']=transformada5
+
+    analizar6 =listas['set_point']['data']
+    #transformada6 =procesar_array_set_point(analizar6)
+    transformada6 =procesar_array_temp(analizar6)
+
+    listas['set_point']['data']=transformada6
+
+    analizar7 =listas['ambient_air']['data']
+    transformada7 =procesar_array_temp(analizar7)
+    listas['ambient_air']['data']=transformada7
+
+    analizar8 =listas['temp_supply_1']['data']
+    transformada8 =procesar_array_temp(analizar8)
+    listas['temp_supply_1']['data']=transformada8
+
+    analizar9 =listas['evaporation_coil']['data']
+    transformada9 =procesar_array_temp(analizar9)
+    listas['evaporation_coil']['data']=transformada9
+
+    listasT = {"graph":listas,"table":"concepto_ots","cadena":cadena,"temperature":0,"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
+    return listasT
+
+
+
 async def data_tunel(notificacion_data: dict) -> dict:
     #capturar hora 
     #desglozar la data y almacenar en base de datos REPOSITORIO_MES_AÑO

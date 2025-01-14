@@ -27,7 +27,6 @@ def procesar_fecha(fechaI="0",fechaF="0"):
     data = [fechaIx,fechaFx]
     return data
 
-
 async def data_industria_grafica(notificacion_data: dict) -> dict:
     print(notificacion_data['imei'])
     coleccion_principal = bd_gene(notificacion_data['imei'])
@@ -40,13 +39,13 @@ async def data_industria_grafica(notificacion_data: dict) -> dict:
     pip = [{"$match": {"$and":diferencial}},  {"$sort": {"fecha_recepcion": -1}}] 
     humidity =[]
     temperature=[]
-    EC =[]
-    PH =[]
-    N =[]
-    P =[]
-    K =[]
-    power =[]
-    fechas=[]
+    EC = []
+    PH = []
+    N = []
+    P = []
+    K = []
+    power = []
+    fechas = []
     async for concepto_ot in madurador.aggregate(pip):
         fechas.append(concepto_ot['fecha_recepcion'])
         humidity.append(concepto_ot['humidity'])
