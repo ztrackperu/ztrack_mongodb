@@ -548,11 +548,11 @@ async def data_ztrack_ja(notificacion_data: dict) -> dict:
     madurador = database.get_collection("madurador")
     listas = {}
     async for concepto_ot in madurador.aggregate(pip):
-        listas["data"]["set_point"]=concepto_ot["set_point"]
-        listas["data"]["temp_supply_1"]=concepto_ot["temp_supply_1"]
-        listas["data"]["return_air"]=concepto_ot["return_air"]
-        listas["data"]["evaporation_coil"]=concepto_ot["evaporation_coil"]
-        listas["data"]["relative_humidity"]=concepto_ot["relative_humidity"]
+        listas["set_point"]=concepto_ot["set_point"]
+        listas["temp_supply_1"]=concepto_ot["temp_supply_1"]
+        listas["return_air"]=concepto_ot["return_air"]
+        listas["evaporation_coil"]=concepto_ot["evaporation_coil"]
+        listas["relative_humidity"]=concepto_ot["relative_humidity"]
     return listas
 
 
