@@ -561,7 +561,7 @@ async def data_ztrack_ja(notificacion_data: dict) -> dict:
         return_air_0.append(concepto_ot["return_air"])
         evaporation_coil_0.append(concepto_ot["evaporation_coil"])
         relative_humidity_0.append(concepto_ot["relative_humidity"])
-        relative_humidity_0.append(concepto_ot["relative_humidity"])
+        created_at_0.append(concepto_ot["created_at"])
 
     listas ={
         "set_point":set_point_0,
