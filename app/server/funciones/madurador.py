@@ -552,6 +552,7 @@ async def data_ztrack_ja(notificacion_data: dict) -> dict:
     return_air_0=[]
     evaporation_coil_0=[]
     relative_humidity_0=[]
+    created_at_0=[]
     async for concepto_ot in madurador.aggregate(pip):
         set_point_0.append(concepto_ot["set_point"])
         temp_supply_1_0.append(concepto_ot["temp_supply_1"])
@@ -563,9 +564,28 @@ async def data_ztrack_ja(notificacion_data: dict) -> dict:
         "temp_supply_1":temp_supply_1_0,
         "return_air":return_air_0,
         "evaporation_coil":evaporation_coil_0,
-        "relative_humidity":relative_humidity_0
+        "relative_humidity":relative_humidity_0,
+        "created_at":created_at_0
     }
     return listas
+
+async def tabla_ztrack_ja(notificacion_data: dict) -> dict: 
+    # pedir bd ztrack_ja
+    bconsultas="ztrack_ja"
+    database = client[bconsultas]
+    #fecha_ztrack_ja
+    fech = fecha_ztrack_ja(notificacion_data['fechaF']) if (notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0") else fecha_ztrack_ja(notificacion_data['fechaI'] ,notificacion_data['fechaF'])
+    diferencial =[{"created_at": {"$gte": fech[0]}},{"created_at": {"$lte": fech[1]}},{"telemetria_id":notificacion_data['imei']}]
+    pip = [{"$match": {"$and":diferencial}},{"$project":{"_id":0}},{"$sort":{"created_at":-1}}]
+    madurador = database.get_collection("madurador")
+    data=[]
+    async for concepto_ot in madurador.aggregate(pip):
+        data.append(concepto_ot)
+    listas ={
+        "dato":data
+    }
+    return listas
+
 
 
 async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
