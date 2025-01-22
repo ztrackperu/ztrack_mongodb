@@ -173,6 +173,16 @@ def devolverfecha(utc,fecha):
     return fechaX
 
 
+def fecha_ztrack_ja(fechaI,fechaF="0"):
+    if(fechaF=="0"):
+        fechaIx=  datetime.fromisoformat(fechaI)-timedelta(hours=12)+timedelta(minutes=0)
+        fechaFx = datetime.fromisoformat(fechaI)+timedelta(minutes=0)
+    else:
+        fechaIx=  datetime.fromisoformat(fechaI)+timedelta(minutes=0)
+        fechaFx = datetime.fromisoformat(fechaF)+timedelta(minutes=0)
+    data = [fechaIx,fechaFx]
+    return data
+
 
 def procesar_fecha_fila(utc,fechaI,fechaF="0"):
     terrible = 0 ; 
@@ -517,6 +527,28 @@ async def data_madurador_tabla(notificacion_data: dict) -> dict:
         tabla.append(concepto_ot)
     listasT = {"graph":listas,"table":tabla,"cadena":cadena,"temperature":dataConfig['c_f'],"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
     return listasT
+
+#debemos consular directamente los datos en la bd ztrack_ja
+
+async def data_ztrack_ja(notificacion_data: dict) -> dict: 
+    # pedir bd ztrack_ja
+    bconsultas="ztrack_ja"
+    database = client[bconsultas]
+    #fecha_ztrack_ja
+    fech = fecha_ztrack_ja(notificacion_data['fechaF']) if (notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0") else fecha_ztrack_ja(notificacion_data['fechaI'] ,notificacion_data['fechaF'])
+
+    diferencial =[{"created_at": {"$gte": fech[0]}},{"created_at": {"$lte": fech[1]}},{"telemetria_id":notificacion_data['imei']}]
+    pip = [{"$match": {"$and":diferencial}},{"$sort":{"created_at":-1}}]
+    madurador = database.get_collection("madurador")
+    listas = {}
+    async for concepto_ot in madurador.aggregate(pip):
+        listas["data"]["set_point"]=concepto_ot["set_point"]
+        listas["data"]["temp_supply_1"]=concepto_ot["temp_supply_1"]
+        listas["data"]["return_air"]=concepto_ot["return_air"]
+        listas["data"]["evaporation_coil"]=concepto_ot["evaporation_coil"]
+        listas["data"]["relative_humidity"]=concepto_ot["relative_humidity"]
+    return listas
+
 
 async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
     #print(notificacion_data['utc'])

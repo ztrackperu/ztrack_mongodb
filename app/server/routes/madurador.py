@@ -24,7 +24,8 @@ from server.funciones.madurador import (
     data_madurador_filadelfia,
     homologar_datos_wonderful,
     data_madurador_tabla,
-    data_pollito
+    data_pollito,
+    data_ztrack_ja
     
 )
 #Aqui importamos el modelo necesario para la clase 
@@ -37,11 +38,17 @@ from server.models.madurador import (
     ProcesarWonderfulSchema,
     WonderfulSchema,
     SolicitudMaduradorSchemaF,
-
+    SolicitudZtrackSchema,
 
 )
 #aqui se definen las rutas de la API REST
 router = APIRouter()
+
+@router.post("/DatosZtrack/", response_description="Datos de los notificacion agregados a la base de datos.")
+async def add_ztrack_data(notificacion: SolicitudZtrackSchema = Body(...)):
+    notificacion = jsonable_encoder(notificacion)   
+    new_notificacion = await data_ztrack_ja(notificacion)
+    return ResponseModel(new_notificacion, "ok")
 
 
 @router.post("/DatosGraficaTabla/", response_description="Datos de los notificacion agregados a la base de datos.")
