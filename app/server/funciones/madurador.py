@@ -175,6 +175,7 @@ def devolverfecha(utc,fecha):
 
 def fecha_ztrack_ja(fechaI,fechaF="0"):
     if(fechaF=="0"):
+        fechaI= datetime.now()
         fechaIx=  datetime.fromisoformat(fechaI)-timedelta(hours=12)+timedelta(minutes=0)
         fechaFx = datetime.fromisoformat(fechaI)+timedelta(minutes=0)
     else:
