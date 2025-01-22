@@ -542,7 +542,9 @@ async def data_ztrack_ja(notificacion_data: dict) -> dict:
     database = client[bconsultas]
     #fecha_ztrack_ja
     fech = fecha_ztrack_ja(notificacion_data['fechaF']) if (notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0") else fecha_ztrack_ja(notificacion_data['fechaI'] ,notificacion_data['fechaF'])
-
+    print("-------")
+    print(fech)
+    print("-------")
     diferencial =[{"created_at": {"$gte": fech[0]}},{"created_at": {"$lte": fech[1]}},{"telemetria_id":notificacion_data['imei']}]
     pip = [{"$match": {"$and":diferencial}},{"$sort":{"created_at":-1}}]
     madurador = database.get_collection("madurador")
