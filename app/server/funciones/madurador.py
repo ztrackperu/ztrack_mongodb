@@ -176,10 +176,13 @@ def devolverfecha(utc,fecha):
 def fecha_ztrack_ja(fechaI,fechaF="0"):
     if(fechaF=="0"):
         fechaI= datetime.now()
-        fechaI = datetime.strptime(fechaI, '%Y-%m-%dT%H:%M:%S')
+        #fechaI = datetime.strptime(fechaI, '%Y-%m-%dT%H:%M:%S')
 
-        fechaIx=  datetime.fromisoformat(fechaI)-timedelta(hours=12)+timedelta(minutes=0)
-        fechaFx = datetime.fromisoformat(fechaI)+timedelta(minutes=0)
+        #fechaIx=  datetime.fromisoformat(fechaI)-timedelta(hours=12)+timedelta(minutes=0)
+        #fechaFx = datetime.fromisoformat(fechaI)+timedelta(minutes=0)
+        fechaIx = fechaI -timedelta(hours=12)
+        fechaFx = fechaI
+
     else:
         fechaIx=  datetime.fromisoformat(fechaI)+timedelta(minutes=0)
         fechaFx = datetime.fromisoformat(fechaF)+timedelta(minutes=0)
