@@ -546,13 +546,13 @@ async def data_ztrack_ja(notificacion_data: dict) -> dict:
     diferencial =[{"created_at": {"$gte": fech[0]}},{"created_at": {"$lte": fech[1]}},{"telemetria_id":notificacion_data['imei']}]
     pip = [{"$match": {"$and":diferencial}},{"$sort":{"created_at":-1}}]
     madurador = database.get_collection("madurador")
-    listas = {}
+    listas = []
     async for concepto_ot in madurador.aggregate(pip):
-        listas["set_point"]=concepto_ot["set_point"]
-        listas["temp_supply_1"]=concepto_ot["temp_supply_1"]
-        listas["return_air"]=concepto_ot["return_air"]
-        listas["evaporation_coil"]=concepto_ot["evaporation_coil"]
-        listas["relative_humidity"]=concepto_ot["relative_humidity"]
+        listas["set_point"].append(concepto_ot["set_point"])
+        listas["temp_supply_1"].append(concepto_ot["temp_supply_1"])
+        listas["return_air"].append(concepto_ot["return_air"])
+        listas["evaporation_coil"].append(concepto_ot["evaporation_coil"])
+        listas["relative_humidity"].append(concepto_ot["relative_humidity"])
     return listas
 
 
