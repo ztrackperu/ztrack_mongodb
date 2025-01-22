@@ -158,13 +158,13 @@ class SolicitudIndustriaSchema(BaseModel):
         }
 
 class SolicitudZtrackSchema(BaseModel):
-    imei: str = Field(...)
+    imei: int = Field(...)
     fechaI: Optional[str] | None ="0"
     fechaF: Optional[str] | None ="0"  
     class Config:
         json_schema_extra = {
             "example": {
-                "imei": "",
+                "imei": 15184,
                 "fechaI": "2024-04-18T11:11:04",
                 "fechaF": "2024-04-18T13:11:04"
             }
