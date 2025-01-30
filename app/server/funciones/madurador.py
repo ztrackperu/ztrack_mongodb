@@ -559,7 +559,7 @@ async def proceso_viticola (notificacion_data: dict) -> dict :
         "power":evaluador[41],
         "fecha":fecha_actual      
     }
-    dispositivo.insertOne(objetov)
+    dispositivo.insert_one(objetov)
     return objetov
 
 
