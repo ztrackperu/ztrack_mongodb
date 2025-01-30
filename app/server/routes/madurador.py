@@ -26,7 +26,8 @@ from server.funciones.madurador import (
     data_madurador_tabla,
     data_pollito,
     data_ztrack_ja,
-    tabla_ztrack_ja
+    tabla_ztrack_ja,
+    proceso_viticola
     
 )
 #Aqui importamos el modelo necesario para la clase 
@@ -40,10 +41,22 @@ from server.models.madurador import (
     WonderfulSchema,
     SolicitudMaduradorSchemaF,
     SolicitudZtrackSchema,
+    ViticolaSchema,
 
 )
 #aqui se definen las rutas de la API REST
 router = APIRouter()
+
+
+@router.post("/viticola/", response_description="Datos de wonderful agregados a la base de datos.")
+#La funcion espera "ConceptoOTSchema"
+async def add_viticola_data(notificacion: ViticolaSchema = Body(...)):
+    #convertir en json
+    notificacion = jsonable_encoder(notificacion)   
+    new_notificacion = await proceso_viticola(notificacion)
+    #return ResponseModel(new_notificacion, "ok")
+    
+    return new_notificacion
 
 
 @router.post("/TablaZtrack/", response_description="Datos de los notificacion agregados a la base de datos.")

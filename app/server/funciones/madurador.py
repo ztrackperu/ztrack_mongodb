@@ -534,6 +534,36 @@ async def data_madurador_tabla(notificacion_data: dict) -> dict:
     listasT = {"graph":listas,"table":tabla,"cadena":cadena,"temperature":dataConfig['c_f'],"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
     return listasT
 
+#aqui implementamos la logica del servidor 
+
+
+async def proceso_viticola (notificacion_data: dict) -> dict : 
+    #ola
+    #recibe parámetros Id_contenedor , USDA1,USDA2,USDA3,SUMINISTRO1,RETORNO1,EVAPORADOR1 y SETPOINT1
+    bd_general = "viticola"
+    database = client[bd_general]
+    dispositivo = database.get_collection(notificacion_data['dispositivo'])
+    mensaje_completo = notificacion_data["data"]
+    separador =","
+    evaluador =mensaje_completo.split(separador)
+    fecha_actual = fet =datetime.now()
+    objetov={
+        "dispositivo":evaluador[2],
+        "set":evaluador[3],
+        "suministro":evaluador[4],
+        "retorno":evaluador[6],
+        "evaporador":evaluador[7],
+        "usda1":evaluador[12],
+        "usda2":evaluador[13],
+        "usda3":evaluador[14],
+        "power":evaluador[41],
+        "fecha":fecha_actual      
+    }
+    dispositivo.insertOne(objetov)
+    return objetov
+
+
+
 #debemos consular directamente los datos en la bd ztrack_ja
 
 async def data_ztrack_ja(notificacion_data: dict) -> dict: 

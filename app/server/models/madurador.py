@@ -93,6 +93,21 @@ class WonderfulSchema(BaseModel):
             }
         }
 
+
+class ViticolaSchema(BaseModel):
+    dispositivo:str = Field(...)
+    data:str = Field(...)
+    status: Optional[int] | None =1
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "dispositivo" : "ZGRU7215000",
+                "data": "1BA2,Madurador,ZGRU7215000,-6.00,-2.90,-3277.00,1.10,-9.30,57.70,91.50,-3277.00,36.80,0.50,0.30,0.50,0.00,76.00,32766.00,3276.60,3276.60,439.00,60.00,15.80,15.90,15.20,25.40,3276.60,60.00,100.00,7577.30,320.90,3276.60,3276.60,6550.70,1.10,0.18,0.00,9.74,4.07,1,99.00,1,1,0,254,0,32766.00,3276.60,3276.60,3276.60,18.00,6.00,0,0,255.00,255.00,255.00,255.00,0.00,0,0,0,0.00,0.00,THERMOKING,-14.9768,-74.8981,0,0,0",
+                "status" :1
+            }
+        }
+
+
 #respuesta cuando todo esta bien
 def ResponseModel(data, message):
     return {
