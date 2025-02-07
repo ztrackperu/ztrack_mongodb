@@ -589,9 +589,9 @@ async def data_ztrack_ja(notificacion_data: dict) -> dict:
         temp_supply_1_0.append(concepto_ot["temp_supply_1"])
         return_air_0.append(concepto_ot["return_air"])
         evaporation_coil_0.append(concepto_ot["evaporation_coil"])
-        print("********************")
-        print(concepto_ot["relative_humidity"])
-        print("********************")
+        #print("********************")
+        #print(concepto_ot["relative_humidity"])
+        #print("********************")
         if concepto_ot["relative_humidity"] :
             concepto_ot["relative_humidity"] = None if concepto_ot["relative_humidity"]  else concepto_ot["relative_humidity"]
         else : 
