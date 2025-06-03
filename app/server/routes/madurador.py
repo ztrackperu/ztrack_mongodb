@@ -113,6 +113,7 @@ async def add_pollito_data(notificacion: SolicitudMaduradorSchemaF = Body(...)):
 
 @router.post("/DatosPollitosTabla/", response_description="Datos de los notificacion agregados a la base de datos.")
 async def data_pollito_tabla_ok(notificacion: SolicitudMaduradorSchemaF = Body(...)):
+    notificacion = jsonable_encoder(notificacion)   
     new_notificacion = await data_pollito_tabla(notificacion)
     return ResponseModel(new_notificacion, "ok")
 
