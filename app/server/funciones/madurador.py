@@ -313,6 +313,9 @@ async def data_pollito(notificacion_data: dict) -> dict:
 
 
     async for concepto_ot in madurador.aggregate(pip):
+        print("&&&&&&&&&&&&&&&&&&")
+        print(concepto_ot)
+        print("&&&&&&&&&&&&&&&&&&")
         for i in range(len(graph)):
             dato =graph
             if dato[i]['label']=='created_at':
