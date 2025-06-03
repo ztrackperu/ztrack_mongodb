@@ -673,7 +673,9 @@ async def data_madurador_filadelfia(notificacion_data: dict) -> dict:
             if dato[i]['label']=='created_at':
                 listas[dato[i]['label']]["data"].append(devolverfecha(notificacion_data['utc'],concepto_ot[dato[i]['label']]))
             else:
-                listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
+                valor_key = concepto_ot.get(dato[i]['label'], None)
+
+                listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(valor_key), listas[dato[i]['label']]["config"][3],dataConfig['c_f']))
     analizar =listas['ethylene']['data']
     transformada =procesar_array_etileno(analizar)
     listas['ethylene']['data']=transformada
