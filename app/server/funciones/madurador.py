@@ -295,6 +295,7 @@ async def data_pollito_tabla(notificacion_data: dict) -> dict:
     async for concepto_ot in madurador.aggregate(pip):
         lista.append(concepto_ot)
     listasT = {"graph":"listas","table":lista,"cadena":dataConfig['config_data'],"temperature":0,"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
+    return listasT
 
 
 async def data_pollito(notificacion_data: dict) -> dict:
