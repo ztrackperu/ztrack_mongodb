@@ -146,6 +146,7 @@ def temp(dato,op):
     res = dato if op==0 else (int(((dato*9/5)+32)*100)/100)
     return res
 def depurar_coincidencia(dato, datosDepurar=datosDepurar):
+
     if dato in datosDepurar:
         return None
     else:
@@ -321,7 +322,8 @@ async def data_pollito(notificacion_data: dict) -> dict:
             if dato[i]['label']=='created_at':
                 listas[dato[i]['label']]["data"].append(devolverfecha(notificacion_data['utc'],concepto_ot[dato[i]['label']]))
             else:
-                listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(concepto_ot[dato[i]['label']]), listas[dato[i]['label']]["config"][3],0))
+                valor_key = concepto_ot.get(dato[i]['label'], None)
+                listas[dato[i]['label']]["data"].append(analisis_dato(depurar_coincidencia(valor_key), listas[dato[i]['label']]["config"][3],0))
     analizar =listas['ethylene']['data']
     transformada =procesar_array_etileno(analizar)
     listas['ethylene']['data']=transformada
