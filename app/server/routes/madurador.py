@@ -27,7 +27,8 @@ from server.funciones.madurador import (
     data_pollito,
     data_ztrack_ja,
     tabla_ztrack_ja,
-    proceso_viticola
+    proceso_viticola,
+    data_pollito_tabla
     
 )
 #Aqui importamos el modelo necesario para la clase 
@@ -109,7 +110,12 @@ async def add_pollito_data(notificacion: SolicitudMaduradorSchemaF = Body(...)):
     return ResponseModel(new_notificacion, "ok")
    #return paginate(new_notificacion)
 
-   
+
+@router.post("/DatosPollitosTabla/", response_description="Datos de los notificacion agregados a la base de datos.")
+async def data_pollito_tabla_ok(notificacion: SolicitudMaduradorSchemaF = Body(...)):
+    new_notificacion = await data_pollito_tabla(notificacion)
+    return ResponseModel(new_notificacion, "ok")
+
 
 @router.post("/DatosTablaF/", response_description="Datos de los notificacion agregados a la base de datos.")
 #La funcion espera "ConceptoOTSchema"

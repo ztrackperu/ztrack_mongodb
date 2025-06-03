@@ -279,6 +279,24 @@ async def config(empresa :int):
     return notificacions[0]
 
 
+async def data_pollito_tabla(notificacion_data: dict) -> dict:
+    if(notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0"):
+        fech = procesar_fecha_fila(notificacion_data['utc'],notificacion_data['ultima'])
+    else : 
+        fech = procesar_fecha_fila(notificacion_data['utc'],notificacion_data['fechaI'],notificacion_data['fechaF'])
+    dataConfig =await config(notificacion_data['empresa'])
+    bconsultas="ztrack_ja"
+    diferencial =[{"created_at": {"$gte": fech[0]}},{"created_at": {"$lte": fech[1]}},{"telemetria_id":notificacion_data['device']}]
+    pip = [{"$match": {"$and":diferencial}},  {"$project":dataConfig['config_data']},
+                {"$skip" : (notificacion_data['page']-1)*notificacion_data['size']},{"$limit" : notificacion_data['size']}]
+    database = client[bconsultas]
+    madurador = database.get_collection("madurador")
+    lista=[]
+    async for concepto_ot in madurador.aggregate(pip):
+        lista.append(concepto_ot)
+    listasT = {"graph":"listas","table":lista,"cadena":dataConfig['config_data'],"temperature":0,"date":[devolverfecha(notificacion_data['utc'],fech[0]),devolverfecha(notificacion_data['utc'],fech[2])]}
+
+
 async def data_pollito(notificacion_data: dict) -> dict:
     #print(notificacion_data['utc'])
     if(notificacion_data['fechaF']=="0" and notificacion_data['fechaI']=="0"):
