@@ -307,6 +307,10 @@ async def data_pollito(notificacion_data: dict) -> dict:
     actual_time = fech[0] 
     actual_intervalo_final =fech[0] +timedelta(minutes=m_d[0])
     dato_return_air=None
+    print("######################")
+    print(dataConfig)
+    print("######################")
+
 
     async for concepto_ot in madurador.aggregate(pip):
         for i in range(len(graph)):
