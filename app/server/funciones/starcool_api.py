@@ -14,6 +14,15 @@ db_connection = mysql.connector.connect(
 )
 
 
+def Get_Number_starcool_one(vector,index,Bytes):
+    inicio = int(index*Bytes)
+    fin = int((index+1)*Bytes)
+    trama_recortada = vector[inicio:fin]
+    valor_decimal = int(trama_recortada, 16)
+    resultado = valor_decimal / 10
+    return resultado
+
+
 def Get_Number_starcool(vector,index,Bytes):
     length = len(vector)
     index = index - 1
@@ -105,7 +114,14 @@ def resultados_starcool(cadena):
     supply_2 = Get_Number_starcool(cadena,11,2)
     supply_2 = Valor_Convertido_starcool(supply_2)
 
-    return [set_point,supply_1,retorno,evap,ambien,supply_2]
+    #opciones de datos o2 setpoint , o2 , co2 setpoint , co2  : 35,36,37,38
+    o2_set = Get_Number_starcool_one(cadena,34,2)
+
+    o2_reading = Get_Number_starcool_one(cadena,35,2)
+    co2_set = Get_Number_starcool_one(cadena,36,2)
+    co2_reading = Get_Number_starcool_one(cadena,37,2)
+
+    return [set_point,supply_1,retorno,evap,ambien,supply_2 ,o2_set,o2_reading,co2_set,co2_reading]
 
 #print(nombre)
 #print(resultados_starcool(str))
@@ -233,6 +249,8 @@ async def homologar_api_starcool_general() -> dict:
                 row = resultados_starcool(captura_datos[6:])
                 print(row)
                 #['Set Point', 'Supply 1 temp', 'Return temp', 'Evaporator temp', 'Ambient temp', 'Supply 2 temp']
+                   # return [set_point,supply_1,retorno,evap,ambien,supply_2 ,o2_set,o2_reading,co2_set,co2_reading]
+
                 objetoV = {
                     "id": ij,
                     "set_point": row[0], 
@@ -257,8 +275,8 @@ async def homologar_api_starcool_general() -> dict:
                     "consumption_ph_1": 0.00, 
                     "consumption_ph_2": 0.00, 
                     "consumption_ph_3": 0.00, 
-                    "co2_reading": 0.00, 
-                    "o2_reading": 0.00, 
+                    "co2_reading": row[9], 
+                    "o2_reading": row[7], 
                     "evaporator_speed": 0.00, 
                     "condenser_speed": 0.00,
                     "power_kwh": 0.00,
@@ -280,8 +298,8 @@ async def homologar_api_starcool_general() -> dict:
                     "fresh_air_ex_mode": 0.00,
                     "fresh_air_ex_rate": 0.00,
                     "fresh_air_ex_delay": 0.00,
-                    "set_point_o2": 0.00,
-                    "set_point_co2": 0.00,
+                    "set_point_o2": row[6],
+                    "set_point_co2": row[8],
                     "defrost_term_temp": 0.00,
                     "defrost_interval": 0.00,
                     "water_cooled_conde": 0.00,
