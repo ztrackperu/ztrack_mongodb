@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 #aqui pedimos las funciones que incluyen nuestro CRUD
 from server.funciones.starcool_api import (
     homologar_api_starcool_general,
+    procesar_starcool_optimizado,
     
 )
 #Aqui importamos el modelo necesario para la clase 
@@ -17,7 +18,9 @@ router = APIRouter()
 
 @router.get("/homologar_api_starcool", response_description="Datos de tunel se homologan con ztrack")
 async def homologar_starcool_ZGRU1092515():
-    notificacions = await homologar_api_starcool_general()
+    #notificacions = await homologar_api_starcool_general()
+    notificacions = await procesar_starcool_optimizado()
+
     if notificacions:
         return ResponseModel(notificacions, "Datos homologados starcool!")
     return ResponseModel(notificacions, "Lista vacía devuelta")

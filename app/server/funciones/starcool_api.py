@@ -555,18 +555,6 @@ async def homologar_starcool_general() -> dict:
     cnx.close()
 
 
-
-
-
-
-        
-                    
-
-
-
-
-
-
 async def homologar_starcool01() -> dict:
     #obtener el id de la telemetria en consulta MYSQL
     #STARCOOL01 es asignado a ZGRU1092515 con telemetria_id 14859 Y id_contenedor 474 , idProgre =16000000000
@@ -732,3 +720,515 @@ async def homologar_starcool01() -> dict:
                 cnx.commit()
     cnx.close()            
                     
+
+# ============================================================================
+# CONFIGURACIÓN MYSQL CON POOL
+# ============================================================================
+
+mysql_config = {
+    "pool_name": "starcool_pool",
+    "pool_size": 15,
+    "pool_reset_session": True,
+    "host": "localhost",
+    "user": "ztrack2023",
+    "passwd": "lpmp2018",
+    "database": "zgroupztrack",
+    "autocommit": False,
+    "connect_timeout": 10,
+    "use_pure": False
+}
+
+try:
+    mysql_pool = mysql.connector.pooling.MySQLConnectionPool(**mysql_config)
+except mysql.connector.Error as err:
+    print(f"Error creando pool MySQL: {err}")
+    mysql_pool = None
+
+# Semáforo para limitar concurrencia
+mysql_semaphore = asyncio.Semaphore(10)
+
+@asynccontextmanager
+async def get_mysql_connection(timeout: int = 30):
+    """Context manager seguro para conexiones MySQL"""
+    cnx = None
+    cursor = None
+    retry_count = 0
+    max_retries = 3
+    
+    async with mysql_semaphore:
+        while retry_count < max_retries:
+            try:
+                cnx = mysql_pool.get_connection()
+                
+                # Configurar timeouts
+                cursor = cnx.cursor()
+                cursor.execute("SET SESSION innodb_lock_wait_timeout = 10")
+                cursor.execute("SET SESSION lock_wait_timeout = 10")
+                cursor.close()
+                
+                yield cnx
+                
+                if cnx.in_transaction:
+                    cnx.commit()
+                break
+                
+            except mysql.connector.errors.DatabaseError as e:
+                retry_count += 1
+                print(f"Error MySQL (intento {retry_count}/{max_retries}): {e}")
+                
+                if cnx:
+                    try:
+                        cnx.rollback()
+                    except:
+                        pass
+                
+                if "Lock wait timeout" in str(e) or "Deadlock" in str(e):
+                    if retry_count < max_retries:
+                        await asyncio.sleep(0.5 * retry_count)
+                        continue
+                raise
+                
+            except Exception as e:
+                print(f"Error inesperado en MySQL: {e}")
+                if cnx:
+                    try:
+                        cnx.rollback()
+                    except:
+                        pass
+                raise
+                
+            finally:
+                if cnx and retry_count >= max_retries:
+                    try:
+                        cnx.close()
+                    except:
+                        pass
+
+# ============================================================================
+# FUNCIONES DE UTILIDAD
+# ============================================================================
+
+def extraer_datos_starcool(notificacion: dict) -> Optional[str]:
+    """
+    Intenta extraer datos de d01, si falla prueba con d02
+    Retorna la cadena de datos o None si no encuentra nada válido
+    """
+    # Primero intentar con d01
+    if 'd01' in notificacion and notificacion['d01']:
+        captura_datos = notificacion['d01']
+        if len(captura_datos) > 100:
+            print(f"✓ Datos encontrados en d01: {len(captura_datos)} caracteres")
+            return captura_datos
+        else:
+            print(f"✗ d01 insuficiente: {len(captura_datos)} caracteres")
+    
+    # Si d01 falla, intentar con d02
+    if 'd02' in notificacion and notificacion['d02']:
+        captura_datos = notificacion['d02']
+        if len(captura_datos) > 100:
+            print(f"✓ Datos encontrados en d02: {len(captura_datos)} caracteres")
+            return captura_datos
+        else:
+            print(f"✗ d02 insuficiente: {len(captura_datos)} caracteres")
+    
+    print("✗ No se encontraron datos válidos en d01 ni d02")
+    return None
+
+async def obtener_o_crear_telemetria(cursor, imei: str) -> int:
+    """
+    Obtiene ID de telemetría existente o crea uno nuevo
+    """
+    identi = f"S{imei}"
+    
+    # Buscar telemetría existente
+    consulta_telemetria = "SELECT id FROM telemetrias WHERE imei=%s AND estado=1"
+    cursor.execute(consulta_telemetria, (identi,))
+    resultado = cursor.fetchone()
+    
+    if resultado:
+        return resultado[0]
+    
+    # No existe, obtener último ID
+    consulta_ultimo_id = "SELECT id FROM telemetrias ORDER BY id DESC LIMIT 1"
+    cursor.execute(consulta_ultimo_id)
+    ultimo = cursor.fetchone()
+    
+    nuevo_id = (ultimo[0] + 1) if ultimo else 1
+    
+    # Crear nueva telemetría
+    insert_telemetria = (
+        "INSERT INTO telemetrias (id, numero_telefono, imei, estado) "
+        "VALUES (%s, %s, %s, 1)"
+    )
+    cursor.execute(insert_telemetria, (nuevo_id, identi, identi))
+    
+    return nuevo_id
+
+async def obtener_o_crear_contenedor(cursor, telemetria_id: int, imei: str) -> bool:
+    """
+    Verifica si existe contenedor, si no lo crea
+    Retorna True si se creó, False si ya existía
+    """
+    identi = f"S{imei}"
+    
+    # Buscar contenedor existente
+    consulta_contenedor = "SELECT id FROM contenedores WHERE telemetria_id=%s AND estado=1"
+    cursor.execute(consulta_contenedor, (telemetria_id,))
+    resultado = cursor.fetchone()
+    
+    if resultado:
+        return False  # Ya existe
+    
+    # Crear nuevo contenedor
+    insert_contenedor = (
+        "INSERT INTO contenedores (nombre_contenedor, tipo, telemetria_id, estado) "
+        "VALUES (%s, %s, %s, 1)"
+    )
+    cursor.execute(insert_contenedor, (identi, "Madurador", telemetria_id))
+    
+    return True  # Creado
+
+def construir_objeto_starcool(row: List, ij: int, fecha: datetime, telemetria_id: int) -> dict:
+    """
+    Construye objeto de telemetría para StarCool
+    """
+    return {
+        "id": ij,
+        "set_point": row[0], 
+        "temp_supply_1": row[1],
+        "temp_supply_2": row[5],
+        "return_air": row[2], 
+        "evaporation_coil": row[3],
+        "condensation_coil": 0.00,
+        "compress_coil_1": None,
+        "compress_coil_2": 0.00, 
+        "ambient_air": row[4], 
+        "cargo_1_temp": 0.00,
+        "cargo_2_temp": 0.00, 
+        "cargo_3_temp": 0.00, 
+        "cargo_4_temp": 0.00, 
+        "relative_humidity": None, 
+        "avl": 0.00, 
+        "suction_pressure": 0.00, 
+        "discharge_pressure": 0.00, 
+        "line_voltage": 0.00, 
+        "line_frequency": 0.00, 
+        "consumption_ph_1": 0.00, 
+        "consumption_ph_2": 0.00, 
+        "consumption_ph_3": 0.00, 
+        "co2_reading": row[9], 
+        "o2_reading": row[7], 
+        "evaporator_speed": 0.00, 
+        "condenser_speed": 0.00,
+        "power_kwh": 0.00,
+        "power_trip_reading": 0.00,
+        "suction_temp": 0.00,
+        "discharge_temp": 0.00,
+        "supply_air_temp": 0.00,
+        "return_air_temp": 0.00,
+        "dl_battery_temp": 0.00,
+        "dl_battery_charge": 0.00,
+        "power_consumption": 0.00,
+        "power_consumption_avg": 0.00,
+        "alarm_present": 0.00,
+        "capacity_load": 0.00,
+        "power_state": 1, 
+        "controlling_mode": 1,
+        "humidity_control": 0.00,
+        "humidity_set_point": 0.00,
+        "fresh_air_ex_mode": 0.00,
+        "fresh_air_ex_rate": 0.00,
+        "fresh_air_ex_delay": 0.00,
+        "set_point_o2": row[6],
+        "set_point_co2": row[8],
+        "defrost_term_temp": 0.00,
+        "defrost_interval": 0.00,
+        "water_cooled_conde": 0.00,
+        "usda_trip": 0.00,
+        "evaporator_exp_valve": 0.00,
+        "suction_mod_valve": 0.00,
+        "hot_gas_valve": 0.00,
+        "economizer_valve": 0.00,
+        "ethylene": 0.00,
+        "stateProcess": 0.00,
+        "stateInyection": 0.00,
+        "timerOfProcess": 0.00,
+        "battery_voltage": 0.00,
+        "power_trip_duration": 0.00,
+        "modelo": "STARCOOL",
+        "latitud": 0.00,
+        "longitud": 0.00,
+        "created_at": fecha,
+        "telemetria_id": telemetria_id,
+        "inyeccion_etileno": 0,
+        "defrost_prueba": 0,
+        "ripener_prueba": 0,
+        "sp_ethyleno": 0.00,
+        "inyeccion_hora": 0.00,
+        "inyeccion_pwm": 0.00,
+        "extra_1": 0,
+        "extra_2": 0,
+        "extra_3": 0,
+        "extra_4": 0,
+        "extra_5": 0
+    }
+
+# ============================================================================
+# PROCESAMIENTO POR LOTES CON MANEJO ROBUSTO
+# ============================================================================
+
+async def procesar_batch_starcool(
+    batch_objetos: List[dict],
+    collection_mongo,
+    batch_size: int = 20
+):
+    """
+    Procesa lote de objetos en MongoDB y MySQL
+    """
+    if not batch_objetos:
+        return
+    
+    # 1. Insertar en MongoDB (más confiable)
+    try:
+        await collection_mongo.insert_many(batch_objetos, ordered=False)
+    except Exception as e:
+        print(f"Error batch MongoDB: {e}")
+        # Insertar uno por uno
+        for obj in batch_objetos:
+            try:
+                await collection_mongo.insert_one(obj)
+            except Exception as e2:
+                print(f"Error individual MongoDB: {e2}")
+    
+    # 2. Actualizar MySQL en sub-lotes pequeños
+    for i in range(0, len(batch_objetos), batch_size):
+        mini_batch = batch_objetos[i:i + batch_size]
+        await actualizar_mysql_batch(mini_batch)
+        await asyncio.sleep(0.01)  # Pausa entre batches
+
+async def actualizar_mysql_batch(objetos: List[dict]):
+    """
+    Actualiza MySQL con retry logic
+    """
+    update_query = """
+        UPDATE contenedores 
+        SET ultima_fecha = %s, set_point = %s, temp_supply_1 = %s, 
+            return_air = %s, ambient_air = %s, relative_humidity = %s, 
+            avl = %s, defrost_prueba = %s, ripener_prueba = %s, 
+            ethylene = %s, set_point_co2 = %s, co2_reading = %s, 
+            humidity_set_point = %s, sp_ethyleno = %s, compress_coil_1 = %s 
+        WHERE estado = 1 AND telemetria_id = %s
+    """
+    
+    try:
+        async with get_mysql_connection() as cnx:
+            cursor = cnx.cursor()
+            
+            # Preparar datos
+            mysql_data = [
+                (
+                    obj['created_at'], obj['set_point'], obj['temp_supply_1'],
+                    obj['return_air'], obj['ambient_air'], obj['relative_humidity'],
+                    obj['avl'], obj['inyeccion_pwm'], obj['inyeccion_hora'],
+                    obj['ethylene'], obj['set_point_co2'], obj['co2_reading'],
+                    obj['humidity_set_point'], obj['sp_ethyleno'], obj['compress_coil_1'],
+                    obj['telemetria_id']
+                )
+                for obj in objetos
+            ]
+            
+            cursor.executemany(update_query, mysql_data)
+            cnx.commit()
+            cursor.close()
+            
+    except mysql.connector.errors.DatabaseError as e:
+        print(f"Error MySQL batch: {e}")
+        # Procesar individualmente
+        await actualizar_mysql_individual(objetos)
+    except Exception as e:
+        print(f"Error inesperado MySQL: {e}")
+
+async def actualizar_mysql_individual(objetos: List[dict]):
+    """
+    Actualiza MySQL uno por uno en caso de fallo del batch
+    """
+    update_query = """
+        UPDATE contenedores 
+        SET ultima_fecha = %s, set_point = %s, temp_supply_1 = %s, 
+            return_air = %s, ambient_air = %s, relative_humidity = %s, 
+            avl = %s, defrost_prueba = %s, ripener_prueba = %s, 
+            ethylene = %s, set_point_co2 = %s, co2_reading = %s, 
+            humidity_set_point = %s, sp_ethyleno = %s, compress_coil_1 = %s 
+        WHERE estado = 1 AND telemetria_id = %s
+    """
+    
+    for obj in objetos:
+        retry_count = 0
+        max_retries = 2
+        
+        while retry_count < max_retries:
+            try:
+                async with get_mysql_connection() as cnx:
+                    cursor = cnx.cursor()
+                    
+                    data = (
+                        obj['created_at'], obj['set_point'], obj['temp_supply_1'],
+                        obj['return_air'], obj['ambient_air'], obj['relative_humidity'],
+                        obj['avl'], obj['inyeccion_pwm'], obj['inyeccion_hora'],
+                        obj['ethylene'], obj['set_point_co2'], obj['co2_reading'],
+                        obj['humidity_set_point'], obj['sp_ethyleno'], obj['compress_coil_1'],
+                        obj['telemetria_id']
+                    )
+                    
+                    cursor.execute(update_query, data)
+                    cnx.commit()
+                    cursor.close()
+                    break
+                    
+            except mysql.connector.errors.DatabaseError as e:
+                retry_count += 1
+                print(f"Error individual MySQL (intento {retry_count}): {e}")
+                if retry_count < max_retries:
+                    await asyncio.sleep(0.2 * retry_count)
+                else:
+                    print(f"Fallo definitivo para telemetria_id {obj['telemetria_id']}")
+            except Exception as e:
+                print(f"Error inesperado: {e}")
+                break
+
+# ============================================================================
+# FUNCIÓN PRINCIPAL OPTIMIZADA
+# ============================================================================
+
+async def procesar_starcool_optimizado():
+    """
+    Procesa dispositivos StarCool con manejo robusto de errores
+    """
+    imeis = []
+    
+    # Colecciones MongoDB
+    collectionImei = databaseMongo.get_collection("dispositivos_starcool")
+    collectionStarControl = databaseMongo.get_collection("control_starcool")
+    
+    # Obtener control
+    controlStarCool = await collectionStarControl.find_one({"control": 1}, {"_id": 0})
+    if not controlStarCool:
+        print("No se encontró registro de control")
+        return []
+    
+    ij_inicial = controlStarCool.get('ij', 241000)
+    fecha_t = controlStarCool.get('fecha_t', '2024-12-11T23:35:54')
+    fecha_ok = datetime.fromisoformat(fecha_t)
+    
+    # MongoDB destino
+    databaseMongoH = client['ztrack_ja']
+    collectionMongoH = databaseMongoH.get_collection("madurador")
+    
+    # Procesar cada IMEI
+    async for x in collectionImei.find():
+        imei = x['imei']
+        imeis.append(imei)
+        
+        print("=" * 50)
+        print(f"Procesando IMEI: {imei}")
+        print("=" * 50)
+        
+        try:
+            # Usar connection pool para MySQL
+            async with get_mysql_connection() as cnx:
+                cursor = cnx.cursor()
+                
+                # Obtener o crear telemetría
+                id_obtenido = await obtener_o_crear_telemetria(cursor, imei)
+                print(f"Telemetria ID: {id_obtenido}")
+                
+                # Obtener o crear contenedor
+                contenedor_creado = await obtener_o_crear_contenedor(cursor, id_obtenido, imei)
+                if contenedor_creado:
+                    print(f"✓ Contenedor creado para {imei}")
+                
+                cnx.commit()
+                
+        except Exception as e:
+            print(f"Error configurando dispositivo {imei}: {e}")
+            continue
+        
+        # Procesar datos históricos
+        base_imei = obtener_mes_ano_anterior_imei(str(imei))
+        collection_especifica = databaseMongo.get_collection(base_imei)
+        
+        factorBusqueda = {"fecha": {"$gt": fecha_ok}}
+        
+        # Batch para procesar
+        batch_objetos = []
+        ij = ij_inicial
+        contador_procesados = 0
+        contador_fallidos = 0
+        
+        cursor_mongo = collection_especifica.find(
+            factorBusqueda, 
+            {"_id": 0}
+        ).sort("fecha", 1)
+        
+        async for notificacion in cursor_mongo:
+            try:
+                # Intentar extraer datos de d01, si falla usar d02
+                captura_datos = extraer_datos_starcool(notificacion)
+                
+                if not captura_datos:
+                    contador_fallidos += 1
+                    continue
+                
+                # Procesar datos
+                row = resultados_starcool(captura_datos[6:])
+                
+                # Construir objeto
+                objetoV = construir_objeto_starcool(
+                    row, 
+                    ij, 
+                    notificacion['fecha'], 
+                    id_obtenido
+                )
+                
+                batch_objetos.append(objetoV)
+                ij += 1
+                contador_procesados += 1
+                
+                # Procesar batch cada 50 registros
+                if len(batch_objetos) >= 50:
+                    await procesar_batch_starcool(batch_objetos, collectionMongoH)
+                    batch_objetos = []
+                    print(f"✓ Procesados: {contador_procesados}, Fallidos: {contador_fallidos}")
+                
+            except Exception as e:
+                print(f"Error procesando notificación: {e}")
+                contador_fallidos += 1
+                continue
+        
+        # Procesar batch restante
+        if batch_objetos:
+            await procesar_batch_starcool(batch_objetos, collectionMongoH)
+        
+        # Actualizar contador
+        ij_inicial = ij + 10
+        
+        print(f"\n{'='*50}")
+        print(f"IMEI {imei} completado:")
+        print(f"  ✓ Procesados: {contador_procesados}")
+        print(f"  ✗ Fallidos: {contador_fallidos}")
+        print(f"{'='*50}\n")
+    
+    # Actualizar control final
+    try:
+        fecha_actual_ok = datetime.now()
+        fecha_formateada = fecha_actual_ok.strftime("%Y-%m-%dT%H:%M:%S")
+        
+        await collectionStarControl.update_one(
+            {"control": 1},
+            {"$set": {"ij": ij_inicial, "fecha_t": fecha_formateada}}
+        )
+        print(f"✓ Control actualizado: ij={ij_inicial}, fecha={fecha_formateada}")
+    except Exception as e:
+        print(f"Error actualizando control: {e}")
+    
+    return imeis
