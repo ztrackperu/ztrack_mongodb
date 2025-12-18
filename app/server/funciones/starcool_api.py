@@ -1105,6 +1105,16 @@ async def actualizar_mysql_individual(objetos: List[dict]):
 # ============================================================================
 
 async def procesar_starcool_optimizado():
+    datazo = BaseConexion.obtener_mes_y_anio_actual()
+    base_anterior = obtener_mes_ano_anterior()
+    print(datazo)
+    print(base_anterior)
+    baseD = "ZTRACK_API"
+    databaseMongo = client[baseD]
+    collectionImei =databaseMongo.get_collection(base_anterior)
+    #imeis = []
+
+
     """
     Procesa dispositivos StarCool con manejo robusto de errores
     """
