@@ -153,7 +153,7 @@ def obtener_mes_ano_anterior_imei(imei):
     return repositorio
 
 
-async def homologar_api_starcool_general() -> dict:
+async def homologar_api_starcool_general_old() -> dict:
     datazo = BaseConexion.obtener_mes_y_anio_actual()
     base_anterior = obtener_mes_ano_anterior()
     print(datazo)
@@ -1245,4 +1245,238 @@ async def procesar_starcool_optimizado():
     except Exception as e:
         print(f"Error actualizando control: {e}")
     
+    return imeis
+
+
+async def homologar_api_starcool_general() -> dict:
+    datazo = BaseConexion.obtener_mes_y_anio_actual()
+    base_anterior = obtener_mes_ano_anterior()
+    print(datazo)
+    print(base_anterior)
+    baseD = "ZTRACK_API"
+    databaseMongo = client[baseD]
+    collectionImei =databaseMongo.get_collection(base_anterior)
+    imeis = []
+    cnx = mysql.connector.connect(
+        host= "localhost",
+        user= "ztrack2023",
+        passwd= "lpmp2018",
+        database="zgroupztrack"
+    )
+    curConte = cnx.cursor(buffered=True)
+    curConteB = cnx.cursor(buffered=True)
+
+    #consultar a coleccion "control_starcool"
+    collectionStarControl =databaseMongo.get_collection("control_starcool")
+    controlStarCool = []
+    async for xy in collectionStarControl.find():
+        controlStarCool.append(xy)
+    if controlStarCool :
+        print("*******")
+        print(controlStarCool[0]['ij'])
+        print("*******")
+        print(controlStarCool[0]['fecha_t'])
+    else : 
+        print("sin datos encontrados")
+        #insertar datos 
+        objetoS = {
+            "ij" :250000,
+            "fecha_t" :"2024-12-11T17:35:54",
+            "control" :1
+        }
+        collectionStarControl.insert_one(objetoS)
+        print("guarddado en starcool control")
+
+
+
+
+    async for x in collectionImei.find():
+        imeis.append(x['imei'])
+        consulta_telemetria = ("SELECT * FROM telemetrias WHERE imei=%s and estado=1")
+        #query_contenedor = curConte.execute(consulta_contenedor,(str(x['imei']),))
+        identi = "S"+str(x['imei'])
+        curConte.execute(consulta_telemetria,(identi,))
+        data_telemtria = []
+        data_ultima = []
+        print("-------------------")
+        print(x['imei'])
+        print("-------------------")
+        for y in curConte:
+            data_telemtria.append(y)
+        if len(data_telemtria)>0 :
+            id_obtenido = data_telemtria[0][0]
+        else : 
+            consulta_ultimo_id_tele = ("SELECT id FROM telemetrias  order by id desc  limit 1  ")
+            curConte.execute(consulta_ultimo_id_tele)
+            for z in curConte:
+                data_ultima.append(z)
+            id_obtenido = data_ultima[0][0] +1
+            #creo el dispostivo en cuestion 
+            insert_new_telemetria = ("INSERT INTO telemetrias (id, numero_telefono, imei) "
+                "VALUES (%s, %s, %s)")
+            curConteB.execute(insert_new_telemetria,(id_obtenido, identi, identi))
+        print(id_obtenido)
+        #consulto a la tabla contenedores por telemetria_id
+        consulta_contenedor = ("SELECT * FROM contenedores WHERE telemetria_id=%s and estado=1")
+        curConte.execute(consulta_contenedor,(id_obtenido,))
+        data_contenedor = []
+        for y1 in curConte:
+            data_contenedor.append(y1)
+        if len(data_contenedor)==0 :
+            #cremoas contenedor con descripcion 
+            insert_new_contenedor = ("INSERT INTO contenedores (nombre_contenedor, tipo, telemetria_id) "
+                "VALUES (%s, %s, %s)")
+            curConteB.execute(insert_new_contenedor,(identi, "Madurador", id_obtenido))
+        
+
+        #leer la tabla correspondiente y de froma masiva importar 
+        base_imei =obtener_mes_ano_anterior_imei(str(x['imei']))
+        collection_especifica =databaseMongo.get_collection(base_imei)
+        prueba_collection =databaseMongo.get_collection("prueba_colect")
+          
+        #ij = 241000
+        ij =controlStarCool[0]['ij']
+        #fecha_t ="2024-12-11T23:35:54"
+        fecha_t = controlStarCool[0]['fecha_t']
+        fecha_ok = datetime.fromisoformat(fecha_t)+timedelta(minutes=0)
+        factorBusqueda ={"fecha":{"$gt":fecha_ok}}
+        async for notificacion in collection_especifica.find(factorBusqueda,{"_id":0}).sort({"fecha":1}):
+            print("********")
+            
+            # INTENTAR PRIMERO CON d01, SI FALLA PROBAR CON d02
+            captura_datos = None
+            
+            # Primero intentar con d01
+            if 'd01' in notificacion and notificacion['d01']:
+                if len(notificacion['d01']) > 100:
+                    captura_datos = notificacion['d01']
+                    print("✓ Usando d01")
+            
+            # Si d01 no sirve, intentar con d02
+            if not captura_datos and 'd02' in notificacion and notificacion['d02']:
+                if len(notificacion['d02']) > 100:
+                    captura_datos = notificacion['d02']
+                    print("✓ Usando d02")
+            
+            # Procesar solo si encontramos datos válidos
+            if captura_datos:
+                row = resultados_starcool(captura_datos[6:])
+                print(row)
+                #['Set Point', 'Supply 1 temp', 'Return temp', 'Evaporator temp', 'Ambient temp', 'Supply 2 temp']
+                   # return [set_point,supply_1,retorno,evap,ambien,supply_2 ,o2_set,o2_reading,co2_set,co2_reading]
+
+                objetoV = {
+                    "id": ij,
+                    "set_point": row[0], 
+                    "temp_supply_1": row[1],
+                    "temp_supply_2": row[5],
+                    "return_air": row[2], 
+                    "evaporation_coil": row[3],
+                    "condensation_coil": 0.00,
+                    "compress_coil_1": None,
+                    "compress_coil_2": 0.00, 
+                    "ambient_air": row[4], 
+                    "cargo_1_temp": 0.00,
+                    "cargo_2_temp": 0.00, 
+                    "cargo_3_temp": 0.00, 
+                    "cargo_4_temp": 0.00, 
+                    "relative_humidity": None, 
+                    "avl": 0.00, 
+                    "suction_pressure": 0.00, 
+                    "discharge_pressure": 0.00, 
+                    "line_voltage": 0.00, 
+                    "line_frequency": 0.00, 
+                    "consumption_ph_1": 0.00, 
+                    "consumption_ph_2": 0.00, 
+                    "consumption_ph_3": 0.00, 
+                    "co2_reading": row[9], 
+                    "o2_reading": row[7], 
+                    "evaporator_speed": 0.00, 
+                    "condenser_speed": 0.00,
+                    "power_kwh": 0.00,
+                    "power_trip_reading": 0.00,
+                    "suction_temp": 0.00,
+                    "discharge_temp": 0.00,
+                    "supply_air_temp": 0.00,
+                    "return_air_temp": 0.00,
+                    "dl_battery_temp": 0.00,
+                    "dl_battery_charge": 0.00,
+                    "power_consumption": 0.00,
+                    "power_consumption_avg": 0.00,
+                    "alarm_present": 0.00,
+                    "capacity_load": 0.00,
+                    "power_state": 1, 
+                    "controlling_mode": 1,
+                    "humidity_control": 0.00,
+                    "humidity_set_point": 0.00,
+                    "fresh_air_ex_mode": 0.00,
+                    "fresh_air_ex_rate": 0.00,
+                    "fresh_air_ex_delay": 0.00,
+                    "set_point_o2": row[6],
+                    "set_point_co2": row[8],
+                    "defrost_term_temp": 0.00,
+                    "defrost_interval": 0.00,
+                    "water_cooled_conde": 0.00,
+                    "usda_trip": 0.00,
+                    "evaporator_exp_valve": 0.00,
+                    "suction_mod_valve": 0.00,
+                    "hot_gas_valve": 0.00,
+                    "economizer_valve": 0.00,
+                    "ethylene": 0.00,
+                    "stateProcess": 0.00,
+                    "stateInyection": 0.00,
+                    "timerOfProcess": 0.00,
+                    "battery_voltage": 0.00,
+                    "power_trip_duration":0.00,
+                    "modelo": 0.00,
+                    "latitud": 0.00,
+                    "longitud":  0.00,
+                    "created_at": notificacion['fecha'],
+                    "telemetria_id": id_obtenido,
+                    "inyeccion_etileno": 0,
+                    "defrost_prueba": 0,
+                    "ripener_prueba": 0,
+                    "sp_ethyleno": 0.00,
+                    "inyeccion_hora": 0.00,
+                    "inyeccion_pwm": 0.00,
+                    "extra_1": 0,
+                    "extra_2": 0,
+                    "extra_3": 0,
+                    "extra_4": 0,
+                    "extra_5": 0
+                }
+                ij+=1
+                databaseMongoH = client['ztrack_ja']  
+                #collectionMongoH = databaseMongoH.get_collection("madurador_starcool")
+                collectionMongoH = databaseMongoH.get_collection("madurador")
+
+                collectionMongoH.insert_one(objetoV)
+                #print(objetoV)
+                curB = cnx.cursor()
+                update_old_salary = (
+                "UPDATE contenedores SET ultima_fecha = %s ,set_point = %s ,temp_supply_1= %s ,return_air= %s"
+                ", ambient_air= %s ,relative_humidity= %s ,avl = %s , defrost_prueba = %s , ripener_prueba = %s , ethylene = %s"
+                    " , set_point_co2 = %s , co2_reading = %s , humidity_set_point = %s , sp_ethyleno = %s , compress_coil_1 = %s WHERE estado = 1 AND telemetria_id = %s  ")
+                curB.execute(update_old_salary, (objetoV['created_at'], objetoV['set_point'],objetoV['temp_supply_1'], 
+                                                    objetoV['return_air'], objetoV['ambient_air'], objetoV['relative_humidity'], 
+                                                    objetoV['avl'], objetoV['inyeccion_pwm'], objetoV['inyeccion_hora'], 
+                                                    objetoV['ethylene'], objetoV['set_point_co2'], objetoV['co2_reading'], 
+                                                    objetoV['humidity_set_point'], objetoV['sp_ethyleno'],objetoV['compress_coil_1'], 
+                                                    objetoV['telemetria_id'],  ))
+
+                cnx.commit()
+
+            else :
+                print("✗ Sin datos válidos en d01 ni d02")
+            #print(notificacion['d01'])
+
+            #print("********")    
+
+        #fecha ok 
+        fecha_actual_ok = datetime.now()
+        fecha_formateada = fecha_actual_ok.strftime("%Y-%m-%dT%H:%M:%S")
+        #actualizar datos 
+        actualizar_control = await collectionStarControl.update_one({"control": 1},{"$set":{"ij": ij+10,"fecha_t":fecha_formateada}})
+
+
     return imeis
