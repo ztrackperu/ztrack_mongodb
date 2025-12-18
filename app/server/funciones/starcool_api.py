@@ -1,10 +1,14 @@
 import json
+import asyncio
+from contextlib import asynccontextmanager
 import mysql.connector
+from mysql.connector import pooling
 from server.database import client
 from bson import regex
 from datetime import datetime,timedelta
 from server.generico.base_conexion import BaseConexion
 from dateutil.relativedelta import relativedelta
+from typing import List, Dict, Optional
 
 db_connection = mysql.connector.connect(
     host= "localhost",
