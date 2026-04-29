@@ -1,4 +1,33 @@
-# incio de proyecto integrado Intranet FASTAPI-MongoDB
+# ZTrack MongoDB - Integración Intranet FASTAPI-MongoDB
+
+## Docker (recomendado)
+
+### Con Docker Compose (app + MongoDB + MySQL)
+
+```bash
+# Construir y levantar todos los servicios
+docker compose up -d
+
+# La API estará disponible en http://localhost:8033
+# MongoDB en localhost:27017, MySQL en localhost:3306
+```
+
+### Solo la aplicación (conectar a bases externas)
+
+```bash
+# Crear .env desde el ejemplo
+cp .env.example .env
+# Editar .env con tus credenciales de MongoDB y MySQL
+
+# Construir y ejecutar
+docker build -t ztrack_mongodb .
+docker run -p 8033:8033 --env-file .env ztrack_mongodb
+```
+
+---
+
+## Instalación manual
+
 *Aspectos del git 
 git remote add origin https://github.com/ztrackperu/integrado.git
 git branch -M main

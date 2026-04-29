@@ -1,0 +1,59 @@
+services:
+  app:
+    build: .
+    container_name: ztrack_mongodb_app
+    ports:
+      - "8033:8033"
+    # Descomentar para usar variables desde .env (cp .env.example .env)
+    # env_file:
+    #   - .env
+    environment:
+      MONGO_DETAILS: mongodb://mongodb:27017
+      DB_URL: mysql+mysqlconnector://ztrack:ztrack123@mysql:3306/zgroupztrack
+      MYSQL_HOST: mysql
+      MYSQL_USER: ztrack
+      MYSQL_PASSWORD: ztrack123
+      MYSQL_DATABASE: zgroupztrack
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:7
+    container_name: ztrack_mongodb_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  mysql:
+    image: mysql:8.0
+    container_name: ztrack_mongodb_mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: zgroupztrack
+      MYSQL_USER: ztrack
+      MYSQL_PASSWORD: ztrack123
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot123"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+volumes:
+  mongodb_data:
+  mysql_data:

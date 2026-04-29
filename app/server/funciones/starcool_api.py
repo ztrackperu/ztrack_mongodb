@@ -341,6 +341,11 @@ async def homologar_api_starcool_general_old() -> dict:
                 collectionMongoH = databaseMongoH.get_collection("madurador")
 
                 collectionMongoH.insert_one(objetoV)
+
+                #insertar datos en oficial
+
+
+
                 #print(objetoV)
                 curB = cnx.cursor()
                 update_old_salary = (
@@ -371,6 +376,14 @@ async def homologar_api_starcool_general_old() -> dict:
 
     return imeis
 
+
+def bd_oficial(imei="",periodo=""):
+    per_actual = datetime.now().year
+    bd_ok ="STARCOOL_OFICIAL_"+str(per_actual)
+    #if imei!=""and periodo!="" :
+    if imei!="" :
+        bd_ok = str(imei)+"_"+bd_ok
+    return bd_ok
 
 async def homologar_starcool_general() -> dict:
     datazo = BaseConexion.obtener_mes_y_anio_actual()
@@ -1451,6 +1464,18 @@ async def homologar_api_starcool_general() -> dict:
                 collectionMongoH = databaseMongoH.get_collection("madurador")
 
                 collectionMongoH.insert_one(objetoV)
+
+
+
+
+                #PROCESAR DATOS EN OFICIAL
+                bd_oficial = bd_oficial(str(x['imei']))
+                collection_oficial =databaseMongo.get_collection(bd_oficial)
+                collection_oficial.insert_one(objetoV)
+
+
+
+
                 #print(objetoV)
                 curB = cnx.cursor()
                 update_old_salary = (

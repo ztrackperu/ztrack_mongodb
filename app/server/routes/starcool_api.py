@@ -17,7 +17,7 @@ from server.models.madurador import (
 router = APIRouter()
 
 @router.get("/homologar_api_starcool", response_description="Datos de tunel se homologan con ztrack")
-async def homologar_starcool_ZGRU1092515():
+async def homologar_starcool_ZGRU1092515(): 
     notificacions = await homologar_api_starcool_general()
     #notificacions = await procesar_starcool_optimizado()
 

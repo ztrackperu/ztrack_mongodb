@@ -4,3 +4,5 @@ fastapi==0.111.0
 pydantic==2.7.4
 python-decouple==3.8
 mysql-connector-python==9.0.0
+fastapi-pagination==0.12.26
+sqlalchemy==2.0.25
