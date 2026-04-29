@@ -1469,8 +1469,8 @@ async def homologar_api_starcool_general() -> dict:
 
 
                 #PROCESAR DATOS EN OFICIAL
-                bd_oficial = bd_oficial(str(x['imei']))
-                collection_oficial =databaseMongo.get_collection(bd_oficial)
+                bd_oficial_x = bd_oficial(str(x['imei']))
+                collection_oficial =databaseMongo.get_collection(bd_oficial_x)
                 collection_oficial.insert_one(objetoV)
 
 
