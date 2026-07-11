@@ -118,6 +118,25 @@ def resultados_starcool(cadena):
     supply_2 = Get_Number_starcool(cadena,11,2)
     supply_2 = Valor_Convertido_starcool(supply_2)
 
+    # sensores usda
+
+    usda_1 = Get_Number_starcool(cadena,13,2)
+    usda_1 = Valor_Convertido_starcool(usda_1)
+
+    usda_2 = Get_Number_starcool(cadena,15,2)
+    usda_2 = Valor_Convertido_starcool(usda_2)
+
+    usda_3 = Get_Number_starcool(cadena,17,2)
+    usda_3 = Valor_Convertido_starcool(usda_3)
+
+    cargo_4 = Get_Number_starcool(cadena,19,2)
+    cargo_4 = Valor_Convertido_starcool(cargo_4)
+
+    sp_humidity = Get_Number_starcool_one(cadena,20,2)
+
+    humidity = Get_Number_starcool_one(cadena,21,2)
+
+
     #opciones de datos o2 setpoint , o2 , co2 setpoint , co2  : 35,36,37,38
     o2_set = Get_Number_starcool_one(cadena,34,2)
 
@@ -125,7 +144,9 @@ def resultados_starcool(cadena):
     co2_set = Get_Number_starcool_one(cadena,36,2)
     co2_reading = Get_Number_starcool_one(cadena,37,2)
 
-    return [set_point,supply_1,retorno,evap,ambien,supply_2 ,o2_set,o2_reading,co2_set,co2_reading]
+    return [set_point,supply_1,retorno,evap,ambien,supply_2 ,o2_set,o2_reading,co2_set,co2_reading , usda_1 ,usda_2 ,usda_3 ,cargo_4,sp_humidity ,humidity]
+
+
 
 #print(nombre)
 #print(resultados_starcool(str))
